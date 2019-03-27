@@ -38,8 +38,8 @@ public class VozilaController {
         return service.findById(id);
     }
 
-    @GetMapping("/filter")
-    ResponseEntity<List<Vozilo>> findAllWithFilter(long idRentACara, FilterPretrageVozila filter) {
+    @GetMapping("/filter/{idRentACara}")
+    ResponseEntity<List<Vozilo>> findAllWithFilter(@PathVariable long idRentACara, @RequestBody FilterPretrageVozila filter) {
         return new ResponseEntity<>(service.findAllWithFilter(idRentACara, filter), HttpStatus.OK);
     }
 

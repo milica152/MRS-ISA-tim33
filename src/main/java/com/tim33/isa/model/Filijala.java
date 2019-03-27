@@ -8,20 +8,19 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "vozila")
+@Table(name = "filijale")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vozilo {
+public class Filijala {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String naziv;
-    private String marka;
-    private double cena;
-    private int tipVozila;
+    private String grad;
+    private String adresa;
+    private String brojZaposlenih;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private RentACar rentACar;

@@ -1,6 +1,5 @@
 package com.tim33.isa.service;
 
-import com.tim33.isa.dto.filter.FilterPretrageVozila;
 import com.tim33.isa.model.RentACar;
 import com.tim33.isa.repository.RentACarRepository;
 import org.springframework.beans.factory.annotation.Autowired;

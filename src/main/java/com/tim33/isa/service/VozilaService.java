@@ -33,7 +33,7 @@ public class VozilaService {
     }
 
     public List<Vozilo> findAllWithFilter(long idProfila, FilterPretrageVozila filter) {
-        return repository.findAllWithFilter(idProfila, filter.getTipVozila());
+        return repository.findAllWithFilter(idProfila, filter);
     }
 
 }
