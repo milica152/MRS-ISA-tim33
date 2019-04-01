@@ -1,5 +1,22 @@
 package com.tim33.isa.model;
 
-public class Avion {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+@Entity
+@Table(name = "avion")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Avion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "avion")
+    private ArrayList<Sediste> sedista;
 }

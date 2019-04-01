@@ -1,5 +1,6 @@
 package com.tim33.isa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,20 @@ import java.util.Date;
 @AllArgsConstructor
 public class Let {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Date vremePoletanja;
     private Date vremeSletanja;
     private int vremePutovanja;
     private int duzinaPutovanja;
-    private ArrayList<Lokacija> presedanja;
+    private ArrayList<String> presedanja;
     private double cena;
+    private KlasaLeta klasa;
+    private TipPuta tipPuta;
+    private double ocena;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Aviokompanija aviokompanija;
 
 
 

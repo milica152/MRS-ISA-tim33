@@ -1,25 +1,24 @@
 package com.tim33.isa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "destinacija")
+@Table(name = "lokacijaPresedanja")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Destinacija {
+public class LokacijaPresedanja {
+    @Id
+    private String sifraAerodroma;
+    private String nazivAerodroma;
     private String grad;
     private String drzava;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Aviokompanija aviokompanija;
-
 }

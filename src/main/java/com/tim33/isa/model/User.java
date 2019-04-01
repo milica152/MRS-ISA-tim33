@@ -16,5 +16,5 @@ import javax.persistence.Table;
 @AllArgsConstructor
 
 public class User {
-
+    private String name;
 }
