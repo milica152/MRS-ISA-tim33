@@ -1,5 +1,6 @@
 package com.tim33.isa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,10 @@ public class RentACar {
     private String promotivniOpis;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "rentACar")
+    @JsonIgnore
     private Set<Vozilo> vozila;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "rentACar")
+    @JsonIgnore
+    private Set<Filijala> filijale;
 }
