@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Set;
+
 @Entity
 @Table(name = "avion")
 @Getter
@@ -17,6 +19,7 @@ public class Avion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "avion")
-    private ArrayList<Sediste> sedista;
+    private Set<Sediste> sedista;
 }

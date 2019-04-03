@@ -15,11 +15,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Destinacija {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String grad;
     private String drzava;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Aviokompanija aviokompanija;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JsonIgnore
+//    private Aviokompanija aviokompanija;
 
 }

@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "lokacijaPresedanja")
@@ -17,6 +15,8 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class LokacijaPresedanja {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String sifraAerodroma;
     private String nazivAerodroma;
     private String grad;

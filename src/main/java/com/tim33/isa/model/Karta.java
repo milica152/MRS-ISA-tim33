@@ -18,10 +18,11 @@ public class Karta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private Let let;
+//    private Let let;
     private String imePutnika;
     private String prezimePutnika;
     private int brojSedista;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Aviokompanija aviokompanija;

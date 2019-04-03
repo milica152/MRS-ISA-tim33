@@ -18,15 +18,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class Let {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Date vremePoletanja;
     private Date vremeSletanja;
     private int vremePutovanja;
     private int duzinaPutovanja;
-    private ArrayList<String> presedanja;
+    // Ovde ne moze da stoji array lista
+    //private ArrayList<String> presedanja;
     private double cena;
-    private KlasaLeta klasa;
-    private TipPuta tipPuta;
+//    private KlasaLeta klasa;
+//    private TipPuta tipPuta;
     private double ocena;
 
     @ManyToOne(fetch = FetchType.EAGER)
