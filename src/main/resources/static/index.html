@@ -9,10 +9,13 @@
     <title>Homepage</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/Homepage.css" rel="stylesheet">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 
 </head>
 
@@ -42,7 +45,7 @@
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">LOGIN<span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
                         <div class="col-xs-4">
-                            <form id="ajax-login-form" action="/logged"  method="post" role="form" autocomplete="off">
+                            <form id="ajax-login-form" role="form" autocomplete="off">
                                 <div class="form-group">
                                     <label for="username">Username</label>
                                     <input type="text" name="username" id="username" tabindex="1" class="form-control-sm" placeholder="Username" value="" autocomplete="off">
@@ -62,7 +65,7 @@
                                 </div>
 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Sign up</a>
+                                <a class="dropdown-item" href="register.html">Sign up</a>
                                 <a class="dropdown-item" href="#">Forgot password?</a>
                                 <input type="hidden" class="hide" name="token" id="token" value="a465a2791ae0bae853cf4bf485dbe1b6">
                             </form>
@@ -107,9 +110,8 @@
         <!-- /.container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+
+
 
 </body>
 

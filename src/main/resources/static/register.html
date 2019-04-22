@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="js/jquery.min.js"></script>
+
+    <script src="js/register.js"> </script>
+    <title>Registration</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+
+<main class="my-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Register</div>
+                    <div class="card-body">
+                        <form id="regForm">
+                            <div class="form-group row">
+                                <label for="f_name" class="col-md-4 col-form-label text-md-right">First name</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="f_name" class="form-control" name="f_name" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="l_name" class="col-md-4 col-form-label text-md-right">Last name</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="l_name" class="form-control" name="l_name" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="email_address" class="form-control" name="email-address" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="user_name" class="col-md-4 col-form-label text-md-right">Username</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="user_name" class="form-control" name="username" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="password" class="form-control" name = "password" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="password2" class="col-md-4 col-form-label text-md-right">Repeat password</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="password2" class="form-control" name="password2" required>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 offset-md-4" id="reg">
+                                <button type="submit" class="btn btn-primary" id="regBtn">
+                                    Register
+                                </button>
+                            </div>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+</body>
+</html>
