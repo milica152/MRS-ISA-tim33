@@ -1,5 +1,6 @@
 package com.tim33.isa.controller;
 
+import com.tim33.isa.model.TipUsera;
 import com.tim33.isa.model.User;
 import com.tim33.isa.repository.UserRepository;
 import com.tim33.isa.service.UserService;
@@ -31,8 +32,12 @@ public class RegisterController {
         u.setPrezime(user.getPrezime());
         u.setUsername(user.getUsername());
         u.setEmail(user.getEmail());
+        u.setTip_korisnika(TipUsera.OBICAN);
         if(userRepository.findByUsername(u.getUsername())!=null){
-            return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Username already taken!", HttpStatus.BAD_REQUEST);
+        }
+        if(userRepository.findByEmail(u.getEmail())!=null){
+            return new ResponseEntity<>("Email already taken!", HttpStatus.BAD_REQUEST);
         }
         userRepository.save(u);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);

@@ -18,7 +18,8 @@ $(document).ready(function(){
             "prezime": $lastName.val(),
             "email": $email.val(),
             "username": $username.val(),
-            "password": $password.val()
+            "password": $password.val(),
+            "tip_korisnika": 4
         });
 
         $.ajax({
@@ -31,8 +32,8 @@ $(document).ready(function(){
                 document.location.href = "logged.html"
             }],
             error: function(xhr, status, error) {
-                if (xhr.responseText=='false'){
-                    alert("Username already taken!")
+                if (xhr.responseText!=='true'){
+                    alert(xhr.responseText);
                 }
             }
         })

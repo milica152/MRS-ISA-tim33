@@ -28,6 +28,16 @@ public class User {
     private String prezime;
     @Column(name = "email", nullable = false)
     private String email;
+    @Column(name = "tip_korisnika", nullable = false)
+    private TipUsera tip_korisnika;
+
+    public TipUsera getTip_korisnika() {
+        return tip_korisnika;
+    }
+
+    public void setTip_korisnika(TipUsera tip_korisnika) {
+        this.tip_korisnika = tip_korisnika;
+    }
 
     public String getUsername() {
         return username;

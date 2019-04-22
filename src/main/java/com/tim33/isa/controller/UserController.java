@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
 
     @Autowired
-    UserService employeeService;
+    UserService userService;
 
 
 
