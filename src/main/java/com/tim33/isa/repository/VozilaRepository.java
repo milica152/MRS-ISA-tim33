@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface VozilaRepository extends JpaRepository<Vozilo, Long>, JpaSpecificationExecutor<Vozilo> {
 
-    @Query(value = "SELECT v.* FROM baza.vozila v WHERE v.rentacar_id = :idRentACara and v.tip_vozila = :#{#filter.tipVozila}", nativeQuery = true)
+    @Query(value = "SELECT v.* FROM vozila v WHERE v.rentacar_id = :idRentACara and v.tip_vozila = :#{#filter.tipVozila}", nativeQuery = true)
     List<Vozilo> findAllWithFilter(@Param("idRentACara") long idRentACara, @Param("filter")FilterPretrageVozila filter);
 
 }
