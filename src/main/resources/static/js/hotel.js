@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     $( "#datepickerStart").datepicker({
         dateFormat:"dd-mm-yy",
         minDate: '0d',
@@ -12,6 +11,7 @@ $(document).ready(function() {
             $('#datepickerEnd').datepicker('option', 'minDate', '0d');
         }
     });
+
     $( "#datepickerEnd" ).datepicker({
         dateFormat:"dd-mm-yy",
         useCurrent: false,
@@ -25,25 +25,26 @@ $(document).ready(function() {
             $('#datepickerStart').datepicker('option', 'maxDate', null);
         }
     });
+
     $.ajax({
-        'url': '/Hotels/all',
-        'method': "GET",
-        'contentType': 'application/json'
-    }).done( function(data) {
-        $('#table').dataTable( {
-            "aaData": data,
-            retrieve: true,
-            searching: false,
-            lengthChange: false,
-            columns: [
-                { data: 'naziv', title: 'Name' },
-                { data: 'adresa', title: 'Address' },
-                { data: 'opis', title: 'Promo description' },
-                { data: 'ocena', tile: 'Rating'},
-                { data: null, defaultContent: '<button type="button" class="btn btn-primary">Choose</button>'}
-            ]
-        })
-    })
+        url: '/Hotels/all',
+        data: {},
+        success: function(data) {
+            $('#table').dataTable( {
+                data: data,
+                retrieve: true,
+                searching: false,
+                lengthChange: false,
+                columns: [
+                    { data: 'naziv', title: 'Name' },
+                    { data: 'adresa', title: 'Address' },
+                    { data: 'opis', title: 'Promo description' },
+                    { data: 'ocena', tile: 'Rating'},
+                    { data: null, defaultContent: '<button type="button" class="btn btn-primary">Choose</button>'}
+                ]
+            });
+        }
+    });
 
     /*$('#search').click(function() {
         $.ajax({
