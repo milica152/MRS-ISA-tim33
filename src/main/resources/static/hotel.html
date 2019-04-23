@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Hotels</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
+
+    <link href="css/hotel.css" rel="stylesheet">
+
+    <!-- jquery za datapicker -->
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href=".">PBC</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">AIRLINES
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="Hotels">HOTELS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="RentACar">RENT-A-CAR</a>
+                </li>
+                <li class="dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown">LOGIN<span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
+                        <li class="px-4 py-4">
+                            <form id="ajax-login-form" method="post" role="form" autocomplete="off">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" name="username" id="username" tabindex="1" class="form-control-sm" placeholder="Username" value="" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control-sm" placeholder="Password" autocomplete="off">
+                                </div>
+
+                                <div class="form-group">
+
+                                    <input type="checkbox" tabindex="3" name="remember" id="remember">
+                                    <label for="remember"> Remember Me</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-success" value="Log In">
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="register.html">Sign up</a>
+                                <a class="dropdown-item" href="#">Forgot password?</a>
+                                <input type="hidden" class="hide" name="token" id="token" value="a465a2791ae0bae853cf4bf485dbe1b6">
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container" id="Cont">
+    <div>
+        <h1 class="text-center">Hotels</h1>
+    </div>
+
+    <div class="row">
+        <form class="form-inline">
+            <div class="form-group">
+                <input type = "text" id="HotelNamePlace" class="form-group">
+            </div>
+            <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                <input type='text' class="form-control" id='datepickerStart' placeholder='Select Start Date'>
+            </div>
+            <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                <input type='text' class="form-control" id='datepickerEnd' placeholder='Select End Date'>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="dropdown-divider"></div>
+    <div>
+        <table id="table" class="display table table-striped table-bordered" width="100%"></table>
+    </div>
+
+
+    <br><br>
+</div>
+
+<footer class="py-5 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright 2019 &copy; Pomoz' Boze Co.</p>
+    </div>
+</footer>
+
+<script type="text/javascript" src="js/hotel.js"> </script>
+</body>
+</html>

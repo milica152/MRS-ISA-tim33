@@ -26,6 +26,9 @@ public class Soba {
     private double cena_nocenja;
     private ArrayList<UslugeHotela> usluga;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Hotel hotel;
+
 
 
 
