@@ -33,6 +33,8 @@ $(document).ready(function() {
         $('#table').dataTable( {
             "aaData": data,
             retrieve: true,
+            searching: false,
+            lengthChange: false,
             columns: [
                 { data: 'naziv', title: 'Name' },
                 { data: 'adresa', title: 'Address' },
