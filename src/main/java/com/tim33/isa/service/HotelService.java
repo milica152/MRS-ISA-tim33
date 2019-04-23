@@ -32,5 +32,7 @@ public class HotelService {
     public Hotel findById(long id) {
         return repository.findById(id).orElse(null);
     }
+    public void deleteById(long id) { repository.delete(findById(id)); }
+
 
 }

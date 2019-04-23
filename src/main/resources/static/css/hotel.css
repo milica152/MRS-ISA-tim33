@@ -4,10 +4,10 @@ body {
 
 #HotelNamePlace{
     display: inline-block;
-    width: 400px;
+    width: 380px;
     padding: 5px;
     margin: 1px;
-
+    margin-left: 20px;
 
 }
 #datepickerStart{
@@ -25,4 +25,21 @@ body {
     margin: 1px;
 
 }
+#NoOfGuests{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
 
+}
+#RoomType{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
+
+}
+#hotel-search-submit{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
+
+}

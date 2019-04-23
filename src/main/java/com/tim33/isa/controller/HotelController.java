@@ -47,4 +47,8 @@ public class HotelController {
     Hotel findById(@PathVariable long id) {
         return service.findById(id);
     }
+
+    @RequestMapping(value = "deleteHotel/{idDel}", method = RequestMethod.POST)
+    @ResponseBody
+    public void deleteHotel(@PathVariable Long idDel){service.deleteById(idDel);}
 }

@@ -25,39 +25,64 @@ $(document).ready(function() {
             $('#datepickerStart').datepicker('option', 'maxDate', null);
         }
     });
-    $.ajax({
-        'url': '/Hotels/all',
-        'method': "GET",
-        'contentType': 'application/json'
-    }).done( function(data) {
-        $('#table').dataTable( {
-            "aaData": data,
-            retrieve: true,
-            searching: false,
-            lengthChange: false,
-            columns: [
-                { data: 'naziv', title: 'Name' },
-                { data: 'adresa', title: 'Address' },
-                { data: 'opis', title: 'Promo description' },
-                { data: 'ocena', tile: 'Rating'},
-                { data: null, defaultContent: '<button type="button" class="btn btn-primary">Choose</button>'}
-            ]
-        })
-    })
 
-    /*$('#search').click(function() {
-        $.ajax({
-            url: '/Hotels/all',
-            data: {},
-            success: function(data) {
+    var table = $('#table').DataTable( {
+        data: undefined,
+        searching: false,
+        lengthChange: false,
+        columns: [
+            { data: 'naziv', title: 'Name' },
+            { data: 'adresa', title: 'Address' },
+            { data: 'opis', title: 'Promo description' },
+            { data: 'ocena', tile: 'Rating'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="editBtn">Edit</button>'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="removeBtn">Remove</button>'}
+        ],
+        columnDefs: [
+            {className: "align-middle", targets: "_all"}
+        ]
+    });
+
+    $.ajax({
+        url: '/Hotels/all',
+        data: {},
+        success: function(data) {
+            if (data != undefined && data.length > 0) {
                 $('#table').dataTable().fnClearTable();
                 $('#table').dataTable().fnAddData(data);
-
-                $('#table tbody').on('click', 'button', function() {
-                    var data = table.row($(this).parents('tr')).data();
-                    alert("Clicked Hotel ID: " + data.id);
-                } );
             }
-        });
-    });*/
+        }
+    });
+
+    $('#table tbody').on('click', '#removeBtn', function(e) {
+        var conBox = confirm("Are you sure?");
+        var data = table.row($(this).parents('tr')).data();
+        if(conBox){
+            $.ajax({
+                type: 'POST',
+                url: '/Hotels/deleteHotel/'+data.id,
+                data : data.id,
+                success: [function(){
+                    $('#table').dataTable().fnDraw();
+                    //table.fnDraw();
+                    //location.reload();
+                }],
+                error: function(xhr, status, error){
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Error - ' + errorMessage);
+                }
+            });
+
+        }
+        else{
+            e.preventDefault();
+        }
+        e.preventDefault();
+
+
+
+
+    } );
+
 });
