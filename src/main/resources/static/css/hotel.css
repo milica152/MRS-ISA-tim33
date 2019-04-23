@@ -1,0 +1,28 @@
+body {
+    padding-top: 56px;
+}
+
+#HotelNamePlace{
+    display: inline-block;
+    width: 400px;
+    padding: 5px;
+    margin: 1px;
+
+
+}
+#datepickerStart{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 8px;
+
+}
+
+#datepickerEnd{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 1px;
+
+}
+
