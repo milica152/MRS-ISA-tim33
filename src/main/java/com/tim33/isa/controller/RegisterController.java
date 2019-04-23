@@ -22,14 +22,10 @@ public class RegisterController {
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
 
         String mess= userService.checkReg(user);
-        if (mess != "true") {
+        if (!mess.equals("true")) {
             return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
-        }
-        else{
+        } else {
             return new ResponseEntity<Boolean>(true, HttpStatus.OK);
         }
-
-
-
     }
 }

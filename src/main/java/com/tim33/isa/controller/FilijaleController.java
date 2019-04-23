@@ -25,7 +25,7 @@ public class FilijaleController {
         return service.save(novaFilijala);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     List<Filijala> findAll() {
         return service.findAll();
     }

@@ -33,9 +33,11 @@ public class UserService {
     public User findById(long id) {
         return repository.findById(id).orElse(null);
     }
+
     public User findByUsername(String username) {
         return repository.findByUsername(username);
     }
+
     public User findByEmail(String email) {
         return repository.findByEmail(email);
     }
@@ -48,20 +50,21 @@ public class UserService {
         u.setUsername(user.getUsername());
         u.setEmail(user.getEmail());
         u.setTip_korisnika(TipUsera.OBICAN);
-        if(user.getIme().isEmpty()||user.getPassword().isEmpty()||user.getEmail().isEmpty()||user.getPrezime().isEmpty()||
+
+        if (user.getIme().isEmpty()||user.getPassword().isEmpty()||user.getEmail().isEmpty()||user.getPrezime().isEmpty()||
             user.getUsername().isEmpty()){
             return "All fields are required!";
         }
-        if(findByUsername(u.getUsername())!= null){
+
+        if (findByUsername(u.getUsername()) != null){
             return "Username already taken!";
         }
-        if(findByEmail(u.getEmail())!= null){
+
+        if (findByEmail(u.getEmail()) != null){
             return "Email already taken!";
         }
+
         repository.save(u);
         return "true";
-
     }
-
-
 }
