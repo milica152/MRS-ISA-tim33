@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
 
-    <script src="js/rcprofil.js"></script>
+    <script src="js/hotelprofil.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -34,10 +34,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">AIRLINES</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="/Hotels">HOTELS</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/RentACar">RENT-A-CAR</a>
                 </li>
                 <li class="dropdown">
@@ -77,11 +77,11 @@
 </nav>
 <div class="container" style="padding-bottom: 100px;">
     <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
-        <strong>Success!</strong> Car has been successfully booked.
+        <strong>Success!</strong> Hotel has been successfully booked.
     </div>
 
     <br>
-    <h2 class="text-center">RC Profile</h2>
+    <h2 class="text-center">Hotel Profile</h2>
 
     <br><br>
 
@@ -98,14 +98,8 @@
         <div class="row" style="margin-top: 60px;">
             <div class="col-md-3 text-center" style="max-width: 300px;">
                 <div id="branches text-center">
-                    <h3 class="text-center">Branches</h3>
-                    <table id="table-branches" class="display table table-striped table-bordered"></table>
-                </div>
-            </div>
-            <div class="col-md-9">
-                <div id="cars text-center">
-                    <h3 class="text-center">Available cars</h3>
-                    <table id="table-cars" class="display table table-striped table-bordered"></table>
+                    <h3 class="text-center">Rooms</h3>
+                    <table id="table-rooms" class="display table table-striped table-bordered"></table>
                 </div>
             </div>
         </div>
