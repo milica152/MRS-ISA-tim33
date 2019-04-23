@@ -1,5 +1,6 @@
 package com.tim33.isa.service;
 
+import com.tim33.isa.model.TipUsera;
 import com.tim33.isa.model.User;
 import com.tim33.isa.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,29 @@ public class UserService {
     }
     public User findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    public String checkReg(User user){
+        User u = new User();
+        u.setIme(user.getIme());
+        u.setPassword(user.getPassword());
+        u.setPrezime(user.getPrezime());
+        u.setUsername(user.getUsername());
+        u.setEmail(user.getEmail());
+        u.setTip_korisnika(TipUsera.OBICAN);
+        if(user.getIme().isEmpty()||user.getPassword().isEmpty()||user.getEmail().isEmpty()||user.getPrezime().isEmpty()||
+            user.getUsername().isEmpty()){
+            return "All fields are required!";
+        }
+        if(findByUsername(u.getUsername())!= null){
+            return "Username already taken!";
+        }
+        if(findByEmail(u.getEmail())!= null){
+            return "Email already taken!";
+        }
+        repository.save(u);
+        return "true";
+
     }
 
 

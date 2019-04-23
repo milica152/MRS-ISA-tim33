@@ -17,30 +17,18 @@ public class RegisterController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
-
 
     @RequestMapping(value = "registerUser", method = RequestMethod.POST)
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
 
+        String mess= userService.checkReg(user);
+        if (mess != "true") {
+            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
+        }
+        else{
+            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        }
 
-        User u = new User();
-        u.setId(0L);
-        u.setIme(user.getIme());
-        u.setPassword(user.getPassword());
-        u.setPrezime(user.getPrezime());
-        u.setUsername(user.getUsername());
-        u.setEmail(user.getEmail());
-        u.setTip_korisnika(TipUsera.OBICAN);
-        if(userRepository.findByUsername(u.getUsername())!=null){
-            return new ResponseEntity<>("Username already taken!", HttpStatus.BAD_REQUEST);
-        }
-        if(userRepository.findByEmail(u.getEmail())!=null){
-            return new ResponseEntity<>("Email already taken!", HttpStatus.BAD_REQUEST);
-        }
-        userRepository.save(u);
-        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 
 
     }
