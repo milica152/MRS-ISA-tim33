@@ -28,7 +28,12 @@ $(document).ready(function() {
                         window.location = "/RentACar/" + data.id;
                     });
                 }
+            },
+            error: function (error) {
+                alert(error);
             }
         });
     });
+
+    // $('#search').click();
 });
