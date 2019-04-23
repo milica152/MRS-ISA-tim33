@@ -54,6 +54,12 @@ $(document).ready(function() {
             }
         }
     });
+    $('#table tbody').on('click', '#chooseBtn', function(e) {
+        var data = table.row($(this).parents('tr')).data();
+        window.location = "/Hotels/" + data.id;
+
+    });
+
 
     $('#table tbody').on('click', '#removeBtn', function(e) {
         var conBox = confirm("Are you sure?");
