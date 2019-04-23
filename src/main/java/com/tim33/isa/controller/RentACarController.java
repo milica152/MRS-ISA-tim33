@@ -5,6 +5,7 @@ import com.tim33.isa.service.RentACarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -35,11 +36,16 @@ public class RentACarController {
     }
 
     @GetMapping
-    public String welcome() {
+    public String rcServicesPage() {
         return "rentacar";
     }
 
     @GetMapping("/{id}")
+    public String rcProfilePage() {
+        return "rcprofil";
+    }
+
+    @GetMapping("/specific/{id}")
     @ResponseBody
     RentACar findById(@PathVariable long id) {
         return service.findById(id);

@@ -28,7 +28,7 @@ public class VozilaController {
         return service.save(novoVozilo);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     List<Vozilo> findAll() {
         return service.findAll();
     }
@@ -38,9 +38,13 @@ public class VozilaController {
         return service.findById(id);
     }
 
-    @GetMapping("/filter/{idRentACara}")
+    @GetMapping("/fromRC/{idRentACara}")
+    ResponseEntity<List<Vozilo>> findAllFromRC(@PathVariable long idRentACara) {
+        return new ResponseEntity<>(service.findAllFromRC(idRentACara), HttpStatus.OK);
+    }
+
+    @GetMapping("/fromRCWithFilters/{idRentACara}")
     ResponseEntity<List<Vozilo>> findAllWithFilter(@PathVariable long idRentACara, @RequestBody FilterPretrageVozila filter) {
         return new ResponseEntity<>(service.findAllWithFilter(idRentACara, filter), HttpStatus.OK);
     }
-
 }

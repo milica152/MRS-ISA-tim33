@@ -32,6 +32,10 @@ public class VozilaService {
         return repository.findById(id).orElse(null);
     }
 
+    public List<Vozilo> findAllFromRC(long idProfila) {
+        return repository.findAllByRentACarId(idProfila);
+    }
+
     public List<Vozilo> findAllWithFilter(long idProfila, FilterPretrageVozila filter) {
         return repository.findAllWithFilter(idProfila, filter);
     }
