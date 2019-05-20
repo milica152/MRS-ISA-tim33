@@ -1,11 +1,17 @@
 package com.tim33.isa.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-public enum TipSobe {
-    JEDNOKREVETNA, DVOKREVETNA, TROKREVETNA, CETVOROKREVETNA, PETOKREVETNA, SESTOKREVETNA
+@NoArgsConstructor
+public class RequestRegister {
+
+    User user;
+    Service service;
 }

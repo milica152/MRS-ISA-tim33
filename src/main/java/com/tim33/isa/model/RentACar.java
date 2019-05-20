@@ -15,14 +15,11 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RentACar {
+public class RentACar extends Service{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String naziv;
-    private String adresa;
-    private String promotivniOpis;
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "rentACar")
+    @JsonIgnore
+    private Set<RCSAdmin> admins;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "rentACar")
     @JsonIgnore

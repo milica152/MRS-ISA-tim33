@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.mapping.Collection;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "destinacija")
@@ -21,8 +24,10 @@ public class Destinacija {
     private String grad;
     private String drzava;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JsonIgnore
-//    private Aviokompanija aviokompanija;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "airline")
+    private Aviokompanija airline;
+
 
 }

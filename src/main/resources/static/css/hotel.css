@@ -4,15 +4,15 @@ body {
 
 #HotelNamePlace{
     display: inline-block;
-    width: 380px;
+    width: 450px;
     padding: 5px;
     margin: 1px;
-    margin-left: 20px;
+    margin-left: 80px;
 
 }
 #datepickerStart{
     display: inline-block;
-    width: 200px;
+    width: 220px;
     padding: 5px;
     margin: 8px;
 
@@ -20,7 +20,7 @@ body {
 
 #datepickerEnd{
     display: inline-block;
-    width: 200px;
+    width: 220px;
     padding: 5px;
     margin: 1px;
 

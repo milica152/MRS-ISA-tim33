@@ -29,4 +29,32 @@ public class AviokompanijaService {
     public Aviokompanija findById(long id){
         return repository.findById(id).orElse(null);
     }
+    public Aviokompanija findByNaziv(String naziv){
+        return repository.findByNaziv(naziv);
+    }
+
+    public String checkAK(Aviokompanija ak){
+        Aviokompanija a = new Aviokompanija();
+        a.setNaziv(ak.getNaziv());
+        a.setAdresa(ak.getAdresa());
+        a.setOpis(ak.getOpis());
+        a.setDestinations(ak.getDestinations());
+        a.setKarteZaBrzu(ak.getKarteZaBrzu());
+        a.setAdmins(ak.getAdmins());
+
+
+        if (ak.getNaziv().isEmpty()||ak.getAdresa().isEmpty()||ak.getOpis().isEmpty()||ak.getDestinations().isEmpty()){
+            return "All fields are required!";
+        }
+        if(ak.getOpis().length()<50){
+            return "Description must have at least 50 characters!";
+        }
+
+        if (findByNaziv(ak.getNaziv()) != null){
+            return "Name already taken!";
+        }
+        repository.save(a);
+        return "true";
+    }
+
 }

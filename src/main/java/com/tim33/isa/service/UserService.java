@@ -1,7 +1,6 @@
 package com.tim33.isa.service;
 
-import com.tim33.isa.model.TipUsera;
-import com.tim33.isa.model.User;
+import com.tim33.isa.model.*;
 import com.tim33.isa.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,29 +41,23 @@ public class UserService {
         return repository.findByEmail(email);
     }
 
-    public String checkReg(User user){
-        User u = new User();
-        u.setIme(user.getIme());
-        u.setPassword(user.getPassword());
-        u.setPrezime(user.getPrezime());
-        u.setUsername(user.getUsername());
-        u.setEmail(user.getEmail());
-        u.setTip_korisnika(TipUsera.OBICAN);
-
-        if (user.getIme().isEmpty()||user.getPassword().isEmpty()||user.getEmail().isEmpty()||user.getPrezime().isEmpty()||
-            user.getUsername().isEmpty()){
+    public String checkReg(User user1){
+        //User user1 = (User) userr;
+        System.out.println(user1);
+        if (user1.getIme().isEmpty()||user1.getPassword().isEmpty()||user1.getEmail().isEmpty()||user1.getPrezime().isEmpty()||
+                user1.getUsername().isEmpty()){
             return "All fields are required!";
         }
 
-        if (findByUsername(u.getUsername()) != null){
+        if (findByUsername(user1.getUsername()) != null){
             return "Username already taken!";
         }
 
-        if (findByEmail(u.getEmail()) != null){
+        if (findByEmail(user1.getEmail()) != null){
             return "Email already taken!";
         }
+        repository.save(user1);
 
-        repository.save(u);
         return "true";
     }
 }

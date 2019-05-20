@@ -33,6 +33,24 @@ public class HotelService {
         return repository.findById(id).orElse(null);
     }
     public void deleteById(long id) { repository.delete(findById(id)); }
+    public Hotel findByNaziv(String naziv){
+        return repository.findByNaziv(naziv);
+    }
 
+    public String checkHotel(Hotel hotel){
+
+        if (hotel.getNaziv().isEmpty()||hotel.getAdresa().isEmpty()||hotel.getOpis().isEmpty()){
+            return "All fields are required!";
+        }
+        if(hotel.getOpis().length()<50){
+            return "Description must have at least 50 characters!";
+        }
+
+        if (findByNaziv(hotel.getNaziv()) != null){
+            return "Name already taken!";
+        }
+        repository.save(hotel);
+        return "true";
+    }
 
 }
