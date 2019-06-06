@@ -4,32 +4,38 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>RC - Profil</title>
+    <title>Hotel - Profil</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="css/Homepage.css" rel="stylesheet">
+    <link href="/css/bootstrap.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Bootstrap core JavaScript -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery.min.js" type="text/javascript" ></script>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
 
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
 
-    <script src="js/hotelprofil.js"></script>
+    <link href="/css/hotel.css" rel="stylesheet">
+
+    <!-- jquery za datapicker -->
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="../.">PBC</a>
+        <a class="navbar-brand" href=".">PBC</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <li class="collapse navbar-collapse" id="navbarResponsive">
+        <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#">AIRLINES</a>
@@ -72,33 +78,76 @@
                     </ul>
                 </li>
             </ul>
-    </div>
+        </div>
     </div>
 </nav>
 <div class="container" style="padding-bottom: 100px;">
-    <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
-        <strong>Success!</strong> Hotel has been successfully booked.
-    </div>
 
     <br>
-    <h2 class="text-center">Hotel Profile</h2>
+    <h2 id="HotelName"></h2>
 
-    <br><br>
 
     <div class="container">
         <div class="row" style="margin-top: 30px;">
-            <div class="col-md-3 text-center">
-                <img src="images/profile_default.png" class="img-thumbnail rounded">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <img src="/images/profile_default.png" class="avatar img-circle img-responsive"
+                         alt="avatar">
+                    <h6 id="PhotoUpload"></h6>
+
+                    <input type="file" class="form-control" hidden>
+                </div>
             </div>
-            <div class="col-md-9">
-                <h4>Service information:</h4>
+            <!-- edit form column -->
+            <div class="col-md-9 personal-info">
+                <div class="alert alert-info alert-dismissable" id="alert"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
+                    <strong>Success!</strong> Hotel has been successfully booked.</div>
+
+                <h4>Hotel info</h4>
+                <br/>
+
+                <div class="form-group">
+                    <label label-default="" class="col-lg-3 control-label label-default"><b>Description:</b></label>
+                    <div class="col-lg-12">
+                        <textarea class="form-control-plaintext" readonly id="descTextArea" rows="4" draggable="false"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label label-default="" class="col-lg-3 control-label label-default"><b>Address:</b></label>
+                    <div class="col-lg-8">
+                        <input class="form-control-plaintext" type="text" id="hotelAddress"readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label label-default="" class="col-md-3 control-label label-default"><b>Price from:</b></label>
+                    <div class="col-md-8">
+                        <input class="form-control-plaintext" type="text" id="HotelPrize" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label label-default="" class="col-md-3 control-label label-default"><b>Rating:</b></label>
+                    <div class="col-md-8">
+                        <input class="form-control-plaintext" type="text" id="Rating" readonly>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="row" style="margin-top: 60px;">
-            <div class="col-md-3 text-center" style="max-width: 300px;">
-                <div id="branches text-center">
-                    <h3 class="text-center">Rooms</h3>
+            <div class="col-md-12">
+                <div id="rooms text-center">
+                    <div class="text-center">
+                        <h3>
+                            <span>Rooms</span>
+                            <button class="btn-lg pull-right" id="AddRoom" data-toggle="modal" data-target="#addRoomModal">
+                                <i class="fa fa-plus-circle"></i>
+                            </button>
+                        </h3>
+
+                        <hr/>
+                    </div>
+
+
                     <table id="table-rooms" class="display table table-striped table-bordered"></table>
                 </div>
             </div>
@@ -106,10 +155,51 @@
     </div>
 </div>
 
+<div class="modal fade" id="addRoomModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoomTitle">Add new room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="AddRoomForm">
+                        <div class="form-group">
+                            <label for="RoomType">Type</label>
+                            <select id="RoomType">
+                                <option value="JEDNOKREVETNA">Single</option>
+                                <option value="DVOKREVETNA">Double</option>
+                                <option value="TROKREVETNA">Three-bed</option>
+                                <option value="CETVOROKREVETNA">Four-bed</option>
+                                <option value="PETOKREVETNA">Five-bed</option>
+                                <option value="SESTOKREVETNA">Six-bed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prizePerNight">Prize per night</label>
+                            <input type="number" min="0" class="form-control" id="prizePerNight">
+                        </div>
+                        <!-- ovde dodaj izbor dodatnih usluga -->
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="AddRoomBtn">Add new room</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <footer class="py-3 bg-dark fixed-bottom">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright 2019 &copy; Pomoz' Boze Co.</p>
     </div>
 </footer>
+<script type="text/javascript" src="/js/hotelprofil.js"> </script>
 </body>
 </html>

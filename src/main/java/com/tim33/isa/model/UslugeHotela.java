@@ -27,6 +27,21 @@ public class UslugeHotela {
     @JsonIgnore
     private Hotel hotel;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinTable(name="room_services",
+            joinColumns={@JoinColumn(name="service_id")},
+            inverseJoinColumns={@JoinColumn(name="room_id")})
+    private Soba room;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinTable(name="reservation_services",
+            joinColumns={@JoinColumn(name="service_id")},
+            inverseJoinColumns={@JoinColumn(name="reservation_id")})
+    private HotelReservation reservation;
+
+
 
 
 }

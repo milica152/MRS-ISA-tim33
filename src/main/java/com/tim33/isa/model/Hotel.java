@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,7 +27,9 @@ public class Hotel extends Service{
     private double cenaOd;
     private int ocena;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel")
+
+    @OneToMany(mappedBy = "hotel") // inverse side: it has a mappedBy attribute, and can't decide how the association is mapped, since the other side already decided it.
+    @Fetch(FetchMode.JOIN)
     @JsonIgnore
     private Set<Soba> konfiguracija_soba;
 
