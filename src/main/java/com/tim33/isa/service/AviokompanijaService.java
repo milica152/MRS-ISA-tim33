@@ -1,7 +1,9 @@
 package com.tim33.isa.service;
 
 import com.tim33.isa.model.Aviokompanija;
+import com.tim33.isa.model.Destinacija;
 import com.tim33.isa.repository.AviokompanijaRepository;
+import com.tim33.isa.repository.DestinacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.List;
 public class AviokompanijaService {
     @Autowired
     AviokompanijaRepository repository;
+    @Autowired
+    DestinacijaService destser;
 
     public Aviokompanija save(Aviokompanija noviProfil){
         // Manipulacija profilom...
@@ -54,6 +58,11 @@ public class AviokompanijaService {
             return "Name already taken!";
         }
         repository.save(a);
+        for(Destinacija d:ak.getDestinations()){
+            d.setAirline(a);
+            destser.save(d);
+
+        }
         return "true";
     }
 

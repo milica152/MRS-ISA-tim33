@@ -33,7 +33,8 @@ public class AviokompanijaController {
         return service.save(noviProfil);
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    @ResponseBody
     List<Aviokompanija> findAll() {
         return service.findAll();
     }
