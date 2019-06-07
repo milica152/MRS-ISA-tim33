@@ -3,6 +3,7 @@ package com.tim33.isa.service;
 import com.tim33.isa.model.Aviokompanija;
 import com.tim33.isa.model.Destinacija;
 import com.tim33.isa.repository.AviokompanijaRepository;
+import com.tim33.isa.repository.DestinacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

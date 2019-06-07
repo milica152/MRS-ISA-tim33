@@ -25,8 +25,10 @@ public class Destinacija {
     private String drzava;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "airline")
+    @ManyToOne
+    @JoinTable(name="airline_destination",
+            joinColumns={@JoinColumn(name="destination_id")},
+            inverseJoinColumns={@JoinColumn(name="airline_id")})
     private Aviokompanija airline;
 
 

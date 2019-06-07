@@ -34,7 +34,7 @@ $(document).ready(function() {
             { data: 'naziv', title: 'Name' },
             { data: 'adresa', title: 'Address' },
             { data: 'opis', title: 'Promo description' },
-            { data: 'ocena', tile: 'Rating'},
+            { data: 'ocena', title: 'Rating'},
             { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>'},
             { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="editBtn">Edit</button>'},
             { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="removeBtn">Remove</button>'}
@@ -56,7 +56,7 @@ $(document).ready(function() {
     });
     $('#table tbody').on('click', '#chooseBtn', function(e) {
         var data = table.row($(this).parents('tr')).data();
-        window.location = "/Hotels/" + data.id;
+        document.location.href = '/Hotels/' + data.id;
 
     });
 
@@ -75,7 +75,7 @@ $(document).ready(function() {
                     //location.reload();
                 }],
                 error: function(xhr, status, error){
-                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    var errorMessage = xhr.status + ': ' + xhr.statusText;
                     alert('Error - ' + errorMessage);
                 }
             });
@@ -86,9 +86,44 @@ $(document).ready(function() {
         }
         e.preventDefault();
 
-
-
-
     } );
+
+    $("#SearchHotel").submit(function(e) {
+        e.preventDefault();
+
+        var NameDest = $("#HotelNamePlace").val();
+        var DateFrom = $("#datepickerStart").val();
+        var DateTo = $("#datepickerEnd").val();
+
+
+        var search = {
+            nameOrDestination: NameDest,
+            dateFrom: DateFrom,
+            dateTo: DateTo
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: "/Hotels/search",
+            contentType : 'application/json',
+            dataType : "json",
+            data: JSON.stringify(search),
+            success: function(data) {
+                if(data.length>0){
+                    $('#table').dataTable().fnClearTable();
+                    $('#table').dataTable().fnAddData(data);
+                }
+                else{
+                    alert("Ne postoji ni jedan hotel koji zadovoljava kriterijume pretrage");
+                }
+                $('#SearchHotel')[0].reset();
+            },
+            error: function(xhr, status, error){
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                alert('Error - ' + errorMessage);
+            }
+        });
+
+    });
 
 });

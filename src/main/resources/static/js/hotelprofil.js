@@ -1,9 +1,11 @@
-$profileID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+$profileID = document.location.href.substring(document.location.href.lastIndexOf('/') + 1);
 
 $(document).ready(function() {
 
-    //#region Inicijalizacija tabela
+    setPage();
 
+    //#region Inicijalizacija tabela
+    $('#alert').hide();
     var roomsTable = $('#table-rooms').DataTable({
         data: undefined,
         searching: false,
@@ -13,14 +15,11 @@ $(document).ready(function() {
         ordering: false,
         compact: true,
         columns: [
-            { data: 'naziv', title: 'Name' },
-            { data: 'adresa', title: 'Address' },
-            { data: 'opis', title: 'Promo description' },
-            { data: 'ocena', tile: 'Rating'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="ChooseBtn">Choose</button>'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="EditBtn">Edit</button>'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="RemoveBtn">Remove</button>'}
-        ],
+            { data: 'tip_sobe', title: 'Room type' },
+            { data: 'cena_nocenja', title: 'Prize per night' },
+            { data: 'ocena', title: 'Rating'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="reserveRoom">Reserve</button>'}
+            ],
         columnDefs: [
             { className: "align-middle", targets: "_all" }
         ]
@@ -30,36 +29,72 @@ $(document).ready(function() {
 
     //#region Preuzimanje podataka za tabele
 
-    /*$.ajax({
-        url: '/Sobe/all',
-        data: {},
-        success: function(data) {
-            if (data != undefined && data.length > 0) {
-                $('#table-branches').dataTable().fnClearTable();
-                $('#table-branches').dataTable().fnAddData(data);
-            }
-        }
-    });
-
     $.ajax({
-        url: '/Vozila/fromRC/' + $profileID,
+        url: '/Rooms/all',
         data: {},
         success: function(data) {
             if (data != undefined && data.length > 0) {
-                $('#table-cars').dataTable().fnClearTable();
-                $('#table-cars').dataTable().fnAddData(data);
-
-                $('#table-cars tbody').on('click', 'button', function () {
-                    var data = carsTable.row($(this).parents('tr')).data();
-
-                    $('#success-alert').toggleClass("collapse");
-                    setTimeout(function() {
-                        $('#success-alert').toggleClass("collapse");
-                    }, 3000);
-                });
+                $('#table-rooms').dataTable().fnClearTable();
+                $('#table-rooms').dataTable().fnAddData(data);
             }
+        },
+        error: function(xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Error - ' + errorMessage);
         }
     });
-*/
-    //#endregion
+
+        //#endregion
+
+    $('#AddRoomBtn').on("click",function(e) {
+        e.preventDefault();
+
+        var $RoomType = $('#RoomType');
+        var $PrizePerNight = $('#prizePerNight');
+
+        var Room = {
+            cena_nocenja: $PrizePerNight.val(),
+            ocena: 0,
+            tip_sobe: $RoomType.val()
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/Rooms/addRoom/'+$profileID,
+            contentType : 'application/json',
+            dataType : "json",
+            data : JSON.stringify(Room),
+            success: function(data){
+                alert("Room added!");
+            },
+            error: function(xhr, status, error) {
+                if (xhr.responseText!=='true'){
+                    alert(xhr.responseText);
+                }
+            }
+        })
+    });
+
+
 });
+
+function setPage(){
+    $.ajax({
+        type:'GET',
+        url: '/Hotels/specific/'+$profileID,
+        data: {},
+        success: function(data) {
+            document.getElementById("HotelName").innerHTML = data.naziv;
+            document.getElementById("descTextArea").value = data.opis;
+            document.getElementById("hotelAddress").value = data.adresa;
+            document.getElementById("HotelPrize").value = data.cenaOd;
+            document.getElementById("Rating").value = data.ocena;
+
+        },
+        error: function(xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Error - ' + errorMessage);
+        }
+    });
+
+
+}

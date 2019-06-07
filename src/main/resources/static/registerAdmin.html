@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Admin</title>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <link href="css/sb-admin.css" rel="stylesheet">
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
+
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">AHC</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">LOGOUT</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="SystemAdmin.html">
+                <span>Add Airline</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="AddHotel.html">
+                <span>Add Hotel</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="AddRCS.html">
+                <span>Add Rent-A-Car Service</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="registerAdmin.html">
+                <span>Add Admin</span></a>
+        </li>
+    </ul>
+    <div id="content-wrapper">
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#airline">Airline Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#hotel">Hotel Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#rcs">RCS Admin</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane container active" id="airline">
+                <table id="tableAirline" class="display table table-striped table-bordered"></table>
+            </div>
+            <div class="tab-pane container fade" id="hotel">
+                <table id="tableHotel" class="display table table-striped table-bordered"></table>
+            </div>
+            <div class="tab-pane container fade" id="rcs">
+                <table id="tableRCS" class="display table table-striped table-bordered"></table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<footer class="py-3 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright 2019 &copy; Pomoz' Boze Co.</p>
+    </div>
+</footer>
+
+<script type="text/javascript" src="js/regAdmin.js"></script>
+
+</body>
+
+</html>
+
