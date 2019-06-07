@@ -1,0 +1,39 @@
+body {
+    padding-top: 56px;
+}
+
+#AviokompNamePlace{
+    display: inline-block;
+    width: 380px;
+    padding: 5px;
+    margin: 1px;
+    margin-left: 20px;
+
+}
+#datepickerStart{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 8px;
+
+}
+
+#datepickerEnd{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 1px;
+
+}
+#NoOfGuests{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
+
+}
+#aviokomp-search-submit{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
+
+}

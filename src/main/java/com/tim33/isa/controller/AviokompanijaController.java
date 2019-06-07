@@ -1,63 +1,83 @@
+
 package com.tim33.isa.controller;
 
-import com.tim33.isa.model.*;
+import com.tim33.isa.model.Aviokompanija;
+import com.tim33.isa.model.LetZaDodavanje;
 import com.tim33.isa.service.AviokompanijaService;
-import com.tim33.isa.service.DestinacijaService;
+import com.tim33.isa.service.LetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.Console;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-@RestController
-@RequestMapping("/AviokompanijaProfil")
+@Controller
+@RequestMapping("/Aviocompany")
 public class AviokompanijaController {
     @Autowired
     AviokompanijaService service;
-    @Autowired
-    DestinacijaService serviceDest;
 
-    @PostMapping
+    @Autowired
+    LetService letService;
+
+    @RequestMapping(value = "addAviocompany", method = RequestMethod.POST)
+    @ResponseBody
     Aviokompanija save(@RequestBody Aviokompanija noviProfil) {
         return service.save(noviProfil);
     }
 
     @PutMapping("/{id}")
+    @ResponseBody
     Aviokompanija update(@RequestBody Aviokompanija noviProfil, @PathVariable long id) {
         noviProfil.setId(id);
         return service.save(noviProfil);
     }
 
-    @GetMapping
+    @PostMapping("/{id}/addFlight")
+    @ResponseBody
+    public ResponseEntity<?> addFlight(@Valid @RequestBody LetZaDodavanje noviLet, @PathVariable String id) {
+
+        String mess= letService.checkAdding(noviLet, id);
+        if (!mess.equals("true")) {
+            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        }
+    }
+
+
+    @GetMapping("/all")
+    @ResponseBody
     List<Aviokompanija> findAll() {
         return service.findAll();
     }
 
+    @GetMapping
+    public String aviocompanyServis() {
+        return "aviokompanije";
+    }
+
     @GetMapping("/{id}")
+    public String aviocompanyProfile() {
+        return "aviokompanijaprofil";
+    }
+
+    @GetMapping("/{id}/noviLet1")
+    public String aviocompanyNewFlight(@PathVariable String id) {
+        return "noviLet";
+    }
+
+    @GetMapping("/specific/{id}")
+    @ResponseBody
     Aviokompanija findById(@PathVariable long id) {
         return service.findById(id);
     }
 
-    @RequestMapping(value = "/addAirline", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody RequestWrapper rw) {
-        Aviokompanija airline = rw.getAirline();
-        Set<Destinacija> destinations = rw.getDestinations();
-        airline.setDestinations(destinations);
-        airline.setKarteZaBrzu(Collections.emptySet());
-        airline.setAdmins(Collections.emptySet());
-        String mess= service.checkAK(airline);
-
-        if (!mess.equals("true")) {
-            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(airline, HttpStatus.OK);
-        }
-    }
-
+    @RequestMapping(value = "deleteAviocompany/{idDel}", method = RequestMethod.POST)   //ako ajax posalje post metodom na ovu adr.
+    @ResponseBody
+    public void deleteAviocompany(@PathVariable Long idDel){service.deleteById(idDel);}    //izbrisi dati hotel sa servisa
 
 }

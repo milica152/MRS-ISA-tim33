@@ -3,10 +3,16 @@ package com.tim33.isa.controller;
 import com.tim33.isa.model.Let;
 import com.tim33.isa.service.LetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Controller
+@RequestMapping("/Flight")
 public class LetController {
     @Autowired
     LetService service;
@@ -22,7 +28,7 @@ public class LetController {
         return service.save(noviLet);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     List<Let> findAll() {
         return service.findAll();
     }
@@ -30,5 +36,10 @@ public class LetController {
     @GetMapping("/{id}")
     Let findById(@PathVariable long id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/fromAviocompany/{idAviocomp}")
+    ResponseEntity<List<Let>> findAllFromAviocompany(@PathVariable long idAviocomp) {
+        return new ResponseEntity<>(service.findAllFromAviocompany(idAviocomp), HttpStatus.OK);
     }
 }

@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Hotels</title>
+    <meta charset="UTF-8">
+    <title>Aviocompanies</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/Homepage.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
 
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
 
-    <link href="css/hotel.css" rel="stylesheet">
+
+    <link href="../css/aviokompanije.css" rel="stylesheet">
 
     <!-- jquery za datapicker -->
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="../js/aviokompanije.js"> </script>
 
 </head>
 <body>
@@ -33,12 +38,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/Aviocompany">AIRLINES
+                <li class="nav-item active">
+                    <a class="nav-link" href="Aviocompany">AIRLINES
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="Hotels">HOTELS</a>
                 </li>
                 <li class="nav-item">
@@ -81,13 +86,13 @@
 </nav>
 <div class="container" id="Cont">
     <div>
-        <h1 class="text-center">Hotels</h1>
+        <h1 class="text-center">Aviocompanies</h1>
     </div>
 
     <div class="row">
         <form class="form-inline">
             <div class="form-group">
-                <input type = "text" id="HotelNamePlace" class="form-group">
+                <input type = "text" id="AviocompanyName" class="form-group">
             </div>
             <div class="form-group pmd-textfield pmd-textfield-floating-label">
                 <input type='text' class="form-control" id='datepickerStart' placeholder='Select Start Date'>
@@ -95,7 +100,66 @@
             <div class="form-group pmd-textfield pmd-textfield-floating-label">
                 <input type='text' class="form-control" id='datepickerEnd' placeholder='Select End Date'>
             </div>
-
+            <div class="form-group">
+                <select class="form-control" id="Passengers">
+                    <option value="" selected disabled>Passengers</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="Class">
+                    <option value="" selected disabled>Class</option>
+                    <option>Economy</option>
+                    <option>Bussiness</option>
+                    <option>First</option>
+                    <option>Premium economy</option>
+                </select>
+            </div><br>
+            <div class="form-group">
+                <select class="form-control" id="departureAirport">
+                    <option value="" selected disabled>Departure airport</option>
+                    <option>Belgrade, Serbia</option>
+                    <option>Budapest, Hungaria</option>
+                    <option>Vienna, Austria</option>
+                    <option>Berlin, Germany</option>
+                    <option>Madrid, Spain</option>
+                    <option>Paris, France</option>
+                    <option>Lisbon, Portugal</option>
+                    <option>London, United Kingdom</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="arrivalAirport">
+                    <option value="" selected disabled>Arrival airport</option>
+                    <option>Belgrade, Serbia</option>
+                    <option>Budapest, Hungaria</option>
+                    <option>Vienna, Austria</option>
+                    <option>Berlin, Germany</option>
+                    <option>Madrid, Spain</option>
+                    <option>Paris, France</option>
+                    <option>Lisbon, Portugal</option>
+                    <option>London, United Kingdom</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="FlightType">
+                    <option value="" selected disabled>Type of Flight</option>
+                    <option>One-way</option>
+                    <option>Round-trip</option>
+                    <option>Multi-city</option>
+                </select>
+            </div>
             <div class="form-group">
                 <input type="submit" name="login-submit" id="hotel-search-submit" class="form-control btn btn-success" value="Search">
             </div>
@@ -108,7 +172,6 @@
         <table id="table" class="display table table-striped table-bordered" width="100%"></table>
     </div>
 
-
     <br><br>
 </div>
 
@@ -118,6 +181,5 @@
     </div>
 </footer>
 
-<script type="text/javascript" src="js/hotel.js"> </script>
 </body>
 </html>

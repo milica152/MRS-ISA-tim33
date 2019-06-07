@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <title>RC - Profil</title>
+    <title>Aviokompanija profil</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../css/bootstrap.css" rel="stylesheet">
@@ -20,7 +19,14 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
 
-    <script src="../js/rcprofil.js"></script>
+    <script src="../js/aviokompanijaprofil.js"></script>
+
+    <script>
+        $profileID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+        function add() {
+            window.location = "/Aviocompany/" + $profileID + "/noviLet1";    //POPRAVI KAD IH LEPO POVEZES
+        }
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -31,13 +37,13 @@
         </button>
         <li class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="/Aviocompany">AIRLINES</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/Hotels">HOTELS</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/RentACar">RENT-A-CAR</a>
                 </li>
                 <li class="dropdown">
@@ -77,11 +83,11 @@
 </nav>
 <div class="container-fluid" style="padding: 0 100px 100px 100px;">
     <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
-        <strong>Success!</strong> Car has been successfully booked.
+        <strong>Success!</strong> Flight has been successfully booked.
     </div>
 
     <br>
-    <h2 class="text-center">RC Profile</h2>
+    <h2 class="text-center">Aviocompany Profile</h2>
 
     <br><br>
 
@@ -107,24 +113,17 @@
                 </p>
 
                 <div>
-                    <button type="button" class="btn btn-secondary">Edit info</button>
-                    <button type="button" class="btn btn-primary">Add Branch</button>
-                    <button type="button" class="btn btn-primary">Add Car</button>
+                    <button type="button" class="btn btn-secondary" id="editInfoBtn">Edit info</button>
+                    <button type="button" onclick="add()" class="btn btn-primary" id="addFlightBtn">Add Flight</button>
                 </div>
             </div>
         </div>
 
         <div class="row" style="margin-top: 60px;">
-            <div class="col-md-3 col-lg-3 col-xl-3 text-center">
-                <div id="branches text-center">
-                    <h3 class="text-center">Branches</h3>
-                    <table id="table-branches" class="display table table-striped table-bordered"></table>
-                </div>
-            </div>
-            <div class="col-md-9 col-lg-9 col-xl-9">
-                <div id="cars text-center">
-                    <h3 class="text-center">Available cars</h3>
-                    <table id="table-cars" class="display table table-striped table-bordered"></table>
+            <div class="text-center" style="max-width:100%;">
+                <div id="flights text-center">
+                    <h3 class="text-center">Flights</h3>
+                    <table id="table-flights" class="display table table-striped table-bordered"></table>
                 </div>
             </div>
         </div>

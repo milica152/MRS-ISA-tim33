@@ -22,7 +22,6 @@ public class Let {
     private long id;
     private Date vremePoletanja;
     private Date vremeSletanja;
-    private int vremePutovanja;
     private int duzinaPutovanja;
     // Ovde ne moze da stoji array lista
     //private ArrayList<String> presedanja;
@@ -35,6 +34,14 @@ public class Let {
     @JsonIgnore
     private Aviokompanija aviokompanija;
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private LokacijaPresedanja polazniAerodrom;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private LokacijaPresedanja odredisniAerodrom;
 
 
 }
