@@ -27,9 +27,13 @@ public class RentACarController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    RentACar update(@RequestBody RentACar noviProfil, @PathVariable long id) {
-        noviProfil.setId(id);
-        return service.save(noviProfil);
+    ResponseEntity<?> update(@RequestBody RentACar noviProfil, @PathVariable long id) {
+        if (service.findById(id) != null) {
+            noviProfil.setId(id);
+            return new ResponseEntity<>(service.save(noviProfil), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no Rent a Car service with that ID", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/all")
@@ -50,8 +54,13 @@ public class RentACarController {
 
     @GetMapping("/specific/{id}")
     @ResponseBody
-    RentACar findById(@PathVariable long id) {
-        return service.findById(id);
+    ResponseEntity<?> findById(@PathVariable long id) {
+        RentACar rc = service.findById(id);
+        if (rc != null) {
+            return new ResponseEntity<>(rc, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no Rent a Car service with that ID", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/addRCS", method = RequestMethod.POST)

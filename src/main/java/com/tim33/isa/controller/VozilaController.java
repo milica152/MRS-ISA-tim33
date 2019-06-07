@@ -23,9 +23,13 @@ public class VozilaController {
     }
 
     @PutMapping("/{id}")
-    Vozilo update(@RequestBody Vozilo novoVozilo, @PathVariable long id) {
-        novoVozilo.setId(id);
-        return service.save(novoVozilo);
+    ResponseEntity<?> update(@RequestBody Vozilo novoVozilo, @PathVariable long id) {
+        if (service.findById(id) != null) {
+            novoVozilo.setId(id);
+            return new ResponseEntity<>(service.save(novoVozilo), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no Car with that ID", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/all")
@@ -34,8 +38,13 @@ public class VozilaController {
     }
 
     @GetMapping("/{id}")
-    Vozilo findById(@PathVariable long id) {
-        return service.findById(id);
+    ResponseEntity<?> findById(@PathVariable long id) {
+        Vozilo car = service.findById(id);
+        if (car != null) {
+            return new ResponseEntity<>(car, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no Car with that ID", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/fromRC/{idRentACara}")

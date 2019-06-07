@@ -27,6 +27,10 @@ public class FilijaleService {
         return repository.findAll();
     }
 
+    public List<Filijala> findAllFromRC(long idProfila) {
+        return repository.findAllByRentACarId(idProfila);
+    }
+
     public Filijala findById(long id) {
         return repository.findById(id).orElse(null);
     }
