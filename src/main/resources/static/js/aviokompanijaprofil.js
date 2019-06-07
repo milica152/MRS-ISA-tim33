@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:8080/Flight/fromAviocompany/' + $profileID,
+        url: 'http://localhost:8081/Flight/fromAviocompany/' + $profileID,
         data: {},
         success: function (data) {
             if (data !== undefined && data.length > 0) {
