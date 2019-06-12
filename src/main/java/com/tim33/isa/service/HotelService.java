@@ -94,12 +94,12 @@ public class HotelService {
         it = result.iterator();
         boolean removeHotel;
 
-        // provjeriti svaki hotel
+        // proveriti svaki hotel
         while (it.hasNext()) {
             current = it.next();
             removeHotel = true;
             for (Soba room : current.getKonfiguracija_soba()) {
-                if (roomService.IsRoomReserved(room, fromDate, toDate)) {
+                if (!roomService.IsRoomReserved(room, fromDate, toDate)) {
                     removeHotel=false;
                 }
 
@@ -111,6 +111,17 @@ public class HotelService {
         }
 
         return result;
+    }
+    public void updateHotelPrice(Hotel hotel){
+        double cena_min = Double.POSITIVE_INFINITY;
+        for (Soba s:hotel.getKonfiguracija_soba()) {
+            if(s.getCena_nocenja()<cena_min){
+                cena_min=s.getCena_nocenja();
+            }
+        }
+        hotel.setCenaOd(cena_min);
+        save(hotel);
+
     }
 
 }

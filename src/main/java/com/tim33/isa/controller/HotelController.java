@@ -56,9 +56,7 @@ public class HotelController {
 
     @GetMapping("/specific/{id}")
     @ResponseBody
-    Hotel findById(@PathVariable long id) {
-        System.out.println(service.findById(id));return service.findById(id);
-    }
+    Hotel findById(@PathVariable long id) {service.updateHotelPrice(service.findById(id));return service.findById(id);}
 
     @RequestMapping(value = "deleteHotel/{idDel}", method = RequestMethod.POST)
     @ResponseBody
@@ -89,4 +87,6 @@ public class HotelController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }

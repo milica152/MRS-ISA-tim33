@@ -43,7 +43,7 @@ public class UserService {
 
     public String checkReg(User user1){
         //User user1 = (User) userr;
-        System.out.println(user1);
+
         if (user1.getIme().isEmpty()||user1.getPassword().isEmpty()||user1.getEmail().isEmpty()||user1.getPrezime().isEmpty()||
                 user1.getUsername().isEmpty()){
             return "All fields are required!";

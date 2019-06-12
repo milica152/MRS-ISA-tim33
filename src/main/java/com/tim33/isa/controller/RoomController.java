@@ -1,5 +1,7 @@
 package com.tim33.isa.controller;
 
+import com.tim33.isa.dto.filter.FilterRooms;
+import com.tim33.isa.model.Hotel;
 import com.tim33.isa.model.RequestWrapper;
 import com.tim33.isa.model.Soba;
 import com.tim33.isa.service.HotelService;
@@ -9,9 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/Rooms")
@@ -38,6 +41,11 @@ public class RoomController {
         return service.findAll();
     }
 
+    @GetMapping("/all/{HotelId}")
+    List<Soba> findHotelRooms(@PathVariable long HotelId) {
+        return service.findHotelRooms(hotelService.findById(HotelId));
+    }
+
     @GetMapping("/{id}")
     Soba findById(@PathVariable long id) {
         return service.findById(id);
@@ -47,7 +55,7 @@ public class RoomController {
     public ResponseEntity<?> register(@RequestBody Soba room,@PathVariable long HotelId) {
         room.setHotel(hotelService.findById(HotelId));
         room.setUsluga(Collections.emptySet());
-
+        room.setOcena(0);
         String mess= service.checkRoom(room);
 
         if (!mess.equals("true")) {
@@ -56,5 +64,18 @@ public class RoomController {
             return new ResponseEntity<>(room, HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value="/{HotelId}/filterRooms", method = RequestMethod.POST)
+    public ResponseEntity<?> filterRooms(@RequestBody FilterRooms params, @PathVariable long HotelId){
+        try {
+            if(params.getPriceFrom()>params.getPriceTo()){
+                return new ResponseEntity<String>("Bad price range", HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<List<Soba> >(service.filterRooms(params,HotelId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

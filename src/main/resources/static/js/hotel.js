@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    initTable();
 
     $( "#datepickerStart").datepicker({
         dateFormat:"dd-mm-yy",
@@ -44,16 +45,7 @@ $(document).ready(function() {
         ]
     });
 
-    $.ajax({
-        url: '/Hotels/all',
-        data: {},
-        success: function(data) {
-            if (data != undefined && data.length > 0) {
-                $('#table').dataTable().fnClearTable();
-                $('#table').dataTable().fnAddData(data);
-            }
-        }
-    });
+
     $('#table tbody').on('click', '#chooseBtn', function(e) {
         var data = table.row($(this).parents('tr')).data();
         document.location.href = '/Hotels/' + data.id;
@@ -70,9 +62,7 @@ $(document).ready(function() {
                 url: '/Hotels/deleteHotel/'+data.id,
                 data : data.id,
                 success: [function(){
-                    $('#table').dataTable().fnDraw();
-                    //table.fnDraw();
-                    //location.reload();
+                    initTable();
                 }],
                 error: function(xhr, status, error){
                     var errorMessage = xhr.status + ': ' + xhr.statusText;
@@ -125,5 +115,17 @@ $(document).ready(function() {
         });
 
     });
+    function initTable(){
+        $.ajax({
+            url: '/Hotels/all',
+            data: {},
+            success: function(data) {
+                if (data != undefined && data.length > 0) {
+                    $('#table').dataTable().fnClearTable();
+                    $('#table').dataTable().fnAddData(data);
+                }
+            }
+        });
+    }
 
 });

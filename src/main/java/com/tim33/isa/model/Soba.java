@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -23,6 +20,8 @@ public class Soba {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private Integer roomNo;
+    private Integer roomFloor;
     private Integer ocena;
     private TipSobe tip_sobe;
     private Double cena_nocenja;
