@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LokacijaPresedanjaRepository   extends JpaRepository<LokacijaPresedanja, Long> {
-
-    LokacijaPresedanja findByNazivAerodroma(String odredisni_aerodrom_id);
-
+public interface LokacijaPresedanjaRepository extends JpaRepository<LokacijaPresedanja, Long> {
+    LokacijaPresedanja findById(String id);
+    LokacijaPresedanja findByNazivAerodroma(String naziv);
 }

@@ -1,7 +1,7 @@
 package com.tim33.isa.controller;
 
-import com.tim33.isa.model.TipUsera;
-import com.tim33.isa.model.User;
+import com.tim33.isa.model.*;
+import com.tim33.isa.repository.ServiceRepository;
 import com.tim33.isa.repository.UserRepository;
 import com.tim33.isa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,11 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ServiceRepository serviceRepository;
+
     @RequestMapping(value = "registerUser", method = RequestMethod.POST)
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
-
         String mess= userService.checkReg(user);
         if (!mess.equals("true")) {
             return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
@@ -28,4 +30,48 @@ public class RegisterController {
             return new ResponseEntity<Boolean>(true, HttpStatus.OK);
         }
     }
+    @RequestMapping(value = "registerAdmin/{serviceName}", method = RequestMethod.POST)
+    public ResponseEntity<?> register(@RequestBody User user,@PathVariable("serviceName") String serviceName) {
+        Service service = serviceRepository.findByNaziv(serviceName);
+        System.out.println(serviceName);
+        String mess = null;
+        if(service==null){
+            mess = "Service doesn't exist";
+            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
+        }
+        User admin = null;
+
+        if(service instanceof Aviokompanija){
+            admin = new AirlineAdmin();
+            ((Aviokompanija) service).getAdmins().add((AirlineAdmin) admin);
+            ((AirlineAdmin) admin).setAirline((Aviokompanija)service);
+            admin.setTip_korisnika(TipUsera.ADMIN_AK);
+
+        }else if(service instanceof Hotel){
+            admin = new HotelAdmin();
+            ((Hotel) service).getAdmins().add((HotelAdmin) admin);
+            ((HotelAdmin) admin).setHotel((Hotel)service);
+            admin.setTip_korisnika(TipUsera.ADMIN_HOTELA);
+        }else if(service instanceof RentACar){
+            admin = new RCSAdmin();
+            ((RentACar) service).getAdmins().add((RCSAdmin) admin);
+            ((RCSAdmin) admin).setRentACar((RentACar)service);
+            admin.setTip_korisnika(TipUsera.ADMIN_RCS);
+        }
+        admin.setId(0);
+        admin.setUsername(user.getUsername());
+        admin.setPassword(user.getPassword());
+        admin.setIme(user.getIme());
+        admin.setPrezime(user.getPrezime());
+        admin.setEmail(user.getEmail());
+
+        mess = userService.checkReg(admin);
+        if (!mess.equals("true")) {
+            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        }
+    }
+
+
 }

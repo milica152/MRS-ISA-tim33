@@ -32,5 +32,24 @@ public class RentACarService {
     public RentACar findById(long id) {
         return repository.findById(id).orElse(null);
     }
+    public RentACar findByNaziv(String naziv){
+        return repository.findByNaziv(naziv);
+    }
+
+    public String checkRCS(RentACar rentACar){
+        if (rentACar.getAdresa().isEmpty()||rentACar.getNaziv().isEmpty()||rentACar.getOpis().isEmpty()){
+            return "All fields are required!";
+        }
+        if(rentACar.getOpis().length()<50){
+            return "Description must have at least 50 characters!";
+        }
+
+        if (findByNaziv(rentACar.getNaziv()) != null){
+            return "Name already taken!";
+        }
+        repository.save(rentACar);
+        return "true";
+    }
+
 
 }

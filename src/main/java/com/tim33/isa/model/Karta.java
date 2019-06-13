@@ -23,8 +23,8 @@ public class Karta {
     private String prezimePutnika;
     private int brojSedista;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Aviokompanija aviokompanija;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinColumn(name="airline_id")
+    private Aviokompanija airline;
 
 }

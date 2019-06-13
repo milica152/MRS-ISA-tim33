@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface LetRepository  extends JpaRepository<Let, Long> {
+    List<Let> findAll();
+
+    List<Let> findAllByAviokompanijaId(long idAviocomp);
 
 
     List<Let> findAllByAviokompanijaId(long idAviocomp);

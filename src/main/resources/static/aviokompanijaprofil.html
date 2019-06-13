@@ -16,12 +16,12 @@
 
     <script src="../js/jquery-ui.min.js"></script>
 
+
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
 
     <script src="../js/aviokompanijaprofil.js"></script>
-
 
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
@@ -85,7 +85,8 @@
     </div>
     </div>
 </nav>
-<div class="container" style="padding: 0 100px 100px 100px;">
+
+<div class="container-fluid" style="padding: 0 100px 100px 100px;">
     <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
         <strong>Success!</strong> Flight has been successfully booked.
     </div>
@@ -95,7 +96,7 @@
 
     <br><br>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row" style="margin-top: 30px;">
             <div class="col-md-3 text-center">
                 <img src="../images/profile_default.png" class="img-thumbnail rounded">
@@ -117,6 +118,7 @@
                 </p>
                 <div>
                     <button type="button" class="btn btn-secondary" id="editInfoBtn">Edit info</button>
+
                 </div>
             </div>
         </div>
@@ -137,6 +139,7 @@
 
                         <hr/>
                     </div>
+
                     <table id="table-flights" class="display table table-striped table-bordered"></table>
                 </div>
             </div>

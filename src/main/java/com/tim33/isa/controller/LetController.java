@@ -48,8 +48,7 @@ public class LetController {
 
     @RequestMapping(value = "deleteLet/{idDel}", method = RequestMethod.POST)
     @ResponseBody
-    public void deleteHotel(@PathVariable Long idDel){service.deleteById(idDel);}
-
+    public void deleteFlight(@PathVariable Long idDel){service.deleteById(idDel);}
 
     @GetMapping("/fromAviocompany/{idAviocomp}")
     ResponseEntity<List<Let>> findAllFromAviocompany(@PathVariable long idAviocomp) {

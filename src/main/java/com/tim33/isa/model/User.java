@@ -1,5 +1,6 @@
 package com.tim33.isa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -19,6 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "username", nullable = false)
@@ -44,4 +47,6 @@ public class User {
 
     @Column(name = "tip_korisnika", nullable = false)
     private TipUsera tip_korisnika;
+
+
 }

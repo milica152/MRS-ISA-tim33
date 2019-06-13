@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.mapping.Collection;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "destinacija")
@@ -21,8 +24,12 @@ public class Destinacija {
     private String grad;
     private String drzava;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JsonIgnore
-//    private Aviokompanija aviokompanija;
+    @JsonIgnore
+    @ManyToOne
+    @JoinTable(name="airline_destination",
+            joinColumns={@JoinColumn(name="destination_id")},
+            inverseJoinColumns={@JoinColumn(name="airline_id")})
+    private Aviokompanija airline;
+
 
 }
