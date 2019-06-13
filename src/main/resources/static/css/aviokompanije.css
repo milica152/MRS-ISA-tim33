@@ -1,0 +1,56 @@
+body {
+    padding-top: 56px;
+}
+
+#AviokompNamePlace{
+    display: inline-block;
+    width: 380px;
+    padding: 5px;
+    margin: 1px;
+    margin-left: 20px;
+
+}
+#datepickerStart{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 8px;
+
+}
+
+#datepickerEnd{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 1px;
+
+}
+#NoOfGuests{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
+
+}
+#aviokomp-search-submit{
+    display: inline-block;
+    padding: 5px;
+    margin: 7px;
+
+}
+
+/* Style buttons */
+.btn-lg {
+    background-color: DodgerBlue; /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+.btn-lg:hover {
+    background-color: RoyalBlue;
+}
+
+

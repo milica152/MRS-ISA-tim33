@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface AviokompanijaRepository  extends JpaRepository<Aviokompanija, Long> {
 
     Aviokompanija findByNaziv(String naziv);
+
+    Aviokompanija findById(long id);
+
+    void deleteById(long id);
 }

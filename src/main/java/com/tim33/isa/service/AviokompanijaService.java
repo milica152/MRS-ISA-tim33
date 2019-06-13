@@ -27,6 +27,12 @@ public class AviokompanijaService {
     }
 
     public Aviokompanija findById(long id){
-        return repository.findById(id).orElse(null);
+        return repository.findById(id);
     }
+
+    public void deleteById(long id){
+        repository.deleteById(id);
+    }
+
+
 }
