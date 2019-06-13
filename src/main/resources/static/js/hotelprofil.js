@@ -6,6 +6,7 @@ $(document).ready(function() {
 
     setPage();
     $(".controls").hide();
+
     //#region Inicijalizacija tabela
     $('#alert').hide();
     var roomsTable = $('#table-rooms').DataTable({
@@ -14,7 +15,7 @@ $(document).ready(function() {
         lengthChange: false,
         paging: false,
         info: false,
-        ordering: false,
+        ordering: true,
         compact: true,
         columns: [
             { data: 'roomNo', title: 'Number' },
@@ -31,15 +32,44 @@ $(document).ready(function() {
 
     //#endregion
     setTable();
+
+    //#region Checkbox-ovi za dodavanje usluga
+    $('#isAirportTransfer').change(function () {
+        $("#AirportTransfer").prop("disabled", !this.checked);
+    });
+    $('#isParkingLot').change(function () {
+        $("#parkingLot").prop("disabled", !this.checked);
+    });
+    $('#isPool').change(function () {
+        $("#pool").prop("disabled", !this.checked);
+    });
+    $('#isRestaurant').change(function () {
+        $("#restaurant").prop("disabled", !this.checked);
+    });
+    $('#isRoomService').change(function () {
+        $("#roomService").prop("disabled", !this.checked);
+    });
+    $('#isWellness').change(function () {
+        $("#wellness").prop("disabled", !this.checked);
+    });
+    $('#isSpa').change(function () {
+        $("#spa").prop("disabled", !this.checked);
+    });
+    $('#isWiFi').change(function () {
+        $("#wiFi").prop("disabled", !this.checked);
+    });
+    //#endregion
+
+    //#region Dodavanje grupa soba
     $(document).on('click', '.btn-add', function(e)
     {
         e.preventDefault();
 
         var controlForm = $('.controls form:first'),
-            currentEntry = $(this).parents('.entry:first'),
-            newEntry = $(currentEntry.clone()).appendTo(controlForm);
-
+            currentEntry = $(this).parents('.entry:first');
+        var newEntry = $(currentEntry.clone());
         newEntry.find('input').val('');
+        currentEntry.before(newEntry);
         controlForm.find('.entry:not(:last) .btn-add')
             .removeClass('btn-add').addClass('btn-remove')
             .removeClass('btn-success').addClass('btn-danger')
@@ -51,7 +81,75 @@ $(document).ready(function() {
         e.preventDefault();
         return false;
     });
+    //#endregion
 
+    //#region Dodavanje usluga Hotelu
+    $('#AddServiceBtn').on("click",function(e) {
+        e.preventDefault();
+        var isValid = test();
+        if(isValid){
+            var $AirportTransferPrice = $('#AirportTransfer').val();
+            var $ParkingLotPrice = $('#parkingLot').val();
+            var $PoolPrice = $('#pool').val();
+            var $RestaurantPrice = $('#restaurant').val();
+            var $RoomServicePrice = $('#roomService').val();
+            var $WellnessPrice = $('#wellness').val();
+            var $SpaPrice = $('#spa').val();
+            var $WiFiPrice = $('#wiFi').val();
+            if(!$('#isAirportTransfer').checked){
+                $AirportTransferPrice = null;
+            }
+            if(!$('#isParkingLot').checked){
+                $ParkingLotPrice = null;
+            }
+            if(!$('#isPool').checked){
+                $PoolPrice = null;
+            }
+            if(!$('#isRestaurant').checked){
+                $RestaurantPrice = null;
+            }
+            if(!$('#isRoomService').checked){
+                $RoomServicePrice = null;
+            }
+            if(!$('#isWellness').checked){
+                $WellnessPrice = null;
+            }
+            if(!$('#isSpa').checked){
+                $SpaPrice = null;
+            }
+            if(!$('#isWiFi').checked){
+                $WiFiPrice = null;
+            }
+
+
+
+            var Services = {
+                name: $RoomNo.val(),
+                price: $RoomFloor.val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/Rooms/addRoom/'+$profileID,
+                contentType : 'application/json',
+                dataType : "json",
+                data : JSON.stringify(Room),
+                success: function(data){
+                    $('#addRoomModal').modal('hide');
+                    setPage();
+                    setTable();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.responseText!=='true'){
+                        alert(xhr.responseText);
+                    }
+                }
+            })
+        }
+
+    });
+    //#endregion
+
+    //#region Dodavanje nove sobe
     $('#AddRoomBtn').on("click",function(e) {
         e.preventDefault();
         var isValid = test();
@@ -88,11 +186,25 @@ $(document).ready(function() {
         }
 
     });
+    //#endregion
+
+    //#region Ponistavanje filtera
+    $(document).on('click', '#cancelFilter', function(e){
+
+        e.preventDefault();
+        setTable();
+
+    });
+    //#endregion
+
+    //#region Praznjenje inputa za dodavanje sobe
     $(".modal").on("hidden.bs.modal", function(){
         $('.mod').val('');
         $('#RoomType').val('JEDNOKREVETNA');
     });
+    //#endregion
 
+    //#region Filtriranje soba
     $(document).on('click', '#filterRooms', function(e){
 
         e.preventDefault();
@@ -114,10 +226,10 @@ $(document).ready(function() {
                 roomTypesNeeded.push('DVOKREVETNA');
             }
         }
-        //alert(roomTypesNeeded);
         doFilter();
 
     });
+    //#endregion
 
 
 });
