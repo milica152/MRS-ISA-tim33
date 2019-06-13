@@ -32,6 +32,7 @@ public class AviokompanijaService {
 
     public Aviokompanija findById(long id){
         return repository.findById(id);
+
     }
     public Aviokompanija findByNaziv(String naziv){
         return repository.findByNaziv(naziv);

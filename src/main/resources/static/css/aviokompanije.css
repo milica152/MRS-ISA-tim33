@@ -37,3 +37,20 @@ body {
     margin: 7px;
 
 }
+
+/* Style buttons */
+.btn-lg {
+    background-color: DodgerBlue; /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+.btn-lg:hover {
+    background-color: RoyalBlue;
+}
+
+

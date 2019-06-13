@@ -1,18 +1,21 @@
 package com.tim33.isa.service;
 
-import com.tim33.isa.model.Let;
-import com.tim33.isa.model.LetZaDodavanje;
+import com.tim33.isa.dto.filter.SearchFlight;
+import com.tim33.isa.model.*;
 import com.tim33.isa.repository.AviokompanijaRepository;
 import com.tim33.isa.repository.LetRepository;
 import com.tim33.isa.repository.LokacijaPresedanjaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.DateFormatter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -43,13 +46,15 @@ public class LetService {
     }
 
 
-    public String checkAdding(LetZaDodavanje noviLetStr, String aviokompanijaID){
+    public String checkAdding(LetZaDodavanje noviLetStr){
         //utility
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String datumIVremePoletanja_str = noviLetStr.getDatum_poletanja()+ " " + noviLetStr.getVreme_poletanja()+ ":00";
         String datumIVremeSletanja_str = noviLetStr.getDatum_sletanja() + " " + noviLetStr.getVreme_sletanja() + ":00";
-        Date datumIVremePoletanja = new Date();
-        Date datumIVremeSletanja = new Date();
+        Date datumIVremePoletanja;
+        Date datumIVremeSletanja;
+        Let noviLet = new Let();
+
 
         try {
             // konvertovanje datuma poletanja
@@ -59,22 +64,49 @@ public class LetService {
             kalendarP.setTime(datumIVremePoletanja);
             kalendarP.add(Calendar.HOUR, 2);
             datumIVremePoletanja = kalendarP.getTime();
+            noviLet.setVremePolaska(datumIVremePoletanja);
 
-            // konvertovanje datuma sletanja
-            datumIVremeSletanja = df.parse(datumIVremeSletanja_str);
-            Calendar kalendarS = Calendar.getInstance();
-            kalendarS.clear();
-            kalendarS.setTime(datumIVremeSletanja);
-            kalendarS.add(Calendar.HOUR, 2);
-            datumIVremeSletanja = kalendarS.getTime();
-            System.out.println(datumIVremeSletanja.getHours());
+            if(!(noviLetStr.getVreme_sletanja().equalsIgnoreCase(""))){
+                // konvertovanje datuma povratka ako je povratni let
+                datumIVremeSletanja = df.parse(datumIVremeSletanja_str);
+                Calendar kalendarS = Calendar.getInstance();
+                kalendarS.clear();
+                kalendarS.setTime(datumIVremeSletanja);
+                kalendarS.add(Calendar.HOUR, 2);
+                datumIVremeSletanja = kalendarS.getTime();
+                noviLet.setVremePovratka(datumIVremeSletanja);
+                try{
+                    noviLet.setDuzinaPovratak(Integer.parseInt(noviLetStr.getDuzina_povratak()));
+                }catch(Exception ex){
+                    return "Duration of return must be positive number!";
+                }
+                if(noviLet.getDuzinaPovratak()<0){
+                    return "Duration of return must be positive number!";
+                }
+
+
+            }else{
+                //ako nije:
+                noviLet.setVremePovratka(null);
+                noviLet.setDuzinaPovratak(0);
+            }
+
         } catch (ParseException e) {
-            e.printStackTrace();
+            return "Nevalidan format datuma!";
         }
 
-        Let noviLet = new Let();
 
         //provere
+        try{
+            noviLet.setDuzinaPolazak(Integer.parseInt(noviLetStr.getDuzina_polazak()));
+        }catch(Exception ex){
+            return "Duration of departure must be positive number!";
+        }
+        if(noviLet.getDuzinaPolazak()<0){
+            return "Duration of departure must be positive number!";
+        }
+
+
         try{
             noviLet.setCena(Double.parseDouble(noviLetStr.getCena()));
         }catch(Exception ex){
@@ -83,40 +115,35 @@ public class LetService {
         if(noviLet.getCena()<0){
             return "Cost must be positive number!";
         }
-        System.out.println(noviLetStr.getAviokompanija_id());
-        noviLet.setAviokompanija(repositoryA.findById(Long.parseLong(noviLetStr.getAviokompanija_id())));
+        if(noviLetStr.getTip().equalsIgnoreCase("ROUND_TRIP")){
+            if(noviLet.getVremePolaska().after(noviLet.getVremePovratka()) || noviLet.getVremePolaska().equals(noviLet.getVremePovratka())){
+                return "Departure must be before return!";
+            }
+        }
 
-        try{
-            noviLet.setOcena(Double.parseDouble(noviLetStr.getOcena()));
-        }catch (Exception ex){
-            return "Rate must be positive number!";
-        }
-        if(noviLet.getOcena()<0){
-            return "Rate must be positive number!";
-        }
+
+        System.out.println(noviLetStr.getOdredisni_aerodrom_id());
+        System.out.println(noviLetStr.getPolazni_aerodrom_id());
+
         if(repositoryLP.findByNazivAerodroma(noviLetStr.getOdredisni_aerodrom_id())  != null){
             noviLet.setOdredisniAerodrom(repositoryLP.findByNazivAerodroma(noviLetStr.getOdredisni_aerodrom_id()));
         }else{
-            return "Departure airport must be existing aiport!";
+            return "Arrival airport must be existing aiport!";
         }
         if(repositoryLP.findByNazivAerodroma(noviLetStr.getPolazni_aerodrom_id()) != null){
             noviLet.setPolazniAerodrom(repositoryLP.findByNazivAerodroma(noviLetStr.getPolazni_aerodrom_id()));
         }else{
-            return "Arrival airport must be existing aiport!";
+            return "Departure airport must be existing aiport!";
         }
-        noviLet.setVremePoletanja(datumIVremePoletanja);
-        noviLet.setVremeSletanja(datumIVremeSletanja);
+        if(noviLet.getOdredisniAerodrom().getId() == noviLet.getPolazniAerodrom().getId()){
+            return "Departure and arrival must be at different airports!";
+        }
 
+        noviLet.setTipPuta(TipPuta.valueOf(noviLetStr.getTip()));
+        noviLet.setKlasa(KlasaLeta.valueOf(noviLetStr.getKlasa()));
+        noviLet.setAviokompanija(repositoryA.findById(Long.parseLong(noviLetStr.getAviokompanija_id())));
+        noviLet.setOcena(0.0);
 
-        if(noviLet.getVremePoletanja().after(noviLet.getVremeSletanja()) || noviLet.getVremePoletanja().equals(noviLet.getVremeSletanja())){
-            return "Departure must be before arrival!";
-        }
-        try{
-            noviLet.setDuzinaPutovanja((int) ((noviLet.getVremeSletanja().getTime() - noviLet.getVremePoletanja().getTime()) / (1000 * 60)));
-            System.out.println(noviLet.getVremeSletanja().getTime() + "-" + noviLet.getVremePoletanja().getTime() + "=" + noviLet.getDuzinaPutovanja());
-        }catch(Exception ex){
-            return "Wrong date!";
-        }
         repository.save(noviLet);
         return "true";
 
@@ -127,4 +154,74 @@ public class LetService {
     }
 
 
+    public List<Let> searchFlight(SearchFlight criteria){
+        //int passangers = Integer.parseInt(criteria.getNoPassengers());  --  kad budu sedista i avion
+        List<Let> result = repository.findAll();
+        Iterator<Let> it = result.iterator();
+
+        Let current;
+
+
+        while (it.hasNext()) {
+            current = it.next();
+            // tip
+            if(!(criteria.getType().trim().equals(""))){
+                if(!(current.getTipPuta().name().replace('_', '-').equalsIgnoreCase(criteria.getType()))){
+                    it.remove();
+                    continue;
+                }
+            }
+
+            //klasa
+            if(!(criteria.getKlasa().trim().equals(""))){
+                if(!(criteria.getKlasa().equalsIgnoreCase(current.getKlasa().name()))){
+                    it.remove();
+                    continue;
+                }
+            }
+
+            //odredisni aer.
+            if(!(criteria.getArrivalAirport().trim().equals(""))){
+                if(!(criteria.getArrivalAirport().equals(current.getOdredisniAerodrom().getNazivAerodroma()))){
+                    it.remove();
+                    continue;
+                }
+            }
+
+            // datum polaska
+            if(!(criteria.getDateFrom().trim().equals(""))){
+                DateFormat df2 = new SimpleDateFormat("dd-MM-yyyy");
+                String date = df2.format(current.getVremePolaska());
+                if(!(criteria.getDateFrom().equals(date))){
+                    it.remove();
+                    continue;
+                }
+            }
+
+            // datum povratka
+            if(criteria.getType().equalsIgnoreCase("round-trip")){   //pogledaj jos format !!
+                if(!(criteria.getDateTo().trim().equals(""))){
+                    DateFormat df3 = new SimpleDateFormat("dd-MM-yyyy");
+                    String date = df3.format(current.getVremePovratka());
+                    if(!(criteria.getDateTo().equals(date))){
+                        it.remove();
+                        continue;
+                    }
+
+                }
+            }
+
+            // polazni aer.
+            if(!(criteria.getDepartureAirport().trim().equalsIgnoreCase(""))){
+                if(!(criteria.getDepartureAirport().equalsIgnoreCase(current.getPolazniAerodrom().getNazivAerodroma()))){
+                    it.remove();
+                }
+            }
+        }
+        return result;
+    }
+
+    public void deleteById(Long idDel) {
+        repository.delete(findById(idDel));
+    }
 }

@@ -20,15 +20,16 @@ public class Let {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private Date vremePoletanja;
-    private Date vremeSletanja;
-    private int duzinaPutovanja;
+    private Date vremePolaska;
+    private Date vremePovratka;
+    private int duzinaPolazak;
+    private int duzinaPovratak;
     // Ovde ne moze da stoji array lista
     //private ArrayList<String> presedanja;
     private double cena;
-//    private KlasaLeta klasa;
-//    private TipPuta tipPuta;
     private double ocena;
+    private KlasaLeta klasa;
+    private TipPuta tipPuta;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
