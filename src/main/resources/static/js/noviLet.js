@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 
     $( "#datum_poletanja").datepicker({
-        dateFormat:"yy-mm-dd",
+\        dateFormat:"dd-mm-yy",
         minDate: '0d',
         onSelect: function(e) {
             $('#datum_sletanja').datepicker('option', 'minDate', e);
@@ -30,7 +30,7 @@ $(document).ready(function(){
         }
     });
     $( "#datum_sletanja" ).datepicker({
-        dateFormat:"yy-mm-dd",
+        dateFormat:"dd-mm-yy",
         useCurrent: false,
         minDate: '0d',
         onSelect: function(e) {
@@ -79,8 +79,8 @@ $(document).ready(function(){
             dataType : "text",
             data : flight,
             success: [function(newFlight){
+
                 alert('uspesno dodavanje');
-                window.location = "/Aviocompany/" + $profileID2;
             }],
             error: function(xhr, status, error) {
                 if (xhr.responseText!=='true'){

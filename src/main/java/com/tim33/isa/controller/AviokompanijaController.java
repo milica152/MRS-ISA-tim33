@@ -40,7 +40,7 @@ public class AviokompanijaController {
     @ResponseBody
     public ResponseEntity<?> addFlight(@Valid @RequestBody LetZaDodavanje noviLet, @PathVariable String id) {
 
-        String mess= letService.checkAdding(noviLet, id);
+        String mess= letService.checkAdding(noviLet);
         if (!mess.equals("true")) {
             return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
         } else {
@@ -57,7 +57,7 @@ public class AviokompanijaController {
 
     @GetMapping
     public String aviocompanyServis() {
-        return "aviokompanije";
+        return "pretragaletova";
     }
 
     @GetMapping("/{id}")
@@ -65,10 +65,11 @@ public class AviokompanijaController {
         return "aviokompanijaprofil";
     }
 
-    @GetMapping("/{id}/noviLet1")
-    public String aviocompanyNewFlight(@PathVariable String id) {
-        return "noviLet";
-    }
+    //@GetMapping("/{id}/noviLet1")
+    //public String aviocompanyNewFlight(@PathVariable String id) {
+    //    return "noviLet";
+    //}
+
 
     @GetMapping("/specific/{id}")
     @ResponseBody
@@ -78,6 +79,7 @@ public class AviokompanijaController {
 
     @RequestMapping(value = "deleteAviocompany/{idDel}", method = RequestMethod.POST)   //ako ajax posalje post metodom na ovu adr.
     @ResponseBody
-    public void deleteAviocompany(@PathVariable Long idDel){service.deleteById(idDel);}    //izbrisi dati hotel sa servisa
+    public void deleteAviocompany(@PathVariable Long idDel){service.deleteById(idDel);}
+
 
 }

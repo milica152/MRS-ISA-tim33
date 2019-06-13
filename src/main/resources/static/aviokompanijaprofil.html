@@ -10,23 +10,27 @@
 
     <!-- Custom styles for this template -->
     <link href="../css/Homepage.css" rel="stylesheet">
+    <link href="../css/aviokompanije.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="../js/jquery-ui.min.js"></script>
+
 
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
 
+    <script src="../js/aviokompanijaprofil.js"></script>
+
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
 
-    <script src="../js/aviokompanijaprofil.js"></script>
 
-    <script>
-        $profileID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-        function add() {
-            window.location = "/Aviocompany/" + $profileID + "/noviLet1";    //POPRAVI KAD IH LEPO POVEZES
-        }
-    </script>
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -81,6 +85,7 @@
     </div>
     </div>
 </nav>
+
 <div class="container-fluid" style="padding: 0 100px 100px 100px;">
     <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
         <strong>Success!</strong> Flight has been successfully booked.
@@ -107,28 +112,144 @@
                     <span id="span-address"></span>
                 </p>
                 <p>
-                    <strong>Promotional description: </strong>
+                    <strong>Description: </strong>
                     <br>
                     <span id="span-desc"></span>
                 </p>
-
                 <div>
                     <button type="button" class="btn btn-secondary" id="editInfoBtn">Edit info</button>
-                    <button type="button" onclick="add()" class="btn btn-primary" id="addFlightBtn">Add Flight</button>
+
                 </div>
             </div>
         </div>
 
+
+
+
         <div class="row" style="margin-top: 60px;">
-            <div class="text-center" style="max-width:100%;">
-                <div id="flights text-center">
-                    <h3 class="text-center">Flights</h3>
+            <div class="col-md-12">
+                <div id="rooms text-center">
+                    <div class="text-center">
+                        <h3>
+                            <span>Flights</span>
+                            <button class="btn-lg pull-right" id="addFlightBtn" data-toggle="modal" data-target="#addFlightModal">
+                                <i class="fa fa-plus-circle"></i>
+                            </button>
+                        </h3>
+
+                        <hr/>
+                    </div>
+
                     <table id="table-flights" class="display table table-striped table-bordered"></table>
                 </div>
             </div>
         </div>
+
+
+
+
     </div>
 </div>
+
+
+
+<div class="modal fade" id="addFlightModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFlightTitle">Add new flight</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                            <div class="form-group">
+                                <label for="type">Type</label>
+                                <select id="type">
+                                    <option value="ROUND_TRIP">Round-trip</option>
+                                    <option value="ONE_WAY">One-way</option>
+                                    <option value="MULTI_CITY">Multi-city</option>
+                                </select>
+                                <label for="class">Class</label>
+                                <select id="class">
+                                    <option value="ECONOMY">Economy</option>
+                                    <option value="BUSINESS">Business</option>
+                                    <option value="FIRST">First</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" min="0" class="form-control" id="price">
+                            </div>
+                            <div class="form-group">
+                                <label for="datum_poletanja">Departure date</label>
+                                <input type="text" id="datum_poletanja" class="form-control" name="datum_poletanja" placeholder="Departure Date">
+                            </div>
+                            <div class="form-group">
+                                <label for="vreme_poletanja">Departure time(HH:mm)</label>
+                                <input type="text" id="vreme_poletanja" class="form-control timepicker" name="vreme_poletanja"  placeholder="Departure Time">
+                            </div>
+                            <div class="form-group">
+                                <label for="datum_sletanja" id ="datum_sletanja_l">Return date</label>
+                                <input type="text" id="datum_sletanja"   class="form-control" name = "datum_sletanja"  placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="vreme_sletanja" id="vreme_sletanja_l">Return time (HH:mm)</label>
+                                <input type="text" id="vreme_sletanja" class="form-control timepicker" name = "vreme_sletanja"  placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="polazni_aerodrom_id" id="polazni_aerodrom_id_l">Departure airport</label>
+                                <select class="form-control" id="polazni_aerodrom_id" name="polazni_aerodrom_id">
+                                    <option value="" selected disabled>Departure airport</option>
+                                    <option>SR, Belgrade, Serbia</option>
+                                    <option>HU, Budapest, Hungary</option>
+                                    <option>AU, Vienna, Austria</option>
+                                    <option>GE, Berlin, Germany</option>
+                                    <option>SP, Madrid, Spain</option>
+                                    <option>FR, Paris, France</option>
+                                    <option>PO, Lisbon, Portugal</option>
+                                    <option>UK, London, United Kingdom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dur_dep" id="dur_dep_l">Departure duration (minutes)</label>
+                                <input type="number" min="0" class="form-control" id="dur_dep">
+                            </div>
+                            <!-- Brisu se kad nije odabran round trip -->
+                            <div class="form-group">
+                                <label for="odredisni_aerodrom_id">Arrival airport</label>
+                                <select class="form-control" id="odredisni_aerodrom_id" name="odredisni_aerodrom_id">
+                                    <option value="" selected disabled>Arrival airport</option>
+                                    <option>SR, Belgrade, Serbia</option>
+                                    <option>HU, Budapest, Hungary</option>
+                                    <option>AU, Vienna, Austria</option>
+                                    <option>GE, Berlin, Germany</option>
+                                    <option>SP, Madrid, Spain</option>
+                                    <option>FR, Paris, France</option>
+                                    <option>PO, Lisbon, Portugal</option>
+                                    <option>UK, London, United Kingdom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dur_ret" id="dur_ret_l">Return duration (minutes)</label>
+                                <input type="number" min="0" class="form-control" id="dur_ret">
+                            </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="addBtn">Add new flight</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 
 <footer class="py-3 bg-dark fixed-bottom">
     <div class="container">

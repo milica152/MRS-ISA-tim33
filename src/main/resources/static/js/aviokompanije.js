@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $( "#datepickerStart").datepicker({   //
+    $( "#datepickerStart").datepicker({
         dateFormat:"dd-mm-yy",
         minDate: '0d',
         onSelect: function(e) {
