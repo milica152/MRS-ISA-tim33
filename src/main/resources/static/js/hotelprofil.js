@@ -31,7 +31,9 @@ $(document).ready(function() {
     });
 
     //#endregion
+
     setTable();
+    setModal();
 
     //#region Checkbox-ovi za dodavanje usluga
     $('#isAirportTransfer').change(function () {
@@ -84,9 +86,9 @@ $(document).ready(function() {
     //#endregion
 
     //#region Dodavanje usluga Hotelu
-    $('#AddServiceBtn').on("click",function(e) {
+    $(document).on('click', '#AddServiceBtn', function(e){
         e.preventDefault();
-        var isValid = test();
+        var isValid = testCbx();
         if(isValid){
             var $AirportTransferPrice = $('#AirportTransfer').val();
             var $ParkingLotPrice = $('#parkingLot').val();
@@ -96,47 +98,83 @@ $(document).ready(function() {
             var $WellnessPrice = $('#wellness').val();
             var $SpaPrice = $('#spa').val();
             var $WiFiPrice = $('#wiFi').val();
-            if(!$('#isAirportTransfer').checked){
-                $AirportTransferPrice = null;
+            if(!$('#isAirportTransfer').prop('checked')){
+                if($AirportTransferPrice!==''){
+                    $AirportTransferPrice=-1;
+                }else{
+                    $AirportTransferPrice = null;
+                }
             }
-            if(!$('#isParkingLot').checked){
-                $ParkingLotPrice = null;
+            if(!$('#isParkingLot').prop('checked')){
+                if($ParkingLotPrice!==''){
+                    $ParkingLotPrice=-1;
+                }else{
+                    $ParkingLotPrice = null;
+                }
             }
-            if(!$('#isPool').checked){
-                $PoolPrice = null;
+            if(!$('#isPool').prop('checked')){
+                if($PoolPrice!==''){
+                    $PoolPrice=-1;
+                }else{
+                    $PoolPrice = null;
+                }
             }
-            if(!$('#isRestaurant').checked){
-                $RestaurantPrice = null;
+            if(!$('#isRestaurant').prop('checked')){
+                if($RestaurantPrice!==''){
+                    $RestaurantPrice=-1;
+                }else{
+                    $RestaurantPrice = null;
+                }
             }
-            if(!$('#isRoomService').checked){
-                $RoomServicePrice = null;
+            if(!$('#isRoomService').prop('checked')){
+                if($RoomServicePrice!==''){
+                    $RoomServicePrice=-1;
+                }else{
+                    $RoomServicePrice = null;
+                }
             }
-            if(!$('#isWellness').checked){
-                $WellnessPrice = null;
+            if(!$('#isWellness').prop('checked')){
+                if($WellnessPrice!==''){
+                    $WellnessPrice=-1;
+                }else{
+                    $WellnessPrice = null;
+                }
             }
-            if(!$('#isSpa').checked){
-                $SpaPrice = null;
+            if(!$('#isSpa').prop('checked')){
+                if($SpaPrice!==''){
+                    $SpaPrice=-1;
+                }else{
+                    $SpaPrice = null;
+                }
             }
-            if(!$('#isWiFi').checked){
-                $WiFiPrice = null;
-            }
+            if(!$('#isWiFi').prop('checked')){
+                if($WiFiPrice!==''){
+                    $WiFiPrice = -1;
+                }else{
+                    $WiFiPrice = null;
+                }
 
-
+            }
 
             var Services = {
-                name: $RoomNo.val(),
-                price: $RoomFloor.val()
+                airportTransferPrice: $AirportTransferPrice,
+                parkingLotPrice: $ParkingLotPrice,
+                poolPrice: $PoolPrice,
+                restaurantPrice: $RestaurantPrice,
+                roomServicePrice: $RoomServicePrice,
+                wellnessPrice: $WellnessPrice,
+                spaPrice: $SpaPrice,
+                wiFiPrice: $WiFiPrice
             };
             $.ajax({
                 type: 'POST',
-                url: '/Rooms/addRoom/'+$profileID,
+                url: '/HotelServices/add/'+$profileID,
                 contentType : 'application/json',
                 dataType : "json",
-                data : JSON.stringify(Room),
+                data : JSON.stringify(Services),
                 success: function(data){
-                    $('#addRoomModal').modal('hide');
-                    setPage();
-                    setTable();
+                    $('#addServiceModal').modal('hide');
+                    alert("Dodalaaa");
                 },
                 error: function(xhr, status, error) {
                     if (xhr.responseText!=='true'){
@@ -199,6 +237,7 @@ $(document).ready(function() {
 
     //#region Praznjenje inputa za dodavanje sobe
     $(".modal").on("hidden.bs.modal", function(){
+        setModal();
         $('.mod').val('');
         $('#RoomType').val('JEDNOKREVETNA');
     });
@@ -233,6 +272,84 @@ $(document).ready(function() {
 
 
 });
+
+function setModal(){
+    $('#isAirportTransfer').prop("checked", false);
+    $('#isParkingLot').prop("checked", false);
+    $('#isPool').prop("checked", false);
+    $('#isRestaurant').prop("checked", false);
+    $('#isRoomService').prop("checked", false);
+    $('#isWellness').prop("checked", false);
+    $('#isSpa').prop("checked", false);
+    $('#isWiFi').prop("checked", false);
+    $('#AirportTransfer').prop("disabled", true);
+    $('#parkingLot').prop("disabled", true);
+    $('#pool').prop("disabled", true);
+    $('#restaurant').prop("disabled", true);
+    $('#roomService').prop("disabled", true);
+    $('#wellness').prop("disabled", true);
+    $('#spa').prop("disabled", true);
+    $('#wiFi').prop("disabled", true);
+
+
+    $.ajax({
+        type: 'GET',
+        url: '/HotelServices/all/'+$profileID,
+        contentType : 'application/json',
+        dataType : "json",
+        data : {},
+        success: function(data){
+            data.forEach(function(d) {
+                if(d.naziv==="Airport Transfer"){
+                    $('#isAirportTransfer').prop("checked", true);
+                    $('#AirportTransfer').val(d.cena);
+                    $('#AirportTransfer').prop("disabled", false);
+                }
+                if(d.naziv==="Parking Lot"){
+                    $('#isParkingLot').prop("checked", true);
+                    $('#parkingLot').val(d.cena);
+                    $('#parkingLot').prop("disabled", false);
+                }
+                if(d.naziv==="Pool Access"){
+                    $('#isPool').prop("checked", true);
+                    $('#pool').val(d.cena);
+                    $('#pool').prop("disabled", false);
+                }
+                if(d.naziv==="Restaurant"){
+                    $('#isRestaurant').prop("checked", true);
+                    $('#restaurant').val(d.cena);
+                    $('#restaurant').prop("disabled", false);
+                }
+                if(d.naziv==="Room Service"){
+                    $('#isRoomService').prop("checked", true);
+                    $('#roomService').val(d.cena);
+                    $('#roomService').prop("disabled", false);
+                }
+                if(d.naziv==="Wellness"){
+                    $('#isWellness').prop("checked", true);
+                    $('#wellness').val(d.cena);
+                    $('#wellness').prop("disabled", false);
+                }
+                if(d.naziv==="Spa"){
+                    $('#isSpa').prop("checked", true);
+                    $('#spa').val(d.cena);
+                    $('#spa').prop("disabled", false);
+                }
+                if(d.naziv==="WiFi"){
+                    $('#isWiFi').prop("checked", true);
+                    $('#wiFi').val(d.cena);
+                    $('#wiFi').prop("disabled", false);
+                }
+
+            });
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+}
 
 function doFilter(){
 
@@ -272,8 +389,7 @@ function test() {
     list.each(function () {
         var that = $(this);
         if (that.find('.mod').val()==='') {
-            //that.find('.mod').addClass("highlight");
-            isFormValid = false;
+            isFormValid=false;
             that.find('.mod').focus();
         } else {
             //that.find('.mod').removeClass("highlight");
@@ -286,6 +402,29 @@ function test() {
     return isFormValid;
 
 }
+
+function testCbx() {
+    var isFormValid = true;
+    var forma = $('#AddServiceForm');
+    var list=forma.find('.input-group');
+    list.each(function () {
+        var that = $(this);
+        var cbx = that.find('.igp').find('.igt').find('.cbx');
+        if (that.find('.mod').val()==='' && cbx.prop('checked')) {
+            isFormValid=false;
+            that.find('.mod').focus();
+        } else {
+            //that.find('.mod').removeClass("highlight");
+        }
+    });
+
+    if (!isFormValid) {
+        //alert("Please fill all fields");
+    }
+    return isFormValid;
+
+}
+
 function setPage(){
     $.ajax({
         type:'GET',
@@ -307,7 +446,6 @@ function setPage(){
 
 
 }
-
 
 function selChange(){
     var x = document.getElementById("selRoomBtn").value;
