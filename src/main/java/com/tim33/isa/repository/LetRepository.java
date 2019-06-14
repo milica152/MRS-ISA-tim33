@@ -13,5 +13,5 @@ public interface LetRepository  extends JpaRepository<Let, Long> {
     List<Let> findAllByAviokompanijaId(long idAviocomp);
 
 
-    List<Let> findAllByAviokompanijaId(long idAviocomp);
+    //List<Let> findAllByAviokompanijaId(long idAviocomp);
 }

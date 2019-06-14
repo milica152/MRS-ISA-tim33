@@ -2,7 +2,6 @@ package com.tim33.isa.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tim33.isa.service.HotelService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +10,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 
 @Entity
