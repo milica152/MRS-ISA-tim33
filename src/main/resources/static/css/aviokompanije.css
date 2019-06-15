@@ -54,3 +54,12 @@ body {
 }
 
 
+
+.centeredBtn {
+    text-align: center;
+}
+
+#filterFlights {
+    position: absolute;
+    top: 50%;
+}

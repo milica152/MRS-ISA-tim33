@@ -12,12 +12,14 @@
     <link href="css/Homepage.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 
     <!-- Css za pretragu -->
-    <link href="css/pretragaletova.css" rel="stylesheet">
+    <link href="css/aviokompanije.css" rel="stylesheet">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
@@ -30,7 +32,7 @@
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-    <script type="text/javascript" src="../js/pretragaletova.js"> </script>
+    <script type="text/javascript" src="js/pretragaletova.js"> </script>
 
 </head>
 <body>
@@ -113,22 +115,11 @@
                 <input type='text' class="form-control" id='datepickerStart' placeholder='Select Departure Date'>
             </div>
 
-            <div class="form-group col-lg-3">
-                <select class="form-control" id="Passengers">
-                    <option value="" selected disabled>Passengers</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                </select>
+            <div class="form-group col-lg-3 nopass">
+                <label for="Passengers">
+                    <span>Passengers</span>
+                </label>
+                <input type="number" id="Passengers" class="form-control" min="1">
             </div>
             <div class="form-group col-lg-3">
                 <select class="form-control" id="Class">
@@ -183,14 +174,71 @@
 
     <div class="dropdown-divider"></div>
 
-    <div>
-        <table id="table" class="display table table-striped table-bordered" width="100%"></table>
+    <div class="row" style="margin-top: 60px; display:none" id="whole_filter">
+        <div class="col-md-12">
+            <div id="filter text-center">
+                <form>
+                    <div class="row">
+                        <div class="form-group col-lg-3 " id="minPriceClass">
+                            <label for="minPrice">
+                                <span>Price from</span>
+                            </label>
+                            <input type="number" id="minPrice" class="form-control" min="1">
+                        </div>
+                        <div class="form-group  col-lg-3  durationClass">
+                            <label for="duration">
+                                <span>Max. duration</span>
+                            </label>
+                            <input type="number" id="duration" class="form-control" min="1">
+                        </div>
+                        <div class="form-group  col-lg-3  airlinesClass">
+                            <label for="airlines">
+                                <span>Airlines</span>
+                            </label>
+                            <select class="form-control" id="airlines">
+                                <option value = "any">Any</option>
+                            </select>
+                        </div>
+                        <div class="form-group  col-lg-3  maxPriceClass">
+                            <label for="maxPrice">
+                                <span>Price to</span>
+                            </label>
+                            <input type="number" id="maxPrice" class="form-control" min="1">
+                        </div>
+
+                    </div>
+                    <div class = "row col-lg-12">
+                        <div class="form-group col-lg-3"></div>
+                        <div class="form-group col-lg-3"></div>
+                        <div class="form-group col-lg-3"></div>
+                        <div class="form-group col-lg-1"></div>
+                        <div class="form-group col-lg-2">
+                            <button class="btn-lg pull-right" type= "submit" id="filterFlights">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
 
+    <br>
+    <br>
+
+    <div id="div_tableairlines">
+        <table id="tableairlines" class="display table table-striped table-bordered" width="100%"></table>
+    </div>
+    <div id ="div_table" style="display:none">
+        <table id="table" class="display table table-striped table-bordered" width="100%"></table>
+    </div>
     <br><br>
 </div>
 
-<footer class="py-5 bg-dark fixed-bottom">
+<footer class="py-3 bg-dark fixed-bottom">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright 2019 &copy; Pomoz' Boze Co.</p>
     </div>

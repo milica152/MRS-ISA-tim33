@@ -1,9 +1,12 @@
 package com.tim33.isa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,19 +19,19 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Aviokompanija {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String naziv;
-    private String adresa;
-    private String opis;
-    private ArrayList<Destinacija> destinacije;
-    private ArrayList<Karta> karteZaBrzu;
-    //private HashMap<Integer, Double> cenovnik;
+public class Aviokompanija extends Service {
 
-//
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "aviokompanija")
-//    private ArrayList<Let> letovi;
+    private double ocena;
+
+    //@OneToMany(mappedBy = "airline")
+    //@Fetch(FetchMode.JOIN)
+    //@JsonIgnore
+    //private Set<Destinacija> destinations;
+
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+    //private Set<Karta> karteZaBrzu;
+
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+    //private Set<AirlineAdmin> admins;
 
 }

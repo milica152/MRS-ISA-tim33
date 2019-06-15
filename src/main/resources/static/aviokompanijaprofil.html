@@ -83,15 +83,19 @@
                 </li>
             </ul>
     </div>
-    </div>
 </nav>
+
 <div class="container" style="padding: 0 100px 100px 100px;">
     <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
         <strong>Success!</strong> Flight has been successfully booked.
     </div>
 
     <br>
-    <h2 class="text-center">Aviocompany Profile</h2>
+    <button class="btn-secondary" id = "backBtn">
+        <i class="fa fa-arrow-left"></i>
+    </button>
+
+    <h2 class="text-center">Airline Profile</h2>
 
     <br><br>
 
@@ -163,12 +167,6 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                             <div class="form-group">
-                                <label for="type">Type</label>
-                                <select id="type">
-                                    <option value="ROUND_TRIP">Round-trip</option>
-                                    <option value="ONE_WAY">One-way</option>
-                                    <option value="MULTI_CITY">Multi-city</option>
-                                </select>
                                 <label for="class">Class</label>
                                 <select id="class">
                                     <option value="ECONOMY">Economy</option>
@@ -210,10 +208,6 @@
                                     <option>UK, London, United Kingdom</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="dur_dep" id="dur_dep_l">Departure duration (minutes)</label>
-                                <input type="number" min="0" class="form-control" id="dur_dep">
-                            </div>
                             <!-- Brisu se kad nije odabran round trip -->
                             <div class="form-group">
                                 <label for="odredisni_aerodrom_id">Arrival airport</label>
@@ -229,11 +223,6 @@
                                     <option>UK, London, United Kingdom</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="dur_ret" id="dur_ret_l">Return duration (minutes)</label>
-                                <input type="number" min="0" class="form-control" id="dur_ret">
-                            </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">

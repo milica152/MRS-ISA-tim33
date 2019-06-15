@@ -1,5 +1,12 @@
-$(document).ready(function() {
+var current_data = [];
+var desiredType = "";
+var returnDate = "";
+var departureAir = "";
+var arrivalAir = "";
+var noPassengers = 0;
+var fClass = "";
 
+$(document).ready(function() {
 
     $( "#datepickerStart").datepicker({
         dateFormat:"dd-mm-yy",
@@ -30,6 +37,7 @@ $(document).ready(function() {
 
     $('#FlightType').change(function() {
         var selected = $(this).val();
+        desiredType = $(this).val();
         if(selected === 'Round-trip'){
             $('#datepickerEnd').show();
         }
@@ -39,40 +47,68 @@ $(document).ready(function() {
         }
     });
 
+    var table = $('#table').DataTable( {
+        data: undefined,
+        searching: false,
+        ordering: true,
+        lengthChange: false,
+        columns: [
+            { data: 'id', title: "ID"},
+
+            { data: 'vremePolaska', title: 'Dep. time' },
+            { data: 'vremeDolaska', title: 'Arr. time'},
+            { data: 'cena', title: 'Price'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="reserveBtn">Reserve</button>'}
+        ],
+        columnDefs: [
+            {className: "align-middle", targets: "_all"}
+        ]
+    });
+
+    $.ajax({
+        url: '/Flight/all',
+        data: {},
+        success: function(data) {
+            if (data !== undefined && data.length > 0) {
+                $('#table').dataTable().fnClearTable();
+                $('#table').dataTable().fnAddData(data);
+            }
+        }
+    });
+
+    $('#table tbody').on('click', '#chooseBtn', function(e) {
+        var data = table.row($(this).parents('tr')).data();    //podaci o letu koji je kliknut
+        //window.location = "/Flight/" + data.id;                //ide se na prozor rezervacije
+    });
+
     $(document).on('submit', '#search-form', function (e) {
-        //skupi podatke
+
         var $depAir = $('#departureAirport').val();
         var $arrAir = $('#arrivalAirport').val();
         var $depTime = $('#datepickerStart').val();
-        var $arrTime = $('#datepickerEnd').val();
         var $noPass = $('#Passengers').val();
-        var $type = $('#FlightType').val();
         var $class = $('#Class').val();
+        returnDate = $('#datepickerEnd').val();
+        departureAir =  $('#departureAirport').val();
+        arrivalAir = $('#arrivalAirport').val();
+        noPassengers = $('#Passengers').val();
+        fClass = $('#Class').val();
 
+
+        //validation
         if($depAir == null){
             $depAir = "";
         }
         if($arrAir == null){
             $arrAir = "";
         }
-        if($noPass == null){
-            $noPass = "";
-        }
-        if($type == null){
-            $type = "";
-        }
         if($class == null){
             $class = "";
-        }
-        if($noPass.length > 3 || $noPass===""){
-            $noPass = "0";
         }
         if($depAir !== ""){
             var listaDep = $depAir.split(', ');
             $depAir = listaDep[0];
         }
-
-
         if($arrAir !== ""){
             var listaArr = $arrAir.split(', ');
             $arrAir = listaArr[0];
@@ -80,16 +116,12 @@ $(document).ready(function() {
         e.preventDefault();
         var searchParameters = JSON.stringify({
             "dateFrom" : $depTime,
-            "dateTo" : $arrTime,
             "departureAirport" : $depAir,
             "arrivalAirport" : $arrAir,
             "NoPassengers" : $noPass,
-            "type" : $type,
             "klasa" : $class
         });
 
-
-        alert('nije normalan');
 
         $.ajax({
             method:'POST',
@@ -98,11 +130,16 @@ $(document).ready(function() {
             dataType : "json",
             data: searchParameters,     //posalji prikupljene podatke
             success: [function(data) {
-                alert('success!');
+                current_data = [];
+                for(var let in data){
+                    current_data.push(data[let].id);
+                }
                 if (data !== undefined && data.length > 0) {
+                    document.getElementById('div_tableairlines').style.display = 'none';
+                    document.getElementById('div_table').style.display = 'contents';
+                    document.getElementById('whole_filter').style.display = 'contents';
                     $('#table').dataTable().fnClearTable();
                     $('#table').dataTable().fnAddData(data);
-
                 }
                 else{
                     alert("Ne postoji nijedan let koji zadovoljava kriterijume pretrage");
@@ -115,41 +152,115 @@ $(document).ready(function() {
         });
     });
 
-    var table = $('#table').DataTable( {
+
+    var tableairlines = $('#tableairlines').DataTable( {
         data: undefined,
         searching: false,
-        ordering: true,
         lengthChange: false,
         columns: [
-            { data: '', title: 'Departure' },
-            { data: '', title: 'Arrival' },
-            { data: 'vremePolaska', title: 'Dep. time' },
-            { data: 'vremePovratka', title: 'Arr. time'},
-            { data: 'cena', title: 'Price'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>'}
-
+            { data: 'naziv', title: 'Name' },
+            { data: 'adresa', title: 'Address' },
+            { data: 'opis', title: 'Promo description' },
+            { data: 'ocena', title: 'Rating'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="editBtn">Edit</button>'},
+            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="removeBtn">Remove</button>'}
         ],
         columnDefs: [
             {className: "align-middle", targets: "_all"}
         ]
     });
 
-
     $.ajax({
-        url: '/Flight/all',
+        url: '/Aviocompany/all',
         data: {},
         success: function(data) {
+            for(var airline in data){
+                var opcija = new Option(data[airline].naziv);
+                opcija.setAttribute("value", data[airline].naziv);
+                document.getElementById('airlines').add(opcija);
+            };
             if (data !== undefined && data.length > 0) {
-
-                $('#table').dataTable().fnClearTable();
-                $('#table').dataTable().fnAddData(data);
+                $('#tableairlines').dataTable().fnClearTable();
+                $('#tableairlines').dataTable().fnAddData(data);
             }
         }
     });
 
-    $('#table tbody').on('click', '#chooseBtn', function(e) {
-        var data = table.row($(this).parents('tr')).data();    //podaci o letu koji je kliknut
-        window.location = "/Flight/" + data.id;
+    $('#tableairlines tbody').on('click', '#chooseBtn', function(e) {
+        var data = tableairlines.row($(this).parents('tr')).data();    //podaci o aviokomp koja je kliknuta
+        window.location = "/Aviocompany/" + data.id;
+    });
+
+    $('#tableairlines tbody').on('click', '#removeBtn', function(e) {
+        var conBox = confirm("Are you sure?");
+        var data = tableairlines.row($(this).parents('tr')).data();
+        if(conBox){
+            $.ajax({
+                type: 'POST',
+                url: '/Aviocompany/deleteAviocompany/'+data.id,
+                data : data.id,
+                success: [function(){
+                    $('#tableairlines').dataTable().fnDraw();
+                    //table.fnDraw();
+                    //location.reload();
+                }],
+                error: function(xhr, status, error){
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Error - ' + errorMessage);
+                }
+            });
+
+        }
+        else{
+            e.preventDefault();
+        }
+        e.preventDefault();
+
+
+
+
+    } );
+
+    $(document).on('click', '#filterFlights', function(e){
+
+        e.preventDefault();
+        //alert(roomTypesNeeded);
+        doFilter();
+
     });
 
 });
+
+function doFilter(){
+
+    var filterParams = {
+        duration: $('#duration').val(),
+        minPrice: $('#minPrice').val(),
+        maxPrice: $('#maxPrice').val(),
+        airline: $('#airlines').val(),
+        flights: current_data
+    };
+    $.ajax({
+        type:'POST',
+        url:'/Flight/filter',
+        contentType : 'application/json',
+        dataType : "json",
+        data: JSON.stringify(filterParams),
+        success: function(data){
+            if(data.length>0){
+                $('#table').dataTable().fnClearTable();
+                $('#table').dataTable().fnAddData(data);
+            }
+            else{
+                alert("No flight that fulfills these parameters!");
+            }
+        },
+        error: function(xhr, status, error){
+            alert(xhr.responseText);
+
+        }
+
+
+    })
+}

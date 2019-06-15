@@ -11,10 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SearchFlight {
     protected String dateFrom;    //samo datum bez vremena se cuva
-    protected String dateTo;
     protected String departureAirport;
     protected String arrivalAirport;
     protected String NoPassengers;
-    protected String type;
     protected String klasa;
 }
