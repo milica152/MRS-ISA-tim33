@@ -12,7 +12,5 @@ public interface AviokompanijaRepository  extends JpaRepository<Aviokompanija, L
 
     Aviokompanija findByNaziv(String naziv);
 
-    Aviokompanija findById(long id);
-
     void deleteById(long id);
 }

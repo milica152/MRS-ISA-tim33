@@ -38,6 +38,22 @@ $(document).ready(function() {
 
 
 
+    $.ajax({
+        url: '/LP/all',
+        data: {},
+        success: function(data) {
+            for(var lp in data){
+                var opcija = new Option(data[lp].nazivAerodroma + ", " + data[lp].grad + ", " + data[lp].drzava);
+                document.getElementById('polazni_aerodrom_id').add(opcija);
+            }
+            for(var lp in data){
+                var opcija = new Option(data[lp].nazivAerodroma + ", " + data[lp].grad + ", " + data[lp].drzava);
+                document.getElementById('odredisni_aerodrom_id').add(opcija);
+            }
+
+        }
+    });
+
     var flightsTable = $('#table-flights').DataTable({
         data: undefined,
         searching: false,
@@ -48,6 +64,7 @@ $(document).ready(function() {
         compact: true,
         columns: [
             { data: 'id', title: 'Id' },
+
             { data: 'vremePolaska', title: 'Polazak' },
             { data: 'vremeDolaska', title: 'Dolazak' },
             { data: 'cena', title: 'Cena'},

@@ -152,6 +152,22 @@ $(document).ready(function() {
         });
     });
 
+    $.ajax({
+        url: '/LP/all',
+        data: {},
+        success: function(data) {
+            for(var lp in data){
+                var opcija = new Option(data[lp].nazivAerodroma + ", " + data[lp].grad + ", " + data[lp].drzava);
+                document.getElementById('departureAirport').add(opcija);
+            }
+            for(var lp in data){
+                var opcija = new Option(data[lp].nazivAerodroma + ", " + data[lp].grad + ", " + data[lp].drzava);
+                document.getElementById('arrivalAirport').add(opcija);
+            }
+
+        }
+    });
+
 
     var tableairlines = $('#tableairlines').DataTable( {
         data: undefined,

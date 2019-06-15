@@ -23,15 +23,15 @@ public class Aviokompanija extends Service {
 
     private double ocena;
 
-    //@OneToMany(mappedBy = "airline")
-    //@Fetch(FetchMode.JOIN)
-    //@JsonIgnore
-    //private Set<Destinacija> destinations;
+    @OneToMany(mappedBy = "airline")
+    @Fetch(FetchMode.JOIN)
+    @JsonIgnore
+    private Set<Destinacija> destinations;
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
-    //private Set<Karta> karteZaBrzu;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+    private Set<Karta> karteZaBrzu;
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
-    //private Set<AirlineAdmin> admins;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+    private Set<AirlineAdmin> admins;
 
 }

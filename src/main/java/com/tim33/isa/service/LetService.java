@@ -106,6 +106,12 @@ public class LetService {
             return "Departure and arrival must be at different airports!";
         }
 
+        long duzinamilisekunde = noviLet.getVremeDolaska().getTime() - noviLet.getVremePolaska().getTime();
+        long duzinaminuti = duzinamilisekunde/ (60 * 1000);
+        String duzinastr = Long.toString(duzinaminuti);
+        int duzina = Integer.parseInt(duzinastr);
+        noviLet.setDuzina(duzina);
+
         noviLet.setKlasa(KlasaLeta.valueOf(noviLetStr.getKlasa()));
         noviLet.setAviokompanija(repositoryA.findById(Long.parseLong(noviLetStr.getAviokompanija_id())));
         noviLet.setOcena(0.0);
