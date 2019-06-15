@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -59,6 +60,21 @@ public class RentACarController {
             return new ResponseEntity<>(rc, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("There is no Rent a Car service with that ID", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/addRCS", method = RequestMethod.POST)
+    public ResponseEntity<?> register(@RequestBody RentACar rentACar) {
+        rentACar.setAdmins(Collections.emptySet());
+        rentACar.setFilijale(Collections.emptySet());
+        rentACar.setVozila(Collections.emptySet());
+
+        String mess= service.checkRCS(rentACar);
+
+        if (!mess.equals("true")) {
+            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(rentACar, HttpStatus.OK);
         }
     }
 }

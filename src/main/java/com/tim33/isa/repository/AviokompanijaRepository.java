@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AviokompanijaRepository  extends JpaRepository<Aviokompanija, Long> {
 
+    Aviokompanija findById(long id);
+
     Aviokompanija findByNaziv(String naziv);
 
     Aviokompanija findById(long id);

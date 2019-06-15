@@ -37,6 +37,7 @@ $(document).ready(function() {
     });
 
 
+
     var flightsTable = $('#table-flights').DataTable({
         data: undefined,
         searching: false,
@@ -164,3 +165,4 @@ function popuniTabelu() {
     });
 
 }
+

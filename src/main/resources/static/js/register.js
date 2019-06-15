@@ -12,21 +12,40 @@ $(document).ready(function(){
             alert("Different passwords!");
             return false;
         }
+
+        if(sessionStorage.getItem("user") ==="1"){
+            var $tipKorisnika = 1;
+            var urlReg = "registerAdmin/"+sessionStorage.getItem("service");
+        }
+        else if(sessionStorage.getItem("user") ==="2"){
+            $tipKorisnika = 2;
+            urlReg = "registerAdmin/"+sessionStorage.getItem("service");
+        }
+        else if(sessionStorage.getItem("user") ==="3"){
+            $tipKorisnika = 3;
+            urlReg = "registerAdmin/"+sessionStorage.getItem("service");
+        }
+        else{
+            $tipKorisnika = 4;
+            urlReg = "registerUser";
+        }
         e.preventDefault();
+
         var user = JSON.stringify({
-            "ime": $firstName.val(),
-            "prezime": $lastName.val(),
-            "email": $email.val(),
-            "username": $username.val(),
-            "password": $password.val(),
-            "tip_korisnika": 4
+            ime: $firstName.val(),
+            prezime: $lastName.val(),
+            email: $email.val(),
+            username: $username.val(),
+            password: $password.val(),
+            tip_korisnika: $tipKorisnika
         });
+
 
         $.ajax({
             type: 'POST',
-            url: 'registerUser',
+            url: urlReg,
             contentType : 'application/json',
-            dataType : "text",
+            dataType : "json",
             data : user,
             success: [function(newUser){
                 document.location.href = "logged.html"

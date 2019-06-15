@@ -66,6 +66,7 @@ public class AviokompanijaController {
     }
 
 
+
     @GetMapping("/specific/{id}")
     @ResponseBody
     Aviokompanija findById(@PathVariable long id) {
@@ -75,5 +76,6 @@ public class AviokompanijaController {
     @RequestMapping(value = "deleteAviocompany/{idDel}", method = RequestMethod.POST)   //ako ajax posalje post metodom na ovu adr.
     @ResponseBody
     public void deleteAviocompany(@PathVariable Long idDel){service.deleteById(idDel);}
+
 
 }

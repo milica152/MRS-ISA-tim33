@@ -1,7 +1,9 @@
 package com.tim33.isa.service;
 
 import com.tim33.isa.model.Aviokompanija;
+import com.tim33.isa.model.Destinacija;
 import com.tim33.isa.repository.AviokompanijaRepository;
+import com.tim33.isa.repository.DestinacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.List;
 public class AviokompanijaService {
     @Autowired
     AviokompanijaRepository repository;
+    @Autowired
+    DestinacijaService destser;
 
     public Aviokompanija save(Aviokompanija noviProfil){
         // Manipulacija profilom...
@@ -28,11 +32,41 @@ public class AviokompanijaService {
 
     public Aviokompanija findById(long id){
         return repository.findById(id);
+
+    }
+    public Aviokompanija findByNaziv(String naziv){
+        return repository.findByNaziv(naziv);
     }
 
-    public void deleteById(long id){
-        repository.deleteById(id);
+    public String checkAK(Aviokompanija ak){
+        Aviokompanija a = new Aviokompanija();
+        a.setNaziv(ak.getNaziv());
+        a.setAdresa(ak.getAdresa());
+        a.setOpis(ak.getOpis());
+        a.setDestinations(ak.getDestinations());
+        a.setKarteZaBrzu(ak.getKarteZaBrzu());
+        a.setAdmins(ak.getAdmins());
+
+
+        if (ak.getNaziv().isEmpty()||ak.getAdresa().isEmpty()||ak.getOpis().isEmpty()||ak.getDestinations().isEmpty()){
+            return "All fields are required!";
+        }
+        if(ak.getOpis().length()<50){
+            return "Description must have at least 50 characters!";
+        }
+
+        if (findByNaziv(ak.getNaziv()) != null){
+            return "Name already taken!";
+        }
+        repository.save(a);
+        for(Destinacija d:ak.getDestinations()){
+            d.setAirline(a);
+            destser.save(d);
+
+        }
+        return "true";
     }
 
+    public void deleteById(long id) { repository.delete(findById(id)); }
 
 }

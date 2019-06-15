@@ -2,10 +2,13 @@ package com.tim33.isa.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tim33.isa.service.HotelService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,25 +16,32 @@ import java.util.HashMap;
 import java.util.Set;
 
 @Entity
-@Table(name = "hotel_servis")
+@Table(name = "hotel")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Hotel {
+public class Hotel extends Service{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String naziv;
-    private String adresa;
-    private String opis;
-    private String cenaOd;
+
+    private double cenaOd;
     private int ocena;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hotel")
+
+    @OneToMany(mappedBy = "hotel") // inverse side: it has a mappedBy attribute, and can't decide how the association is mapped, since the other side already decided it.
+    @Fetch(FetchMode.JOIN)
     @JsonIgnore
     private Set<Soba> konfiguracija_soba;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
+    @JsonIgnore
+    private Set<UslugeHotela> usluge;
+
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "hotel")
+    @JsonIgnore
+    private Set<HotelAdmin> admins;
+
+
 
 
 
