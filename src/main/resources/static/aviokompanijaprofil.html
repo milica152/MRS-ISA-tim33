@@ -33,7 +33,7 @@
 
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
+    <script src="../js/login.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -53,7 +53,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/RentACar">RENT-A-CAR</a>
                 </li>
-                <li class="dropdown">
+                <li class="dropdown" id="login-menu-item">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">LOGIN<span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
                         <li class="px-4 py-4">
@@ -78,11 +78,12 @@
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="register.html">Sign up</a>
-                                <a class="dropdown-item" href="#">Forgot password?</a>
-                                <input type="hidden" class="hide" name="token" id="token" value="a465a2791ae0bae853cf4bf485dbe1b6">
                             </form>
                         </li>
                     </ul>
+                </li>
+                <li id="logout-menu-item">
+                    <a class="nav-link">LOGOUT</a>
                 </li>
             </ul>
     </div>
