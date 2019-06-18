@@ -5,7 +5,10 @@ $profileID2 = $profileID1.substring($profileID1.lastIndexOf('/') + 1);
 
 $(document).ready(function() {
 
-
+    $(document).on('click', '#backBtn', function(e){
+        e.preventDefault();
+        window.location = "/Aviocompany";
+    });
 
     $( "#datum_poletanja").datepicker({
         dateFormat:"dd-mm-yy",
@@ -33,26 +36,23 @@ $(document).ready(function() {
         }
     });
 
-    $('#type').change(function() {
-        var selected = $(this).val();
-        if(selected === 'ROUND_TRIP'){
-            $('#dur_ret').show();
-            $('#dur_ret_l').show();
-            $('#vreme_sletanja').show();
-            $('#vreme_sletanja_l').show();
-            $('#datum_sletanja').show();
-            $('#datum_sletanja_l').show();
-        }
-        else{
-            $('#dur_ret').hide();
-            $('#dur_ret_l').hide();
-            $('#vreme_sletanja').hide();
-            $('#vreme_sletanja_l').hide();
-            $('#datum_sletanja').hide();
-            $('#datum_sletanja_l').hide();
+
+
+    $.ajax({
+        url: '/LP/all',
+        data: {},
+        success: function(data) {
+            for(var lp in data){
+                var opcija = new Option(data[lp].nazivAerodroma + ", " + data[lp].grad + ", " + data[lp].drzava);
+                document.getElementById('polazni_aerodrom_id').add(opcija);
+            }
+            for(var lp in data){
+                var opcija = new Option(data[lp].nazivAerodroma + ", " + data[lp].grad + ", " + data[lp].drzava);
+                document.getElementById('odredisni_aerodrom_id').add(opcija);
+            }
+
         }
     });
-
 
     var flightsTable = $('#table-flights').DataTable({
         data: undefined,
@@ -64,8 +64,9 @@ $(document).ready(function() {
         compact: true,
         columns: [
             { data: 'id', title: 'Id' },
+
             { data: 'vremePolaska', title: 'Polazak' },
-            { data: 'vremePovratka', title: 'Dolazak' },
+            { data: 'vremeDolaska', title: 'Dolazak' },
             { data: 'cena', title: 'Cena'},
             { data: 'ocena', title: 'Ocena'},
             { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="ChooseBtn">Choose</button>'},
@@ -105,7 +106,6 @@ $(document).ready(function() {
 
     $(document).on('submit', '#addForm', function(e){
         var $cena = $('#price').val();
-        var $tip = $('#type').val();
         var $klasa = $('#class').val();
         var $vreme_poletanja = $('#vreme_poletanja').val();
         var $vreme_sletanja = $('#vreme_sletanja').val();
@@ -113,23 +113,13 @@ $(document).ready(function() {
         var $datum_sletanja = $('#datum_sletanja').val();
         var $odredisni_aerodrom = $('#odredisni_aerodrom_id').val();
         var $polazni_aerodrom = $('#polazni_aerodrom_id').val();
-        var $duzina_u_odlasku = $('#dur_dep').val();
-        var $duzina_u_dolasku = $('#dur_ret').val();
 
-        if($tip === "ROUND_TRIP"){
-            if($vreme_sletanja === null ||$vreme_sletanja === "" || $datum_sletanja=== null || $datum_sletanja==="" || $duzina_u_dolasku=== null || $duzina_u_dolasku===""){
-                alert("You must fill all fields!");
-                return  false;
-            }
-            else{
-                var nista = "";
-            }
-        }else{
-            $vreme_sletanja = "";
-            $datum_sletanja = "";
-            $duzina_u_dolasku = "";
+        if($vreme_sletanja === null ||$vreme_sletanja === "" || $datum_sletanja=== null || $datum_sletanja===""){
+            alert("You must fill all fields!");
+            return  false;
         }
-        if($cena === null || $cena === "" || $tip=== null  || $tip === ""  || $klasa===null  || $klasa === ""  || $vreme_poletanja===null || $vreme_poletanja === "" ||  $datum_poletanja===null  ||  $datum_poletanja==="" || $odredisni_aerodrom===null  || $odredisni_aerodrom==="" || $polazni_aerodrom===null || $polazni_aerodrom===""){
+
+        if($cena === null || $cena === "" || $klasa===null  || $klasa === ""  || $vreme_poletanja===null || $vreme_poletanja === "" ||  $datum_poletanja===null  ||  $datum_poletanja==="" || $odredisni_aerodrom===null  || $odredisni_aerodrom==="" || $polazni_aerodrom===null || $polazni_aerodrom===""){
             alert("You must fill all fields!");
             return false;
         }
@@ -150,9 +140,6 @@ $(document).ready(function() {
             "polazni_aerodrom_id": $polazni_aerodrom,
             "datum_poletanja": $datum_poletanja,
             "datum_sletanja": $datum_sletanja,
-            "duzina_polazak" : $duzina_u_odlasku,
-            "duzina_povratak" : $duzina_u_dolasku,
-            "tip" : $tip,
             "klasa" : $klasa
         });
 

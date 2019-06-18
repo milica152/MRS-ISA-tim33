@@ -19,7 +19,7 @@ public class Avion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "avion")
-    private Set<Sediste> sedista;
+    private int brojRedova;
+    private int brojKolona;
+    private int brojSedistaPoKoloni;
 }
