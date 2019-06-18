@@ -3,40 +3,354 @@ $profileID0 = window.location.href.lastIndexOf('/');
 $profileID1 = window.location.href.substring(0,$profileID0);
 $profileID2 = $profileID1.substring($profileID1.lastIndexOf('/') + 1);
 
+var chartLabels = [];
+var chartData = [];
+var chartLabel = "";
+var rate = "";
+var income = "";
+
 $(document).ready(function() {
+
+    //var myLineChart = new Chart();
+
+    //function napraviDijagram() {
+        var ctxL = document.getElementById("lineChart").getContext('2d');  //2d
+        var gradientFill = ctxL.createLinearGradient(0, 0, 0, 290);  //
+        gradientFill.addColorStop(0, "rgba(173, 53, 186, 1)");    //
+        gradientFill.addColorStop(1, "rgba(173, 53, 186, 0.1)");   //
+        var myLineChart = new Chart(ctxL, {
+            type: 'line',
+            data: {
+                labels: chartLabels,
+                datasets: [
+                    {
+                        label: chartLabel,
+                        data: chartData,
+                        backgroundColor: gradientFill,
+                        borderColor: [
+                            '#AD35BA'
+                        ],
+                        borderWidth: 2,
+                        pointBorderColor: "#fff",
+                        pointBackgroundColor: "rgba(173, 53, 186, 0.1)"
+                    }
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    //}
 
     $(document).on('click', '#backBtn', function(e){
         e.preventDefault();
         window.location = "/Aviocompany";
     });
 
+    $(document).on('click', '#rateBtn', function (e) {
+        e.preventDefault();
+        document.getElementById('chart').style.display = 'none';
+        document.getElementById('date').style.display = 'none';
+        document.getElementById('income').style.display = 'none';
+        document.getElementById('rate').style.display = 'contents';
+        document.getElementById('income_dates').style.display = 'none';
+
+
+        $('#rate_value').html("Rate: " + rate);
+    });
+
+    $(document).on('click', '#flightratesBtn', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'GET',
+            url: '/Flight/fromAviocompany/' + $profileID,
+            data: {},
+            success: function (data) {
+                if (data !== undefined && data.length > 0) {
+                    chartLabels=[];
+                    chartData=[];
+                    chartLabel = "Flight rates";
+                    for (var flight in data){
+                        chartLabels.push(data[flight].sifra);
+                        chartData.push(data[flight].ocena);
+                    }
+                    myLineChart.data.datasets[0].label = chartLabel;
+                    myLineChart.data.datasets[0].data = chartData;
+                    myLineChart.data.labels = chartLabels;
+                    myLineChart.update();
+                    document.getElementById('rate').style.display = 'none';
+                    document.getElementById('income').style.display = 'none';
+                    document.getElementById('date').style.display = 'none';
+                    document.getElementById('income_dates').style.display = 'none';
+
+                    $('#chart').show();
+                }
+
+
+            }
+        });
+
+
+
+    });
+
+    $(document).on('click', '#dailyBtn', function (e) {
+        e.preventDefault();
+        document.getElementById('date').style.display = 'contents';
+        document.getElementById('rate').style.display = 'none';
+        document.getElementById('income').style.display = 'none';
+        document.getElementById('chart').style.display = 'none';
+        document.getElementById('income_dates').style.display = 'none';
+
+
+    });
+
+    function getWeekDay(date){
+        var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        //Use the getDay() method to get the day.
+        var day = date.getDay();
+        return weekdays[day];
+    }
+
+    $(document).on('click', '#weeklyBtn', function (e) {
+        e.preventDefault();
+        document.getElementById('date').style.display = 'none';
+        document.getElementById('rate').style.display = 'none';
+        document.getElementById('income').style.display = 'none';
+        document.getElementById('chart').style.display = 'none';
+        document.getElementById('income_dates').style.display = 'none';
+
+
+        chartLabel = "Number of sold tickets";
+        chartLabels=[];
+        chartData = [];
+
+        //get all the days to show
+        var step;
+        for (step = 6; step >= 0; step--) {
+            var current = new Date();  //todays date
+            current.setDate(current.getDate() - step);
+            var weekDay = getWeekDay(current);
+            chartLabels.push(weekDay.substr(0,3));
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Flight/weeklyReport/' + $profileID,
+            data: {},
+            success:[function (data) {
+                for (var oneData in data){
+                    chartData.push(data[oneData]);
+                }
+                myLineChart.data.datasets[0].label = chartLabel;
+                myLineChart.data.datasets[0].data = chartData;
+                myLineChart.data.labels = chartLabels;
+                myLineChart.update();
+                $('#chart').show();
+            }],
+            error: function(xhr, status, error) {
+                if (xhr.responseText!=='true'){
+                    alert(xhr.responseText);
+                }
+            }
+    });
+
+    });
+
+
+    function daysInMonth (month, year) {
+        return new Date(year, month, 0).getDate();
+    }
+
+    $(document).on('click', '#monthlyBtn', function (e) {
+        e.preventDefault();
+        document.getElementById('date').style.display = 'none';
+        document.getElementById('rate').style.display = 'none';
+        document.getElementById('income').style.display = 'none';
+        document.getElementById('chart').style.display = 'none';
+        document.getElementById('income_dates').style.display = 'none';
+
+        chartLabel = "Number of sold tickets";
+        chartLabels=[];
+        chartData = [];
+        var today = new Date();
+        var variableDay = new Date();
+        var step;
+
+
+        for(step = daysInMonth(today.getMonth(), today.getFullYear()) - 1; step >= 0; step--){
+            var dateOffset = (24*60*60*1000) * step; //5 days
+            variableDay.setTime(today.getTime() - dateOffset);
+            var ispis = variableDay.getDate().toString() + "." +( variableDay.getMonth()+1).toString() + ".";
+            chartLabels.push(ispis);
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Flight/monthlyReport/' + $profileID,
+            data: {},
+            success:[function (data) {
+                for (var oneData in data){
+                    chartData.push(data[oneData]);
+                }
+                myLineChart.data.datasets[0].label = chartLabel;
+                myLineChart.data.datasets[0].data = chartData;
+                myLineChart.data.labels = chartLabels;
+                myLineChart.update();
+                $('#chart').show();
+            }],
+            error: function(xhr, status, error) {
+                if (xhr.responseText!=='true'){
+                    alert(xhr.responseText);
+                }
+            }
+        });
+
+    });
+
+    $(document).on('click', '#incomeBtn', function (e) {
+        e.preventDefault();
+        document.getElementById('date').style.display = 'none';
+        document.getElementById('rate').style.display = 'none';
+        document.getElementById('chart').style.display = 'none';
+        document.getElementById('income_dates').style.display = 'contents';
+
+    });
+
+    $(document).on('click', '#showBtn', function (e) {
+        e.preventDefault();
+        var date_from = $('#date_from_value').val();
+        var date_to = $('#date_to_value').val();
+        if(date_from === null || date_from === "" ||date_to === null || date_to === "" ){
+            alert('You must fill all fields!');
+            return false;
+        }
+        var forSending = date_from + " " + date_to;
+        $.ajax({
+            type: 'POST',
+            url: '/Flight/incomeReport/' + $profileID,
+            dataType : "text",
+            data: forSending,
+            success: [function (data) {
+                if (data !== undefined && data.length > 0) {
+                    $('#income_value').html("Income: " + data.toString());
+                    document.getElementById('income').style.display = 'contents';
+                }
+
+
+            }],
+            error: function(xhr, status, error) {
+                if (xhr.responseText!=='true'){
+                    alert(xhr.responseText);
+                }
+            }
+        });
+    });
+
     $( "#datum_poletanja").datepicker({
         dateFormat:"dd-mm-yy",
         minDate: '0d',
         onSelect: function(e) {
-            $('#datum_sletanja').datepicker('option', 'minDate', e);
+            $('.datum_sletanja').datepicker('option', 'minDate', e);
         }
     }).keyup(function(e) {
         if(e.keyCode === 8 || e.keyCode === 46) {
-            $('#datum_poletanja').datepicker('setDate', null);
-            $('#datum_sletanja').datepicker('option', 'minDate', '0d');
+            $('.datum_poletanja').datepicker('setDate', null);
+            $('.datum_sletanja').datepicker('option', 'minDate', '0d');
         }
     });
+
+    $( "#date_from_value").datepicker({
+        dateFormat:"dd.mm.yy",
+        onSelect: function(e) {
+            $('#date_to_value').datepicker('option', 'minDate', e);
+        }
+    }).keyup(function(e) {
+        if(e.keyCode === 8 || e.keyCode === 46) {
+            $('#date_from_value').datepicker('setDate', null);
+        }
+    });
+
+    $( "#date_to_value" ).datepicker({
+        dateFormat:"dd.mm.yy",
+        useCurrent: false,
+        onSelect: function(e) {
+            $('#date_from_value').datepicker('option', 'maxDate', e);    //postavlja se minimalni datum za polazak
+        }
+    }).keyup(function(e) {
+        if(e.keyCode === 8 || e.keyCode === 46) {
+            $('#date_to_value').datepicker('setDate', null);
+            $('#date_from_value').datepicker('option', 'maxDate', null);
+        }
+    });
+
     $( "#datum_sletanja" ).datepicker({
         dateFormat:"dd-mm-yy",
         useCurrent: false,
         minDate: '0d',
         onSelect: function(e) {
-            $('#datum_poletanja').datepicker('option', 'maxDate', e);    //postavlja se minimalni datum za polazak
+            $('.datum_poletanja').datepicker('option', 'maxDate', e);    //postavlja se minimalni datum za polazak
         }
     }).keyup(function(e) {
         if(e.keyCode === 8 || e.keyCode === 46) {
-            $('#datum_sletanja').datepicker('setDate', null);
-            $('#datum_poletanja').datepicker('option', 'maxDate', null);
+            $('.datum_sletanja').datepicker('setDate', null);
+            $('.datum_poletanja').datepicker('option', 'maxDate', null);
         }
     });
 
+    $( "#date_value" ).datepicker({
+        dateFormat:"dd-mm-yy",
+        useCurrent: false,
+        onSelect: function(e) {
+            //e.preventDefault();
+            chartLabel = "Number of sold tickets";
+            chartLabels=[];
+            chartLabels = ["00:00-02:00", "02:00-04:00", "04:00-06:00", "06:00-08:00", "08:00-10:00", "10:00-12:00", "12:00-14:00", "14:00-16:00", "16:00-18:00", "18:00-20:00", "20:00-22:00", "22:00-00:00"];
+            chartData = [];
+            var date = $('#date_value').val();
 
+            $.ajax({
+                method: 'POST',
+                url:'/Flight/dailyReport/' + $profileID,
+                data: date,
+                success: [function (data) {
+
+                    for (var oneData in data){
+                        chartData.push(data[oneData]);
+                    }
+                    myLineChart.data.datasets[0].label = chartLabel;
+                    myLineChart.data.datasets[0].data = chartData;
+                    myLineChart.data.labels = chartLabels;
+                    myLineChart.update();
+                    $('#chart').show();
+                }],
+                error: function(xhr, status, error) {
+                    if (xhr.responseText!=='true'){
+                        alert(xhr.responseText);
+                    }
+                }
+            });
+        }
+    }).keyup(function(e) {
+        if(e.keyCode === 8 || e.keyCode === 46) {
+            $('#date_value').datepicker('setDate', null);
+        }
+    });
+
+    $(document).on('click', '#reportsBtn', function (e) {
+        e.preventDefault();
+        document.getElementById('rate').style.display = 'none';
+        document.getElementById('income').style.display = 'none';
+        document.getElementById('date').style.display = 'none';
+        document.getElementById("date_value").value = "";
+        document.getElementById('income_dates').style.display = 'none';
+        document.getElementById("date_value").value = "";
+        document.getElementById("date_from_value").value = "";
+        document.getElementById("date_to_value").value = "";
+
+        $('#chart').show();
+    });
 
     $.ajax({
         url: '/LP/all',
@@ -87,7 +401,20 @@ $(document).ready(function() {
             if (data !== undefined && data.length > 0) {
                 $('#table-flights').dataTable().fnClearTable();
                 $('#table-flights').dataTable().fnAddData(data);
+                chartLabels=[];
+                chartData=[];
+                chartLabel = "Flight rates";
+                for (var flight in data){
+                    chartLabels.push(data[flight].sifra);
+                    chartData.push(data[flight].ocena);
+                }
+                myLineChart.data.datasets[0].label = chartLabel;
+                myLineChart.data.datasets[0].data = chartData;
+                myLineChart.data.labels = chartLabels;
+                myLineChart.update();
             }
+
+
         }
     });
 
@@ -100,6 +427,7 @@ $(document).ready(function() {
             $('#span-name').html(data.naziv);
             $('#span-address').html(data.adresa);
             $('#span-desc').html(data.opis);
+            rate = data.ocena;
         }
     });
 
@@ -113,8 +441,9 @@ $(document).ready(function() {
         var $datum_sletanja = $('#datum_sletanja').val();
         var $odredisni_aerodrom = $('#odredisni_aerodrom_id').val();
         var $polazni_aerodrom = $('#polazni_aerodrom_id').val();
+        var $sifra = $('#code').val();
 
-        if($vreme_sletanja === null ||$vreme_sletanja === "" || $datum_sletanja=== null || $datum_sletanja===""){
+        if($vreme_sletanja === null ||$vreme_sletanja === "" || $datum_sletanja=== null || $datum_sletanja==="" || $sifra === ""){
             alert("You must fill all fields!");
             return  false;
         }
@@ -123,6 +452,7 @@ $(document).ready(function() {
             alert("You must fill all fields!");
             return false;
         }
+
         var listaDep = $polazni_aerodrom.split(', ');
         $polazni_aerodrom = listaDep[0];
 
@@ -132,6 +462,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         var flight = JSON.stringify({
+            "sifra" : $sifra,
             "cena": $cena,
             "vreme_poletanja": $vreme_poletanja,
             "vreme_sletanja": $vreme_sletanja,
@@ -164,7 +495,6 @@ $(document).ready(function() {
 
 
     });
-
 
 });
 
