@@ -20,6 +20,7 @@ public class Let {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String sifra;
     private Date vremePolaska;
     private Date vremeDolaska;
     private int duzina;
@@ -33,7 +34,6 @@ public class Let {
     @JsonIgnore
     private Aviokompanija aviokompanija;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private LokacijaPresedanja polazniAerodrom;
@@ -42,5 +42,7 @@ public class Let {
     @JsonIgnore
     private LokacijaPresedanja odredisniAerodrom;
 
-
+    //@ManyToOne(fetch = FetchType.EAGER)
+    //@JsonIgnore
+    //private Avion plane;
 }

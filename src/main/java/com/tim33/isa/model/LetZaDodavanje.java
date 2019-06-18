@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LetZaDodavanje {
+    private String sifra;
     private String cena;
     private String vreme_poletanja;
     private String vreme_sletanja;

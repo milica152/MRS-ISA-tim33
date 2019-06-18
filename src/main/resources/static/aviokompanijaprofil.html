@@ -11,17 +11,20 @@
     <!-- Custom styles for this template -->
     <link href="../css/Homepage.css" rel="stylesheet">
     <link href="../css/aviokompanije.css" rel="stylesheet">
+    <link href="../css/mdb.css" rel="stylesheet">
+    <link href="../css/mdb.lite.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
 
-    <script src="../js/jquery-ui.min.js"></script>
 
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
-
-    <script src="../js/aviokompanijaprofil.js"></script>
-
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/mdb.js"></script>
+    <script src="../js/chart.js"></script>
 
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
@@ -121,11 +124,10 @@
                 </p>
                 <div>
                     <button type="button" class="btn btn-secondary" id="editInfoBtn">Edit info</button>
+                    <button type="button" class="btn btn-secondary" id="reportsBtn" data-toggle="modal" data-target="#reportsModal">Reports</button>
                 </div>
             </div>
         </div>
-
-
 
 
         <div class="row" style="margin-top: 60px;">
@@ -170,13 +172,17 @@
                                     <option value="FIRST">First</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                        <div class="form-group">
+                            <label for="code">Flight code:</label>
+                            <input type="text" id="code" class="form-control" name="code">
+                        </div>
+                        <div class="form-group">
                                 <label for="price">Price</label>
                                 <input type="number" min="0" class="form-control" id="price">
                             </div>
                             <div class="form-group">
                                 <label for="datum_poletanja">Departure date</label>
-                                <input type="text" id="datum_poletanja" class="form-control" name="datum_poletanja" placeholder="Departure Date">
+                                <input type="text" id="datum_poletanja" class="form-control datePickerMin" name="datum_poletanja" placeholder="Departure Date">
                             </div>
                             <div class="form-group">
                                 <label for="vreme_poletanja">Departure time(HH:mm)</label>
@@ -184,7 +190,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="datum_sletanja" id ="datum_sletanja_l">Arrival date</label>
-                                <input type="text" id="datum_sletanja"   class="form-control" name = "datum_sletanja"  placeholder="">
+                                <input type="text" id="datum_sletanja"   class="form-control datePickerMax" name = "datum_sletanja"  placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="vreme_sletanja" id="vreme_sletanja_l">Arrival time (HH:mm)</label>
@@ -214,6 +220,72 @@
 </div>
 
 
+<div class="modal fade" id="reportsModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportsTitle">Reports</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <section>
+                    <nav id = "reportsNav">
+                        <div class="btn-group mainBtngroups" role="group">
+                            <button type="button" class="btn btn-secondary" id="rateBtn">Rate</button>
+                            <button type="button" class="btn btn-secondary" id="flightratesBtn">Flight rates</button>
+                            <div class="btn-group" role="group">
+                                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Sold tickets
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    <button type="button" class="btn btn-light" id="dailyBtn">Daily</button>
+                                    <button type="button" class="btn btn-light" id="weeklyBtn">This week</button>
+                                    <button type="button" class="btn btn-light" id="monthlyBtn">This month</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="incomeBtn">Income</button>
+                        </div>
+                    </nav>
+                        <div id="date" class="text-center" style="display:none;">
+                            <div style="padding: 100px 0 50px">
+                                <input type='text' class="form-control" id='date_value' placeholder='Select Date'>
+                            </div>
+
+                        </div>
+                        <div id="income_dates" class="text-center" style="display:none;">
+                            <div style="padding: 100px 0 50px">
+                                <input type='text' class="form-control datePickerMin" id='date_from_value' placeholder='Select Date'>
+                            </div>
+                            <div style="padding: 10px 0 50px">
+                                <input type='text' class="form-control datePickerMax" id='date_to_value' placeholder='Select Date'>
+                            </div>
+                            <div style="padding: 1px 0 50px">
+                                <button class="btn btn-secondary" id="showBtn">Show</button>
+                            </div>
+                        </div>
+
+                        <div id="rate" class="text-center" style="display:none;  padding: 200px 0 50px">
+                            <h3 id="rate_value" style="padding: 200px 0 20px;"></h3>
+
+                        </div>
+                        <div id="income" class= "text-center" style="display:none;  padding: 200px 0 50px">
+                            <h3 id="income_value" style="padding: 20px 0 50px;"></h3>
+                        </div>
+
+                    <div id="chart">
+                        <div>
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+
+
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <footer class="py-3 bg-dark fixed-bottom">
@@ -221,5 +293,9 @@
         <p class="m-0 text-center text-white">Copyright 2019 &copy; Pomoz' Boze Co.</p>
     </div>
 </footer>
+
+
+<script src="../js/aviokompanijaprofil.js"></script>
+
 </body>
 </html>
