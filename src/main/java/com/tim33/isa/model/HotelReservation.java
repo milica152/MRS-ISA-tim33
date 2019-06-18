@@ -32,10 +32,10 @@ public class HotelReservation {
     @JoinColumn(name="room")
     private Soba room;
 
-    @OneToMany(mappedBy = "reservation") // inverse side: it has a mappedBy attribute, and can't decide how the association is mapped, since the other side already decided it.
-    @Fetch(FetchMode.JOIN)
-    @JsonIgnore
-    private Set<UslugeHotela> usluga;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "reservation_services", joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
+    protected Set<UslugeHotela> hotelServices;
 
 
 }
