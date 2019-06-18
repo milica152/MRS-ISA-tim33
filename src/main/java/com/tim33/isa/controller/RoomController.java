@@ -54,7 +54,6 @@ public class RoomController {
     @RequestMapping(value = "/addRoom/{HotelId}", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Soba room,@PathVariable long HotelId) {
         room.setHotel(hotelService.findById(HotelId));
-        room.setUsluga(Collections.emptySet());
         room.setOcena(0);
         String mess= service.checkRoom(room);
 

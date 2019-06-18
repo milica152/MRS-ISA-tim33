@@ -26,10 +26,6 @@ public class Soba {
     private TipSobe tip_sobe;
     private Double cena_nocenja;
 
-    @OneToMany(mappedBy = "room") // inverse side: it has a mappedBy attribute, and can't decide how the association is mapped, since the other side already decided it.
-    @Fetch(FetchMode.JOIN)
-    @JsonIgnore
-    private Set<UslugeHotela> usluga;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

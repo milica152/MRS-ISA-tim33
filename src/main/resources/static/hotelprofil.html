@@ -6,7 +6,7 @@
     <title>Hotel - Profil</title>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src = "https://kit.fontawesome.com/df0583b6a8.js"></script>
     <!-- Bootstrap core JavaScript -->
     <script src="/js/jquery.min.js" type="text/javascript" ></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
@@ -77,8 +77,7 @@
                 <div class="text-center">
                     <img src="/images/profile_default.png" class="avatar img-circle img-responsive"
                          alt="avatar">
-                    <h6 id="PhotoUpload"></h6>
-                    <input type="file" class="form-control" hidden>
+                    <a href="#addServiceModal" data-target="#addServiceModal" data-toggle="modal">Add Services</a>
                 </div>
             </div>
             <!-- edit form column -->
@@ -91,7 +90,7 @@
                 <div class="form-group">
                     <label label-default="" class="col-lg-3 control-label label-default"><b>Description:</b></label>
                     <div class="col-lg-12">
-                        <textarea class="form-control-plaintext" readonly id="descTextArea" rows="4" draggable="false"></textarea>
+                        <textarea class="form-control-plaintext" readonly id="descTextArea" rows="2" draggable="false"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -120,13 +119,13 @@
                     <div class="text-center">
                         <h3>
                             <span>Rooms</span>
-                            <button class="btn-lg pull-right" id="AddRoom" data-toggle="modal" data-target="#addRoomModal">
+                            <button class="btn-lg float-right" id="AddRoom" data-toggle="modal" data-target="#addRoomModal">
                                 <i class="fa fa-plus-circle"></i>
                             </button>
                         </h3>
                         <hr/>
                     </div>
-                    <form class="form-inline">
+                    <form class="form-inline fi">
                         <div class="form-group">
                             <label for="selRoomBtn">
                                 <span>Rooms for</span>
@@ -151,6 +150,9 @@
                         </div>
                         <button class="btn-lg pull-right" type= "submit" id="filterRooms">
                             <i class="fa fa-search"></i>
+                        </button>
+                        <button class="btn-lg pull-right" type= "submit" id="cancelFilter">
+                            <i class="fa fa-sync-alt"></i>
                         </button>
                     </form>
                     <div class="controls" id="selRooms">
@@ -226,6 +228,148 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" id="CancelBtn" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary" id="AddRoomBtn">Add new room</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addServiceModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addServiceTitle">Add Services</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="form" id="AddServiceForm">
+                        <div class="row">
+                            <div class="col">
+                                <label class="serviceLabels">Airport Transfer</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isAirportTransfer" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="AirportTransfer" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="serviceLabels">Parking Lot</label>
+                                <div class="input-group" >
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isParkingLot" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="parkingLot" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="serviceLabels">Pool Access</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isPool" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="pool" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="serviceLabels">Restaurant</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isRestaurant" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="restaurant" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="serviceLabels">Room Service</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isRoomService" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="roomService" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="serviceLabels">Wellness</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isWellness" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="wellness" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="serviceLabels2">Spa</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isSpa" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0.1 class="form-control mod" id="spa" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="serviceLabels2">WiFi</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend igp">
+                                        <div class="input-group-text igt">
+                                            <input id="isWiFi" type="checkbox" class="cbx">
+                                        </div>
+                                    </div>
+                                    <input type="number" min=0 class="form-control mod" id="wiFi" disabled="true" placeholder="Enter Price">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">€</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" id="CancelServiceBtn" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="AddServiceBtn">Add Services</button>
             </div>
         </div>
     </div>
