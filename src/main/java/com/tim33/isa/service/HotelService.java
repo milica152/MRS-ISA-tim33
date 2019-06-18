@@ -114,6 +114,9 @@ public class HotelService {
     }
     public void updateHotelPrice(Hotel hotel){
         double cena_min = Double.POSITIVE_INFINITY;
+        if(hotel.getKonfiguracija_soba().isEmpty()){
+            cena_min=0;
+        }
         for (Soba s:hotel.getKonfiguracija_soba()) {
             if(s.getCena_nocenja()<cena_min){
                 cena_min=s.getCena_nocenja();
