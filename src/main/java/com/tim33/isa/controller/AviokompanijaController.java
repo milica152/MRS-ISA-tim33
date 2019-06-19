@@ -65,10 +65,6 @@ public class AviokompanijaController {
         return "aviokompanijaprofil";
     }
 
-    //@GetMapping("/{id}/noviLet1")
-    //public String aviocompanyNewFlight(@PathVariable String id) {
-    //    return "noviLet";
-    //}
 
 
     @GetMapping("/specific/{id}")

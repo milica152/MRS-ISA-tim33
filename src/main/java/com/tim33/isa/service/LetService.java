@@ -1,8 +1,10 @@
 package com.tim33.isa.service;
 
+import com.tim33.isa.dto.filter.FilterFlight;
 import com.tim33.isa.dto.filter.SearchFlight;
 import com.tim33.isa.model.*;
 import com.tim33.isa.repository.AviokompanijaRepository;
+import com.tim33.isa.repository.FlightReservationRepository;
 import com.tim33.isa.repository.LetRepository;
 import com.tim33.isa.repository.LokacijaPresedanjaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,9 @@ import javax.swing.text.DateFormatter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class LetService {
@@ -26,6 +26,8 @@ public class LetService {
     AviokompanijaRepository repositoryA;
     @Autowired
     LokacijaPresedanjaRepository repositoryLP;
+    @Autowired
+    FlightReservationRepository repositoryFR;
 
     public Let save(Let noviLet){
         // Manipulacija letom...
@@ -42,7 +44,7 @@ public class LetService {
     }
 
     public Let findById(long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id);
     }
 
 
@@ -66,46 +68,23 @@ public class LetService {
             datumIVremePoletanja = kalendarP.getTime();
             noviLet.setVremePolaska(datumIVremePoletanja);
 
-            if(!(noviLetStr.getVreme_sletanja().equalsIgnoreCase(""))){
-                // konvertovanje datuma povratka ako je povratni let
-                datumIVremeSletanja = df.parse(datumIVremeSletanja_str);
-                Calendar kalendarS = Calendar.getInstance();
-                kalendarS.clear();
-                kalendarS.setTime(datumIVremeSletanja);
-                kalendarS.add(Calendar.HOUR, 2);
-                datumIVremeSletanja = kalendarS.getTime();
-                noviLet.setVremePovratka(datumIVremeSletanja);
-                try{
-                    noviLet.setDuzinaPovratak(Integer.parseInt(noviLetStr.getDuzina_povratak()));
-                }catch(Exception ex){
-                    return "Duration of return must be positive number!";
-                }
-                if(noviLet.getDuzinaPovratak()<0){
-                    return "Duration of return must be positive number!";
-                }
-
-
-            }else{
-                //ako nije:
-                noviLet.setVremePovratka(null);
-                noviLet.setDuzinaPovratak(0);
-            }
+            datumIVremeSletanja = df.parse(datumIVremeSletanja_str);
+            Calendar kalendarS = Calendar.getInstance();
+            kalendarS.clear();
+            kalendarS.setTime(datumIVremeSletanja);
+            kalendarS.add(Calendar.HOUR, 2);
+            datumIVremeSletanja = kalendarS.getTime();
+            noviLet.setVremeDolaska(datumIVremeSletanja);
 
         } catch (ParseException e) {
             return "Nevalidan format datuma!";
         }
 
-
-        //provere
-        try{
-            noviLet.setDuzinaPolazak(Integer.parseInt(noviLetStr.getDuzina_polazak()));
-        }catch(Exception ex){
-            return "Duration of departure must be positive number!";
+        for(Let f : findAll()){
+            if(f.getSifra().equalsIgnoreCase(noviLetStr.getSifra())){
+                return "Flight with that code already exists!";
+            }
         }
-        if(noviLet.getDuzinaPolazak()<0){
-            return "Duration of departure must be positive number!";
-        }
-
 
         try{
             noviLet.setCena(Double.parseDouble(noviLetStr.getCena()));
@@ -115,15 +94,10 @@ public class LetService {
         if(noviLet.getCena()<0){
             return "Cost must be positive number!";
         }
-        if(noviLetStr.getTip().equalsIgnoreCase("ROUND_TRIP")){
-            if(noviLet.getVremePolaska().after(noviLet.getVremePovratka()) || noviLet.getVremePolaska().equals(noviLet.getVremePovratka())){
+            if(noviLet.getVremePolaska().after(noviLet.getVremeDolaska()) || noviLet.getVremePolaska().equals(noviLet.getVremeDolaska())){
                 return "Departure must be before return!";
             }
-        }
 
-
-        System.out.println(noviLetStr.getOdredisni_aerodrom_id());
-        System.out.println(noviLetStr.getPolazni_aerodrom_id());
 
         if(repositoryLP.findByNazivAerodroma(noviLetStr.getOdredisni_aerodrom_id())  != null){
             noviLet.setOdredisniAerodrom(repositoryLP.findByNazivAerodroma(noviLetStr.getOdredisni_aerodrom_id()));
@@ -139,11 +113,16 @@ public class LetService {
             return "Departure and arrival must be at different airports!";
         }
 
-        noviLet.setTipPuta(TipPuta.valueOf(noviLetStr.getTip()));
+        long duzinamilisekunde = noviLet.getVremeDolaska().getTime() - noviLet.getVremePolaska().getTime();
+        long duzinaminuti = duzinamilisekunde/ (60 * 1000);
+        String duzinastr = Long.toString(duzinaminuti);
+        int duzina = Integer.parseInt(duzinastr);
+        noviLet.setDuzina(duzina);
+
         noviLet.setKlasa(KlasaLeta.valueOf(noviLetStr.getKlasa()));
         noviLet.setAviokompanija(repositoryA.findById(Long.parseLong(noviLetStr.getAviokompanija_id())));
         noviLet.setOcena(0.0);
-
+        noviLet.setSifra(noviLetStr.getSifra().toUpperCase());
         repository.save(noviLet);
         return "true";
 
@@ -153,6 +132,161 @@ public class LetService {
         return repository.findAllByAviokompanijaId(idAviocomp);
     }
 
+    private static Date getZeroTimeDate(Date fecha) {
+        Date res = fecha;
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime( fecha );
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        res = calendar.getTime();
+
+        return res;
+    }
+
+    public int[] findAllDaily(long idAviocomp, String dateStr){
+        DateFormat df = new SimpleDateFormat("dd-MM-yy");
+        Date date = null;
+        try {
+            date = df.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        int cnt0 = 0;
+        int cnt1 = 0;
+        int cnt2 = 0;
+        int cnt3 = 0;
+        int cnt4 = 0;
+        int cnt5 = 0;
+        int cnt6 = 0;
+        int cnt7 = 0;
+        int cnt8 = 0;
+        int cnt9 = 0;
+        int cnt10 = 0;
+        int cnt11 = 0;
+        int cmp;
+
+        List<Let> all = findAllFromAviocompany(idAviocomp);    //svi letovi ove aviokompanije
+        for (Let f : all){    //za svaki let
+            List<FlightReservation> reservations = repositoryFR.findAllByFlightId(f.getId());  //sve rezervacije za taj let
+            for(FlightReservation fr : reservations){     //izlistaj te rezervacije
+
+                //jer baza dodaje 2 sata
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(fr.getTime());
+                cal.add(Calendar.HOUR, -2);
+                Date reservationTime = cal.getTime();
+
+                cmp = getZeroTimeDate(date).compareTo(getZeroTimeDate(reservationTime));
+                if(cmp == 0){    //ako je let rezervisan danas
+                    if(reservationTime.getHours() < 2 && reservationTime.getHours() >= 0){
+                        cnt0 += 1;
+                    }
+                    if(reservationTime.getHours() < 4 && reservationTime.getHours() >= 2){
+                        cnt1 += 1;
+                    }
+                    if(reservationTime.getHours() < 6 && reservationTime.getHours() >= 4){
+                        cnt2 += 1;
+                    }
+                    if(reservationTime.getHours() < 8 && reservationTime.getHours() >= 6){
+                        cnt3 += 1;
+                    }
+                    if(reservationTime.getHours() < 10 && reservationTime.getHours() >= 8){
+                        cnt4 += 1;
+                    }
+                    if(reservationTime.getHours() < 12 && reservationTime.getHours() >= 10){
+                        cnt5 += 1;
+                    }
+                    if(reservationTime.getHours() < 14 && reservationTime.getHours() >= 12){
+                        cnt6 += 1;
+                    }
+                    if(reservationTime.getHours() < 16 && reservationTime.getHours() >= 14){
+                        cnt7 += 1;
+                    }
+                    if(reservationTime.getHours() < 18 && reservationTime.getHours() >= 16){
+                        cnt8 += 1;
+                    }
+                    if(reservationTime.getHours() < 20 && reservationTime.getHours() >= 18){
+                        cnt9 += 1;
+                    }
+                    if(reservationTime.getHours()< 22 && reservationTime.getHours() >= 20){
+                        cnt10 += 1;
+                    }
+                    if(reservationTime.getHours() <=23  && reservationTime.getHours() >= 22){
+                        cnt11 += 1;
+                    }
+                }
+
+            }
+        }
+
+        return new int[]{cnt0,cnt1,cnt2,cnt3,cnt4,cnt5,cnt6,cnt7,cnt8,cnt9,cnt10,cnt11};
+
+
+    }
+
+    private static Date subtractDays(int numDays, Date curr) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(curr);
+        cal.add(Calendar.DATE, 0-numDays);
+        return cal.getTime();
+    }
+
+    private static Date subtractTwoHours(Date curr){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(curr);
+        cal.add(Calendar.HOUR, -2);
+        return cal.getTime();
+    }
+
+    public int[] findWeeklyReport(long idAviocomp) {
+        int cnt0 = 0;
+        int cnt1 = 0;
+        int cnt2 = 0;
+        int cnt3 = 0;
+        int cnt4 = 0;
+        int cnt5 = 0;
+        int cnt6 = 0;
+        Date today = new Date();
+        int cmp;
+
+        List<Let> all = findAllFromAviocompany(idAviocomp);    //svi letovi ove aviokompanije
+        for (Let f : all){    //za svaki let
+            List<FlightReservation> reservations = repositoryFR.findAllByFlightId(f.getId());  //sve rezervacije za taj let
+            for(FlightReservation fr : reservations){     //izlistaj te rezervacije
+                //jer baza dodaje 2 sata
+                Date reservationTime = subtractTwoHours(fr.getTime());
+
+                if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(0, today))) == 0){
+                    cnt6 += 1;
+                }
+                else if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(1, today))) == 0){
+                    cnt5 += 1;
+                }
+                else if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(2, today))) == 0){
+                    cnt4 += 1;
+                }
+                else if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(3, today))) == 0){
+                    cnt3 += 1;
+                }
+                else if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(4, today))) == 0){
+                    cnt2 += 1;
+                }
+                else if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(5, today))) == 0){
+                    cnt1 += 1;
+                }
+                else if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(6, today))) == 0){
+                    cnt0 += 1;
+                }
+            }
+        }
+
+        return new int[]{cnt0,cnt1,cnt2,cnt3,cnt4,cnt5,cnt6};
+    }
 
     public List<Let> searchFlight(SearchFlight criteria){
         //int passangers = Integer.parseInt(criteria.getNoPassengers());  --  kad budu sedista i avion
@@ -161,16 +295,8 @@ public class LetService {
 
         Let current;
 
-
         while (it.hasNext()) {
             current = it.next();
-            // tip
-            if(!(criteria.getType().trim().equals(""))){
-                if(!(current.getTipPuta().name().replace('_', '-').equalsIgnoreCase(criteria.getType()))){
-                    it.remove();
-                    continue;
-                }
-            }
 
             //klasa
             if(!(criteria.getKlasa().trim().equals(""))){
@@ -198,18 +324,6 @@ public class LetService {
                 }
             }
 
-            // datum povratka
-            if(criteria.getType().equalsIgnoreCase("round-trip")){   //pogledaj jos format !!
-                if(!(criteria.getDateTo().trim().equals(""))){
-                    DateFormat df3 = new SimpleDateFormat("dd-MM-yyyy");
-                    String date = df3.format(current.getVremePovratka());
-                    if(!(criteria.getDateTo().equals(date))){
-                        it.remove();
-                        continue;
-                    }
-
-                }
-            }
 
             // polazni aer.
             if(!(criteria.getDepartureAirport().trim().equalsIgnoreCase(""))){
@@ -223,5 +337,86 @@ public class LetService {
 
     public void deleteById(Long idDel) {
         repository.delete(findById(idDel));
+    }
+
+    public List<Let> filter(FilterFlight params) {
+        List<Let> returnFlights = new ArrayList<>();
+
+        for(Integer let : params.getFlights()){
+            Let current = repository.findById(Integer.toUnsignedLong(let));
+            if(!(current.getCena()> params.getMinPrice() && current.getCena() < params.getMaxPrice())){
+                continue;
+            }
+            if(!(params.getAirline().equalsIgnoreCase("any"))){
+                if(!(current.getAviokompanija().getNaziv().equalsIgnoreCase(params.getAirline()))){
+                    continue;
+                }
+            }
+            if(!(current.getDuzina() <= params.getDuration())){
+                continue;
+            }
+            returnFlights.add(current);
+        }
+
+        return returnFlights;
+    }
+
+    public int[] findMonthlyReport(long idAviocomp) {
+        Date today = new Date();
+        int year = today.getYear();
+        int month = today.getMonth();
+        if(month==1){
+            month = 13;
+        }
+        YearMonth yearMonthObject = YearMonth.of(year,month-1);
+        int daysInMonth = yearMonthObject.lengthOfMonth();
+        int counter = 0;
+        int[] lista = new int[daysInMonth];
+
+        List<Let> all = findAllFromAviocompany(idAviocomp);    //svi letovi ove aviokompanije
+        for(int i = daysInMonth-1; i > 0; i--){
+            for(Let f : all){
+                //traze se sve rezervacije koje su ovog dana meseca i godine
+                List<FlightReservation> reservations = repositoryFR.findAllByFlightId(f.getId());  //sve rezervacije za taj let
+                for(FlightReservation fr : reservations){
+                    Date reservationTime = subtractTwoHours(fr.getTime());
+                    if(getZeroTimeDate(reservationTime).compareTo(getZeroTimeDate(subtractDays(i, today))) == 0) {
+                        counter++;
+                    }
+                }
+            }
+            //kad se nadje koliko je rez u tom danu
+            lista[daysInMonth-1-i] = counter;
+            counter = 0;
+        }
+        return lista;
+    }
+
+    public Double findIncomeReport(long idAviocomp, String dates_str){
+        String[] dates = (dates_str.substring(0,dates_str.length()-1)).split("\\+");
+
+        Double count = 0.0;
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        Date prvi = new Date();
+        Date drugi = new Date();
+
+        try {
+             prvi = df.parse(dates[0] + " 00:00:00");
+            drugi = df.parse(dates[1] + " 00:00:00");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        List<Let> all = findAllFromAviocompany(idAviocomp);
+            for(Let f : all) {
+                List<FlightReservation> reservations = repositoryFR.findAllByFlightId(f.getId());  //sve rezervacije za taj let
+                for (FlightReservation fr : reservations) {
+                    if((getZeroTimeDate(subtractTwoHours(fr.getTime())).before(drugi) || getZeroTimeDate(subtractTwoHours(fr.getTime())).compareTo(drugi)==0) && (getZeroTimeDate(subtractTwoHours(fr.getTime())).after(prvi) || getZeroTimeDate(subtractTwoHours(fr.getTime())).compareTo(prvi)==0)){
+                        count += fr.getPrice();
+                    }
+
+                }
+            }
+            return count;
     }
 }

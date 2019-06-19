@@ -1,5 +1,6 @@
 package com.tim33.isa.controller;
 
+import com.tim33.isa.dto.filter.FilterFlight;
 import com.tim33.isa.dto.filter.SearchFlight;
 import com.tim33.isa.model.Let;
 import com.tim33.isa.service.LetService;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/Flight")
@@ -50,6 +51,7 @@ public class LetController {
     @ResponseBody
     public void deleteFlight(@PathVariable Long idDel){service.deleteById(idDel);}
 
+
     @GetMapping("/fromAviocompany/{idAviocomp}")
     ResponseEntity<List<Let>> findAllFromAviocompany(@PathVariable long idAviocomp) {
         return new ResponseEntity<>(service.findAllFromAviocompany(idAviocomp), HttpStatus.OK);
@@ -58,8 +60,60 @@ public class LetController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<List<Let>> searchFlight(@Valid @RequestBody SearchFlight criteria) {
-        System.out.println("dosao na server");
             return new ResponseEntity<>(service.searchFlight(criteria), HttpStatus.OK);
     }
 
+    @RequestMapping(value="/filter", method = RequestMethod.POST)
+    public ResponseEntity<?> filter(@RequestBody FilterFlight params) {
+        if(params.getMaxPrice() == 0){
+            params.setMaxPrice(99999999999999999.99);
+        }
+        try {
+            if(params.getMinPrice()>params.getMaxPrice()){
+                return new ResponseEntity<String>("Bad price range", HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<List<Let> >(service.filter(params), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/dailyReport/{idAviocomp}")
+    @ResponseBody
+    ResponseEntity<?> findAllDaily(@PathVariable long idAviocomp, @RequestBody String date){
+        try {
+            return new ResponseEntity<int[]>(service.findAllDaily(idAviocomp, date), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/weeklyReport/{idAviocomp}")
+    @ResponseBody
+    ResponseEntity<?> findWeeklyReport(@PathVariable long idAviocomp){
+        try {
+            return new ResponseEntity<int[]>(service.findWeeklyReport(idAviocomp), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/monthlyReport/{idAviocomp}")
+    @ResponseBody
+    ResponseEntity<?> findMonthlyReport(@PathVariable long idAviocomp){
+        try {
+            return new ResponseEntity<int[]>(service.findMonthlyReport(idAviocomp), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PostMapping("/incomeReport/{idAviocomp}")
+    @ResponseBody
+    ResponseEntity<?> findIncomeReport(@PathVariable long idAviocomp, @RequestBody String dates){
+        try {
+            return new ResponseEntity<Double>(service.findIncomeReport(idAviocomp, dates), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

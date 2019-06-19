@@ -16,9 +16,12 @@ import javax.persistence.*;
 public class Sediste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int broj;
+    private long id;
+    private int brojReda;
+    private int brojKolone;
     private boolean rezervisano;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Avion avion;
+
 }

@@ -54,3 +54,30 @@ body {
 }
 
 
+
+.centeredBtn {
+    text-align: center;
+}
+
+#filterFlights {
+    position: absolute;
+    top: 50%;
+}
+
+#reportsNav {
+    float: left;
+    width: 85%;
+    padding: 15px;
+    height: 150px;
+}
+
+.mainBtngroups{
+    position:relative;
+    vertical-align:middle;
+    height: 50%;
+    width: 85%;
+}
+
+#showBtn{
+    background-color: #4b4b4b;
+}

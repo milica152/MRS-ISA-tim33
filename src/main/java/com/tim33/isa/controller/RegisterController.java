@@ -2,15 +2,16 @@ package com.tim33.isa.controller;
 
 import com.tim33.isa.model.*;
 import com.tim33.isa.repository.ServiceRepository;
-import com.tim33.isa.repository.UserRepository;
+import com.tim33.isa.repository.UserRoleRepository;
 import com.tim33.isa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.HashSet;
 
 @RestController
 public class RegisterController {
@@ -20,6 +21,9 @@ public class RegisterController {
 
     @Autowired
     private ServiceRepository serviceRepository;
+
+    @Autowired
+    private UserRoleRepository roleRepository;
 
     @RequestMapping(value = "registerUser", method = RequestMethod.POST)
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
@@ -46,21 +50,22 @@ public class RegisterController {
             ((Aviokompanija) service).getAdmins().add((AirlineAdmin) admin);
             ((AirlineAdmin) admin).setAirline((Aviokompanija)service);
             admin.setTip_korisnika(TipUsera.ADMIN_AK);
-
-        }else if(service instanceof Hotel){
+            admin.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByRole("ADMIN_AK"))));
+        } else if(service instanceof Hotel){
             admin = new HotelAdmin();
             ((Hotel) service).getAdmins().add((HotelAdmin) admin);
             ((HotelAdmin) admin).setHotel((Hotel)service);
             admin.setTip_korisnika(TipUsera.ADMIN_HOTELA);
-        }else if(service instanceof RentACar){
+            admin.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByRole("ADMIN_HOTELA"))));
+        } else if(service instanceof RentACar){
             admin = new RCSAdmin();
             ((RentACar) service).getAdmins().add((RCSAdmin) admin);
             ((RCSAdmin) admin).setRentACar((RentACar)service);
             admin.setTip_korisnika(TipUsera.ADMIN_RCS);
+            admin.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByRole("ADMIN_RCS"))));
         }
         admin.setId(0);
         admin.setUsername(user.getUsername());
-        admin.setPassword(user.getPassword());
         admin.setIme(user.getIme());
         admin.setPrezime(user.getPrezime());
         admin.setEmail(user.getEmail());
