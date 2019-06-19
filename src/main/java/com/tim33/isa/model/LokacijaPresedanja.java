@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "lokacijaPresedanja")
@@ -22,10 +23,15 @@ public class LokacijaPresedanja {
     private String nazivAerodroma;
     private String grad;
     private String drzava;
-    @JsonIgnore
+
+    /*@JsonIgnore
     @ManyToOne
     @JoinTable(name="airline_destination",
             joinColumns={@JoinColumn(name="destination_id")},
             inverseJoinColumns={@JoinColumn(name="airline_id")})
-    private Aviokompanija airline;
+    private Aviokompanija airline;*/
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "destinations")
+    private Set<Aviokompanija> airline;
 }

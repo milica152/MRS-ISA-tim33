@@ -1,6 +1,7 @@
 var noOfReser=0;
 
 $(document).ready(function() {
+
     initTable();
     setCart();
     var $hotelReservation = $.parseJSON(sessionStorage.getItem("HotelReservation"));
@@ -152,6 +153,7 @@ $(document).ready(function() {
         });
 
     });
+
     function initTable(){
         $.ajax({
             url: '/Hotels/all',

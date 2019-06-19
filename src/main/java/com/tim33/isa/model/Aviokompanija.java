@@ -23,15 +23,17 @@ public class Aviokompanija extends Service {
 
     private double ocena;
 
-    @OneToMany(mappedBy = "airline")
-    @Fetch(FetchMode.JOIN)
     @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "airlines_destinations", joinColumns = @JoinColumn(name = "airline_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "destination_id", referencedColumnName = "id"))
     private Set<LokacijaPresedanja> destinations;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+    @JsonIgnore
     private Set<Karta> karteZaBrzu;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+    @JsonIgnore
     private Set<AirlineAdmin> admins;
 
 }
