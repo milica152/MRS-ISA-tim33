@@ -1,15 +1,57 @@
 $profileID = document.location.href.substring(document.location.href.lastIndexOf('/') + 1);
 var isGroupSel = false;
 var roomTypesNeeded=[];
+var noOfReser=0;
+var clicks=0;
+var roomsTable;
 
 $(document).ready(function() {
 
-    setPage();
+    if(sessionStorage.getItem("HotelReservation")==null){
+        createInitialReservation();
+    }
+    //updateCart();
+    /*if(sessionStorage.getItem("DateFromHotelRes")==null || sessionStorage.getItem("DateToHotelRes")==null){
+        //disejbluj rezervacije
+    }
+    if(($.parseJSON(sessionStorage.getItem("HotelReservation"))).dateFrom!==sessionStorage.getItem("DateFromHotelRes")){
+        //updateReservationDate();
+    }else if(($.parseJSON(sessionStorage.getItem("HotelReservation"))).dateTo!==sessionStorage.getItem("DateToHotelRes")){
+        //updateReservationDate();
+    }*/
+
+
     $(".controls").hide();
 
-    //#region Inicijalizacija tabela
+    var panels = $('.service-infos');
+    var panelsButton = $('.dropdown-service');
+    panels.hide();
+
+    //#region Click dropdown
+    panelsButton.click(function() {
+        //get data-for attribute
+        var dataFor = $(this).attr('data-for');
+        var idFor = $(dataFor);
+
+        //current button
+        var currentButton = $(this);
+        idFor.slideToggle(400, function() {
+            //Completed slidetoggle
+            if(idFor.is(':visible'))
+            {
+                currentButton.html('<i class="fas fa-chevron-up text-muted float-right"></i>');
+            }
+            else
+            {
+                currentButton.html('<i class="fas fa-chevron-down text-muted float-right"></i>');
+            }
+        })
+    });
+    //#endregion
+
+    //#region Inicijalizacija tabele
     $('#alert').hide();
-    var roomsTable = $('#table-rooms').DataTable({
+    roomsTable = $('#table-rooms').DataTable({
         data: undefined,
         searching: false,
         lengthChange: false,
@@ -23,8 +65,8 @@ $(document).ready(function() {
             { data: 'tip_sobe', title: 'Room type' },
             { data: 'cena_nocenja', title: 'Price per night' },
             { data: 'ocena', title: 'Rating'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="reserveRoom">Reserve</button>'}
-            ],
+            { data: null, defaultContent:'<button class="btn btn-success reserveBtn" onClick = "Reserve(this)" type="button"><i class="fa fa-cart-plus"></i></button>', title:'Select'}
+        ],
         columnDefs: [
             { className: "align-middle", targets: "_all" }
         ]
@@ -33,7 +75,13 @@ $(document).ready(function() {
     //#endregion
 
     setTable();
+    setPage();
     setModal();
+    if($.parseJSON(sessionStorage.getItem("HotelReservation"))!=null){
+        updateCart($.parseJSON(sessionStorage.getItem("HotelReservation")));
+    }
+    setCart();
+
 
     //#region Checkbox-ovi za dodavanje usluga
     $('#isAirportTransfer').change(function () {
@@ -174,7 +222,7 @@ $(document).ready(function() {
                 data : JSON.stringify(Services),
                 success: function(data){
                     $('#addServiceModal').modal('hide');
-                    alert("Dodalaaa");
+                    //TODO alert
                 },
                 error: function(xhr, status, error) {
                     if (xhr.responseText!=='true'){
@@ -370,6 +418,7 @@ function doFilter(){
                 $('#table-rooms').dataTable().fnAddData(data);
             }
             else{
+                //TODO alert lepo
                 alert("Not enough rooms!");
             }
         },
@@ -467,6 +516,7 @@ function setTable(){
             if (data !== undefined && data.length > 0) {
                 $('#table-rooms').dataTable().fnClearTable();
                 $('#table-rooms').dataTable().fnAddData(data);
+                setButtons();
             }
         },
         error: function(xhr, status, error) {
@@ -474,5 +524,228 @@ function setTable(){
             alert('Error - ' + errorMessage);
         }
     });
+
+}
+
+function Reserve(btn){
+    var data = roomsTable.row($(btn).parents('tr')).data();
+    if(btn.innerHTML == '<i class="fa fa-cart-plus" aria-hidden="true"></i>'){
+        btn.innerHTML = '<i class="fa fa-trash-alt" aria-hidden="true"></i>';
+        btn.className = "btn btn-danger reservebtn";
+        addRoomToReservation(data);
+    }else{
+        btn.innerHTML = '<i class="fa fa-cart-plus" aria-hidden="true"></i>';
+        btn.className = "btn btn-success reservebtn";
+        removeRoomFromReservation(data);
+    }
+
+}
+
+function setButtons(){
+    var listOfResRooms = $.parseJSON(sessionStorage.getItem("HotelReservation")).room;
+    if(listOfResRooms!=null){
+        var listOfIds=[];
+        listOfResRooms.forEach(function(room){
+            listOfIds.push(room.id);
+        });
+        roomsTable.rows().every(function() {
+            var rowNode = this.node();
+            var cells = $(rowNode).find("td:visible");
+            if(listOfIds.includes(this.data().id)){
+                cells[5].innerHTML = '<button class="btn btn-danger reservebtn" onClick = "Reserve(this)" type="button"><i class="fa fa-trash-alt" aria-hidden="true"></i></button>';
+            }else{
+                cells[5].innerHTML = '<button class="btn btn-success reservebtn" onClick = "Reserve(this)" type="button"><i class="fa fa-cart-plus" aria-hidden="true"></i></button>';
+            }
+        });
+    }
+
+
+}
+
+function addRoomToReservation(data){
+    var $Room= data;
+    var $reservationId = ($.parseJSON(sessionStorage.getItem("HotelReservation"))).id;
+    $.ajax({
+        type: 'POST',
+        url: '/HotelReservation/addRoom/'+$reservationId,
+        contentType : 'application/json',
+        dataType : "json",
+        data : JSON.stringify($Room),
+        success: function(data){
+            sessionStorage.setItem("HotelReservation", JSON.stringify(data));
+            updateCart(data);
+            setCart();
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+}
+
+function removeRoomFromReservation(data){
+    var $Room= data;
+    var $reservationId = ($.parseJSON(sessionStorage.getItem("HotelReservation"))).id;
+    $.ajax({
+        type: 'POST',
+        url: '/HotelReservation/deleteRoom/'+$reservationId,
+        contentType : 'application/json',
+        dataType : "json",
+        data : JSON.stringify($Room),
+        success: function(data){
+            sessionStorage.setItem("HotelReservation", JSON.stringify(data));
+            updateCart(data);
+            setCart();
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+}
+
+function removeRoomFromCart(data){
+    var room = data.cells[0].children[0].children[1].children[0].innerHTML;
+    var roomSplit = room.split("Room");
+    var roomId = roomSplit[1];
+    var $reservationId = ($.parseJSON(sessionStorage.getItem("HotelReservation"))).id;
+    $.ajax({
+        type: 'POST',
+        url: '/HotelReservation/deleteRoomCart/'+roomId+'/'+$reservationId,
+        contentType : 'application/json',
+        dataType : "json",
+        data : {},
+        success: function(data){
+            sessionStorage.setItem("HotelReservation", JSON.stringify(data));
+            updateCart(data);
+            setCart();
+            setButtons();
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+}
+
+function createInitialReservation(){
+    $.ajax({
+        type: 'POST',
+        url: '/HotelReservation/add',
+        contentType : 'application/json',
+        dataType : "json",
+        data : {},
+        success: function(data){
+            sessionStorage.setItem("HotelReservation", JSON.stringify(data));
+            setCart();
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+
+}
+
+function setCart(){
+    var $airlineReservation = $.parseJSON(sessionStorage.getItem("AirlineReservation"));
+    var $hotelReservation = $.parseJSON(sessionStorage.getItem("HotelReservation"));
+    var $rcsReservation = $.parseJSON(sessionStorage.getItem("RCSReservation"));
+    var sumTotal=0.00;
+    var cartEl = 0;
+
+    if($airlineReservation!=null){
+        document.getElementById('flightResNo').innerHTML = $airlineReservation.id;
+        document.getElementById('FlightsTotal').innerHTML = $airlineReservation.price;
+        sumTotal = sumTotal + parseFloat($airlineReservation.price);
+        //TODO dodajte ovde za vas deo
+        //cartEl = cartEl + $airlineReservation.flights.length;
+    }
+    if($hotelReservation!=null){
+        document.getElementById('hotelResNo').innerHTML = $hotelReservation.id;
+        document.getElementById('RoomsTotal').innerHTML = $hotelReservation.price;
+        sumTotal = sumTotal + parseFloat($hotelReservation.price);
+        if($hotelReservation.room!=null){
+            cartEl = cartEl + $hotelReservation.room.length;
+        }
+
+    }
+    if($rcsReservation!=null){
+        document.getElementById('rcsResNo').innerHTML = $rcsReservation.id;
+        document.getElementById('VehiclesTotal').innerHTML = $rcsReservation.price;
+        sumTotal = sumTotal + parseFloat($rcsReservation.price);
+        //TODO dodajte ovde za vas deo
+        //cartEl = cartEl + $rcsReservation.vehicles.length;
+    }
+    document.getElementById("SumTotal").innerHTML = sumTotal+"€";
+    document.getElementById('noOfRes').innerHTML = cartEl;
+
+
+}
+
+function updateReservationDate(){
+
+    $.ajax({
+        type: 'POST',
+        url: '/HotelReservation/updateDate',
+        contentType : 'application/json',
+        dataType : "json",
+        data : { dateFrom: sessionStorage.getItem("DateFromHotelRes"), dateTo: sessionStorage.getItem("DateToHotelRes")},
+        success: function(data){
+            sessionStorage.setItem("HotelReservation", JSON.stringify(data));
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+}
+
+function updateCart(reservation){
+    if(reservation.room!=null){
+        var rooms = reservation.room;
+        var rowCount = $('#RoomTable tbody tr').length;
+        var toDelete = rowCount-3;
+        $("#RoomTable").find("tbody tr:lt("+toDelete+")").remove();
+        rooms.forEach(function(room) {
+            var cartRows = $('#rowSubtotal');
+            var newEntry = '<tr>\n' +
+                '<td>\n' +
+                '<div class="media">\n' +
+                '<a class="thumbnail pull-left roomImg" href="#"> <img class="media-object" src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" > </a>\n' +
+                '<div class="media-body">\n' +
+                '<h6 class="media-heading roomTypeTable">Room '+room.id +'</h6>\n' +
+                '<p class="roomFloorInfo">Floor: '+room.roomFloor +' </p>\n' +
+                '<p class="roomNoInfo">Number: '+room.roomNo +'</p>\n' +
+                '</div>\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="text-center"><strong>'+room.cena_nocenja+'€</strong></td>\n' +
+                '<td class="text-center">\n' +
+                '<button type="button" onclick="removeRoomFromCart(this.parentNode.parentNode)" class="btn-md btn-danger">\n' +
+                '<span class="fas fa-trash"></span>\n' +
+                '</button>\n' +
+                '</td>\n' +
+                '</tr>';
+            cartRows.before(newEntry);
+        })
+
+        var discount=0.00;
+        if(reservation.discount==null){
+            discount = 0.00;
+        }else{
+            discount = reservation.discount;
+        }
+        var priceNoDisc = reservation.price + discount;
+        document.getElementById('subtotal').innerHTML = priceNoDisc+"€";
+        document.getElementById('discount').innerHTML = discount+"€";
+        document.getElementById('totalAll').innerHTML = reservation.price + "€";
+        document.getElementById('RoomsTotal').innerHTML = reservation.price;
+    }
 
 }

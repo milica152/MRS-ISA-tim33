@@ -21,7 +21,7 @@ import java.util.Set;
 public class Hotel extends Service{
 
 
-    private double cenaOd;
+    private double cenaOd=0;
     private int ocena;
 
 

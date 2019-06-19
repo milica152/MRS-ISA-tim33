@@ -27,10 +27,11 @@ public class HotelReservation {
     private Date beginDate;
     private Date endDate;
     private Double price;
+    private Double discount=0.0;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="room")
-    private Soba room;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "reservation_room", joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "room_id", referencedColumnName = "id"))
+    private Set<Soba> room;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
