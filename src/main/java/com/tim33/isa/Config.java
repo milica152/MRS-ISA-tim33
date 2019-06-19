@@ -37,6 +37,7 @@ public class Config {
                 Set<UserRole> roles = new HashSet<>();
                 roles.add(roleRepository.findByRole("SISTEM_ADMIN"));
                 user.setRoles(roles);
+                user.setConfirmed(true);
 
                 userService.save(user);
             }

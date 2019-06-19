@@ -53,6 +53,9 @@ public class User implements UserDetails {
     @JoinTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
 
+    @Column(name = "confirmed", nullable = false)
+    private boolean confirmed;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> grantedAuthorities = new HashSet<>();

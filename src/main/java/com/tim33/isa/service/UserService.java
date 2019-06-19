@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,28 +26,26 @@ public class UserService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
         User user = repository.findByUsername(username);
         if (user == null) throw new UsernameNotFoundException(username);
         return user;
-//        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-//        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRoles().getName()));
-
-//        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 
     public User save(User noviUser) {
-        // Manipulacija profilom...
-
         noviUser.setPassword(bCryptPasswordEncoder.encode(noviUser.getPassword()));
-        return repository.save(noviUser);
+        User u = repository.save(noviUser);
+
+        emailService.sendVerificationEmail(u);
+        return u;
     }
 
     public User update(User noviUser) {
-        // Manipulacija profilom...
-
         return repository.save(noviUser);
     }
 
@@ -84,8 +83,20 @@ public class UserService implements UserDetailsService {
 
         user1.setPassword(bCryptPasswordEncoder.encode(user1.getPassword()));
 
-        repository.save(user1);
+        User u = repository.save(user1);
+        emailService.sendVerificationEmail(u);
 
         return "true";
+    }
+
+    public RedirectView confirmRegistration(String token) {
+        User ru = repository.findByToken(token);
+        if (ru != null) {
+            ru.setConfirmed(true);
+            repository.save(ru);
+            return new RedirectView("/acc_verified.html");
+        }
+
+        return null;
     }
 }

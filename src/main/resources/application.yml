@@ -23,8 +23,23 @@ spring:
     # suffix: .html
     # template-resolver-order:
     # view-names:
+  mail:
+    default-encoding: UTF-8
+    host: mail.vpetrovic.com
+    username: isa@vpetrovic.com
+    password: IsaProjekat12
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+            required: false
+    protocol: smtp
+    test-connection: false
   queries:
-    users-query: select username, password, 1 from users where username=?
+    users-query: select username, password, confirmed from users where username=?
     roles-query: select u.username, r.role from users u inner join roles ur on(u.id=ur.user_id) inner join role r on(ur.role_id=r.role_id) where u.username=?
 jwt:
   header: Authorization

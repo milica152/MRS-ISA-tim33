@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -27,6 +28,8 @@ public class RegisterController {
 
     @RequestMapping(value = "registerUser", method = RequestMethod.POST)
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
+        user.setTip_korisnika(TipUsera.OBICAN);
+        user.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByRole("OBICAN"))));
         String mess= userService.checkReg(user);
         if (!mess.equals("true")) {
             return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
@@ -78,5 +81,9 @@ public class RegisterController {
         }
     }
 
+    @RequestMapping(value = "/acc_confirm", method = RequestMethod.GET)
+    public RedirectView confirmRegistration(@RequestParam String token) {
+        return userService.confirmRegistration(token);
+    }
 
 }
