@@ -3,6 +3,7 @@ package com.tim33.isa.controller;
 
 import com.tim33.isa.model.Aviokompanija;
 import com.tim33.isa.model.LetZaDodavanje;
+import com.tim33.isa.model.RequestWrapper;
 import com.tim33.isa.service.AviokompanijaService;
 import com.tim33.isa.service.LetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -27,6 +29,20 @@ public class AviokompanijaController {
     @ResponseBody
     Aviokompanija save(@RequestBody Aviokompanija noviProfil) {
         return service.save(noviProfil);
+    }
+
+
+    @RequestMapping(value = "/addNewAviocompany", method = RequestMethod.POST)
+    public ResponseEntity<?> addNew(@RequestBody RequestWrapper request) {
+        Aviokompanija ak = request.getAirline();
+        ak.setDestinations(request.getDestinations());
+        String mess= service.checkAK(ak);
+
+        if (!mess.equals("true")) {
+            return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(ak, HttpStatus.OK);
+        }
     }
 
     @PutMapping("/{id}")

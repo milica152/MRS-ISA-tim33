@@ -40,7 +40,6 @@ public class RegisterController {
     @RequestMapping(value = "registerAdmin/{serviceName}", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user,@PathVariable("serviceName") String serviceName) {
         Service service = serviceRepository.findByNaziv(serviceName);
-        System.out.println(serviceName);
         String mess = null;
         if(service==null){
             mess = "Service doesn't exist";
@@ -68,6 +67,7 @@ public class RegisterController {
             admin.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByRole("ADMIN_RCS"))));
         }
         admin.setId(0);
+        admin.setPassword(user.getPassword());
         admin.setUsername(user.getUsername());
         admin.setIme(user.getIme());
         admin.setPrezime(user.getPrezime());

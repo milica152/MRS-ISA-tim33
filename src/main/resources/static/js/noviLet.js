@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 
     $( "#datum_poletanja").datepicker({
-\        dateFormat:"dd-mm-yy",
+        dateFormat:"dd-mm-yy",
         minDate: '0d',
         onSelect: function(e) {
             $('#datum_sletanja').datepicker('option', 'minDate', e);

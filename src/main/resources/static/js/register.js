@@ -48,7 +48,7 @@ $(document).ready(function(){
             dataType : "json",
             data : user,
             success: [function(newUser){
-                alery("You have registered successfully.");
+                alert("You have registered successfully.");
                 document.location.href = "/";
             }],
             error: function(xhr, status, error) {

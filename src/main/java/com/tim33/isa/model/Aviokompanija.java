@@ -26,7 +26,7 @@ public class Aviokompanija extends Service {
     @OneToMany(mappedBy = "airline")
     @Fetch(FetchMode.JOIN)
     @JsonIgnore
-    private Set<Destinacija> destinations;
+    private Set<LokacijaPresedanja> destinations;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
     private Set<Karta> karteZaBrzu;
