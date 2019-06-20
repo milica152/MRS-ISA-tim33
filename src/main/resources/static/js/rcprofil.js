@@ -40,11 +40,26 @@ $(document).ready(function() {
             { data: 'marka', title: 'Manifacturer' },
             { data: 'cena', title: 'Price' },
             { data: 'tipVozila', title: 'Type' },
-            { data: null, title: "Booking", defaultContent: '<button type="button" class="book-car btn btn-success">Book car</button>' },
-            { data: null, defaultContent: '<button type="button" class="edit-car btn btn-secondary">Edit</button>' }
+            { data: 'brojMesta', title: 'Seats' },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return '<button type="button" class="book-car btn btn-success" data-id="' + data.id + '">Book</button>';
+                }
+            },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return '<button type="button" class="edit-car btn btn-secondary" data-id="' + data.id + '">Edit</button>';
+                }
+            }
         ],
         columnDefs: [
-            { className: "align-middle", targets: "_all" }
+            { className: "align-middle", targets: "_all" },
+            { width: "40px", targets: 5 },
+            { width: "40px", targets: 6 }
         ]
     });
 
@@ -126,26 +141,55 @@ $(document).ready(function() {
         url: '/Vozila/fromRC/' + $profileID,
         data: {},
         success: function(data) {
+            $table = $('#table-cars').dataTable();
+            $table.fnClearTable();
             if (data != undefined && data.length > 0) {
-                $('#table-cars').dataTable().fnClearTable();
-                $('#table-cars').dataTable().fnAddData(data);
-
-                $('#table-cars .book-car').each(function() {
-                   $(this).click(function () {
-                       var data = carsTable.row($(this).parents('tr')).data();
-
-                       $('#success-alert').toggleClass("collapse");
-                       setTimeout(function() {
-                           $('#success-alert').toggleClass("collapse");
-                       }, 3000);
-                   });
-                });
+                $table.fnAddData(data);
+                setEventForCarInTable($table);
             }
         },
         error: function (error) {
             alert(error.responseText);
         }
     });
+
+    function setEventForCarInTable($table) {
+        // Event za editovanje vozila
+        $('#table-cars .edit-car').click(function () {
+            var id = $(this).data('id');
+            var data = $table.fnGetData();
+            $dialog = $('#car-dialog');
+
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].id == id) {
+                    $dialog.find('#name').val(data[i].naziv);
+                    $dialog.find('#brand').val(data[i].marka);
+                    $dialog.find('#price').val(data[i].cena);
+                    $dialog.find('#type').val(data[i].tipVozila);
+                    $dialog.find('#seats').val(data[i].brojMesta);
+                    break;
+                }
+            }
+
+            $dialog.find('.message-error').hide();
+            $dialog.find('.message-success').hide();
+            $dialog.find('#dialog-title').text('Edit car with ID: ' + id);
+            $dialog.find('#btn-save').data('id', id);
+            $dialog.modal('show');
+        });
+
+        // Event za rezervaciju vozila
+        $('#table-cars .book-car').each(function() {
+            $(this).click(function () {
+                var data = carsTable.row($(this).parents('tr')).data();
+
+                $('#success-alert').toggleClass("collapse");
+                setTimeout(function() {
+                    $('#success-alert').toggleClass("collapse");
+                }, 3000);
+            });
+        });
+    }
 
     //#endregion
 
@@ -170,22 +214,12 @@ $(document).ready(function() {
             dataType : "json",
             data: JSON.stringify(filter),
             success: function(data) {
-                $('#table-cars').dataTable().fnClearTable();
+                $table = $('#table-cars').dataTable();
+                $table.fnClearTable();
 
                 if (data != undefined && data.length > 0) {
-                    $('#table-cars').dataTable().fnClearTable();
-                    $('#table-cars').dataTable().fnAddData(data);
-
-                    $('#table-cars .book-car').each(function() {
-                        $(this).click(function () {
-                            var data = carsTable.row($(this).parents('tr')).data();
-
-                            $('#success-alert').toggleClass("collapse");
-                            setTimeout(function() {
-                                $('#success-alert').toggleClass("collapse");
-                            }, 3000);
-                        });
-                    });
+                    $table.fnAddData(data);
+                    setEventForCarInTable($table);
                 }
             },
             error: function (error) {
@@ -278,6 +312,60 @@ $(document).ready(function() {
                     $dialog.find('.message-error').hide();
                     $dialog.find('.message-success').show();
                     getRCBranches();
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert(error.responseText);
+                }
+            });
+        }
+    });
+
+    $('#btn-add-car').click(function () {
+        $dialog = $('#car-dialog');
+        $dialog.find('#name').val('');
+        $dialog.find('#brand').val('');
+        $dialog.find('#price').val('');
+        $dialog.find('#type').val('');
+        $dialog.find('#seats').val('');
+        $dialog.find('.message-error').hide();
+        $dialog.find('.message-success').hide();
+        $dialog.find('#dialog-title').text('Add new car');
+        $dialog.find('#btn-save').removeData('id');
+        $dialog.modal('show');
+    });
+
+    $('#car-dialog #btn-save').click(function () {
+        $dialog = $('#car-dialog');
+        $id = $(this).data('id');
+
+        var podaci = {
+            id: $id,
+            naziv: $dialog.find('#name').val(),
+            marka: $dialog.find('#brand').val(),
+            cena: $dialog.find('#price').val(),
+            tipVozila: $dialog.find('#type').val(),
+            brojMesta: $dialog.find('#seats').val(),
+            rentACar: {
+                id : $profileID
+            }
+        };
+
+        if (podaci.naziv == '' || podaci.marka == '' || podaci.cena == 0 ||
+            podaci.tipVozila <= 0 || podaci.brojMesta <= 0) {
+            $dialog.find('.message-error').show();
+            $dialog.find('.message-success').hide();
+        } else {
+            $.ajax({
+                type: ($id == undefined ? 'POST' : 'PUT'),
+                url: '/Vozila/' + ($id == undefined ? '' : $id),
+                contentType : 'application/json',
+                dataType : "json",
+                data : JSON.stringify(podaci),
+                success: function(data) {
+                    $dialog.find('.message-error').hide();
+                    $dialog.find('.message-success').show();
+                    $('#search-cars').click();
                 },
                 error: function (error) {
                     console.log(error);
