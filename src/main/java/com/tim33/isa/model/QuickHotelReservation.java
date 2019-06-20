@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,8 +16,23 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="HotelReservations")
-public class QuickHotelReservation extends HotelReservation {
+public class QuickHotelReservation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private Double discount = 0.0;
+    private Date beginDate;
+    private Date endDate;
+    private double price;
 
     @JsonIgnore
-    private Double discountQuick;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room")
+    private Soba room;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "quickReservation_services", joinColumns = @JoinColumn(name = "quickReservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
+    protected Set<UslugeHotela> hotelServices;
+
 }

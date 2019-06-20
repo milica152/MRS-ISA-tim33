@@ -36,5 +36,9 @@ public class Soba {
     @OneToMany(mappedBy = "room")
     private Set<HotelReservation> reservations;
 
+    @OneToMany(mappedBy = "room") // inverse side: it has a mappedBy attribute, and can't decide how the association is mapped, since the other side already decided it.
+    @Fetch(FetchMode.JOIN)
+    @JsonIgnore
+    private Set<QuickHotelReservation> quick_reservations;
 
 }

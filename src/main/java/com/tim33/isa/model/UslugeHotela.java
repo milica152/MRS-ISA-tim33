@@ -32,6 +32,10 @@ public class UslugeHotela {
     @OneToMany(mappedBy = "hotelServices")
     private Set<HotelReservation> reservations;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "hotelServices")
+    private Set<QuickHotelReservation> quickReservations;
+
 
 
 

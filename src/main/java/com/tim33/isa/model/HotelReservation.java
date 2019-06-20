@@ -27,7 +27,7 @@ public class HotelReservation {
 
     private Date beginDate;
     private Date endDate;
-    private Double price;
+    private Double price = 0.0;
     private Double discount=0.0;
     private Long hotelId;
 
