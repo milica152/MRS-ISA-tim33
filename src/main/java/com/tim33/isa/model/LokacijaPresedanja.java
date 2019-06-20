@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class LokacijaPresedanja {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String sifraAerodroma;
     private String nazivAerodroma;
