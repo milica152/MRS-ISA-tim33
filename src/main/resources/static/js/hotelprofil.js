@@ -65,10 +65,63 @@ $(document).ready(function() {
 
     //#endregion
 
+    //#region Region inicijalizovanja tabele Quick Res
+    var quickTable = $('#quick-table').DataTable({
+        data: undefined,
+        searching: false,
+        lengthChange: false,
+        paging: false,
+        info: false,
+        ordering: true,
+        compact: true,
+        columns: [
+            { data: 'roomId', title: 'Room Id' },
+            { data: 'price', title: 'Price' },
+            { data: 'priceBefore', title: 'Regular price' },
+            { data: 'discount', title: 'Discount' },
+            { data: 'dateFrom', title: 'From Date'},
+            { data: 'dateTo', title: 'To Date'},
+            { data: 'services', title: 'Additional Services'},
+            { data: null, defaultContent:'<button class="btn btn-success reserveBtn" onClick = "Reserve(this)" type="button"><i class="fa fa-cart-plus"></i></button>', title:'Select'}
+        ],
+        columnDefs: [
+            { className: "align-middle", targets: "_all" }
+        ]
+    });
+    //#endregion
+
     setTable();
     setPage();
     setModal();
+    setAddQuickModal();
 
+    //#region Region za polje sa datumima
+    $( "#datepickerStart").datepicker({
+        dateFormat:"dd-mm-yy",
+        minDate: '0d',
+        onSelect: function(e) {
+            $('#datepickerEnd').datepicker('option', 'minDate', e);
+        }
+    }).keyup(function(e) {
+        if(e.keyCode == 8 || e.keyCode == 46) {
+            $('#datepickerStart').datepicker('setDate', null);
+            $('#datepickerEnd').datepicker('option', 'minDate', '0d');
+        }
+    });
+    $( "#datepickerEnd" ).datepicker({
+        dateFormat:"dd-mm-yy",
+        useCurrent: false,
+        minDate: '0d',
+        onSelect: function(e) {
+            $('#datepickerStart').datepicker('option', 'maxDate', e);
+        }
+    }).keyup(function(e) {
+        if(e.keyCode == 8 || e.keyCode == 46) {
+            $('#datepickerEnd').datepicker('setDate', null);
+            $('#datepickerStart').datepicker('option', 'maxDate', null);
+        }
+    });
+    //#endregion
 
     //#region Checkbox-ovi za dodavanje usluga
     $('#isAirportTransfer').change(function () {
@@ -221,6 +274,24 @@ $(document).ready(function() {
             })
         }
 
+    });
+    //#endregion
+
+    //#region Region dodavanja Quick res
+    $(document).on('click', '#AddSelServiceBtn', function(e){
+        e.preventDefault();
+        var $Discount = $('#QuickDisc').val();
+        var $RoomQuick = $('#RoomQuick').val();
+        var $DateFrom = $('#datepickerStart').val();
+        var $DateTo = $('#datepickerEnd').val();
+        var selectedServices =  $('.cbx2:checkbox:checked');
+        var listOfSelected = new Array();
+        if(selectedServices.length!=0){
+            selectedServices.each(function(){
+                listOfSelected.push($(this).attr("value"));
+            });
+        }
+        
     });
     //#endregion
 
@@ -870,11 +941,160 @@ function addServicesToReservation(){
                 sessionStorage.setItem("HotelReservation", JSON.stringify(data));
                 setCart();
                 updateCart($.parseJSON(sessionStorage.getItem("HotelReservation")));
-                alert("bravo bravo");
+                setAddQuickModal();
+                //alert("bravo bravo");
             }
         },
         error: function(xhr, status, error) {
             alert(xhr.responseText);
         }
     });
+}
+
+function setAddQuickModal(){
+    $.ajax({
+        url: '/Rooms/all/'+$profileID,
+        data: {},
+        success: function(rooms) {
+            if(rooms.length!==0){
+                rooms.forEach(function(room){
+                    var opcija = new Option(room.id);
+                    document.getElementById('RoomQuick').add(opcija);
+                });
+            }
+        }
+    });
+    document.getElementById("rowAddQuick").innerHTML="";
+    var rowAdd = $('#rowAddQuick');
+
+    $.ajax({
+        url: '/HotelServices/all/'+$profileID,
+        contentType : 'application/json',
+        dataType : "json",
+        data : {},
+        success: function(services){
+            services.forEach(function(service){
+                if(service.naziv==="Airport Transfer"){
+                    var span = "<div class=\"col\">\n" +
+                        "                                <label class=\"btn btnsquick btn-success\" id=\"airportTransferLabel1\">\n" +
+                        "                                    <div class=\"hvrbox\">\n" +
+                        "                                        <img id=\"airportTransferImage1\" src=\"https://cdn4.iconfinder.com/data/icons/hotel-facilities-1/512/airport-transfer3-512.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                        <div class=\"hvrbox-layer_top\">\n" +
+                        "                                            <div class=\"hvrbox-text1\">Airport Transfer</div>\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                      <label id=\"airportTransferPrice1\" class=\"priceForService\"><input id = \"ATcbx1\" class=\"cbx2\" type=\"checkbox\" name=\"checkbox\" value=\"Airport Transfer\"><span></span></label>\n" +
+                        "                                </label>\n" +
+                        "                            </div>";
+                    rowAdd.before(span);
+                    $('#airportTransferPrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="WiFi"){
+                    var span1="<div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success\" id=\"wiFiLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"wiFiImage\" src=\"https://cdn3.iconfinder.com/data/icons/wireless/512/21-256.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">WiFi</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label id=\"wiFiPrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"wiFicbx1\" type=\"checkbox\" name=\"checkbox\" value=\"WiFi\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span1);
+                    $('#wiFiPrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="Parking Lot"){
+                    var span2="<div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success btnsquick\" id=\"parkingLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"parkingImage1\" src=\"https://cdn3.iconfinder.com/data/icons/hotel-vacation/33/parking-2-256.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">Parking Lot</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label id=\"parkingPrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"PLcbx1\" type=\"checkbox\" name=\"checkbox\" value=\"Parking Lot\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span2);
+                    $('#parkingPrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="Pool Access"){
+                    var span3 = " <div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success\" id=\"poolLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"poolImage1\" src=\"https://cdn1.iconfinder.com/data/icons/real-estate-set-2/512/38-512.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">Pool Access</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label  id=\"poolPrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"Poolcbx1\" type=\"checkbox\" name=\"checkbox\" value=\"Pool Access\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span3);
+                    $('#poolPrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="Restaurant"){
+                    var span4 = "<div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success\" id=\"restLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"restImage\" src=\"https://cdn3.iconfinder.com/data/icons/glyph/227/Cook-256.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">Restaurant</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label id=\"restaurantPrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"Restcbx1\" type=\"checkbox\" name=\"checkbox\" value=\"Restaurant\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span4);
+                    $('#restaurantPrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="Room Service"){
+                    var span5="<div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success\" id=\"roomServiceLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"roomServiceImage\" src=\"https://cdn4.iconfinder.com/data/icons/hotel-13/24/hotel-room-service-512.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">Room Service</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label id=\"roomServicePrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"RScbx1\" type=\"checkbox\" name=\"checkbox\" value=\"Room Service\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span5);
+                    $('#roomServicePrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="Wellness"){
+                    var span6 = " <div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success\" id=\"wellnessLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"wellnessImage\" src=\"https://cdn4.iconfinder.com/data/icons/hotel-services-and-facilities-3/32/Hotel-40-256.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">Wellness</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label id=\"wellnessPrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"Wellcbx1\" type=\"checkbox\" name=\"checkbox\" value=\"Wellness\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span6);
+                    $('#wellnessPrice1 span').text(service.cena + "€");
+                }else if(service.naziv==="Spa"){
+                    var span7 =" <div class=\"col\">\n" +
+                        "                               <label class=\"btn btnsquick btn-success\" id=\"spaLabel1\">\n" +
+                        "                                   <div class=\"hvrbox\">\n" +
+                        "                                       <img id=\"spaImage\" src=\"https://cdn4.iconfinder.com/data/icons/beauty-spa-solid-style/24/sign-spa--256.png\" alt=\"...\" class=\"img-thumbnail1 hvrbox-layer_bottom\">\n" +
+                        "                                       <div class=\"hvrbox-layer_top\">\n" +
+                        "                                           <div class=\"hvrbox-text1\">Spa</div>\n" +
+                        "                                       </div>\n" +
+                        "                                   </div>\n" +
+                        "                                   <label id=\"spaPrice1\" class=\"priceForService\"><input class=\"cbx2\" id = \"Spacbx1\" type=\"checkbox\" name=\"checkbox\" value=\"Spa\"><span></span></label>\n" +
+                        "                               </label>\n" +
+                        "                           </div>";
+                    rowAdd.before(span7);
+                    $('#spaPrice1 span').text(service.cena + "€");
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
+            }
+        }
+    })
+
+
 }
