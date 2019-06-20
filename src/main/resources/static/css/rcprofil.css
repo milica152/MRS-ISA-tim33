@@ -28,14 +28,14 @@ input[type="date"], #date-pickup, #date-return {
     z-index: 1000;
 }
 
-#rc-edit-error {
+.message-error {
     width: 100%;
     text-align: center;
     color: #9e0011;
     margin: 10px 0px 0px 0px;
 }
 
-#rc-edit-success {
+.message-success {
     width: 100%;
     text-align: center;
     color: #049e2d;

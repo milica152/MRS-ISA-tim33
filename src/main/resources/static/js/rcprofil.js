@@ -13,13 +13,21 @@ $(document).ready(function() {
         ordering: false,
         compact: true,
         columns: [
-            { data: 'grad', title: 'Name' },
+            { data: 'id', visible: false },
+            { data: 'grad', title: 'City' },
             { data: 'adresa', title: 'Address' },
-            { data: 'brojZaposlenih', title: 'No. empl.' },
-            { data: null, defaultContent: '<button type="button" class="edit-branch btn btn-secondary">Edit</button>' }
+            { data: 'brojZaposlenih', title: 'No. Empl.' },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return '<button type="button" class="edit-branch btn btn-secondary" data-id="' + data.id + '">Edit</button>';
+                }
+            }
         ],
         columnDefs: [
-            { className: "align-middle", targets: "_all" }
+            { className: "align-middle", targets: "_all" },
+            { width: "30px", targets: 3 }
         ]
     });
 
@@ -58,19 +66,44 @@ $(document).ready(function() {
         }
     });
 
-    $.ajax({
-        url: '/Filijale/fromRC/' + $profileID,
-        data: {},
-        success: function(data) {
-            if (data != undefined && data.length > 0) {
-                $('#table-branches').dataTable().fnClearTable();
-                $('#table-branches').dataTable().fnAddData(data);
+    function getRCBranches() {
+        $.ajax({
+            url: '/Filijale/fromRC/' + $profileID,
+            data: {},
+            success: function(data) {
+                if (data != undefined && data.length > 0) {
+                    $table = $('#table-branches').dataTable();
+                    $table.fnClearTable();
+                    $table.fnAddData(data);
+
+                    $('#table-branches .edit-branch').click(function () {
+                        var id = $(this).data('id');
+                        var data = $table.fnGetData();
+                        $dialog = $('#branch-dialog');
+
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].id == id) {
+                                $dialog.find('#city').val(data[i].grad);
+                                $dialog.find('#address').val(data[i].adresa);
+                                $dialog.find('#employees').val(data[i].brojZaposlenih);
+                                break;
+                            }
+                        }
+
+                        $dialog.find('.message-error').hide();
+                        $dialog.find('.message-success').hide();
+                        $dialog.find('#dialog-title').text('Edit branch with ID: ' + id);
+                        $dialog.find('#btn-save').data('id', id);
+                        $dialog.modal('show');
+                    });
+                }
+            },
+            error: function (error) {
+                alert(error.responseText);
             }
-        },
-        error: function (error) {
-            alert(error.responseText);
-        }
-    });
+        });
+    }
+    getRCBranches();
 
     $.ajax({
         type: 'GET',
@@ -166,8 +199,8 @@ $(document).ready(function() {
         $dialog.find('#rc-name').val($('#span-name').text());
         $dialog.find('#rc-address').val($('#span-address').text());
         $dialog.find('#rc-description').val($('#span-desc').text());
-        $dialog.find('#rc-edit-error').hide();
-        $dialog.find('#rc-edit-success').hide();
+        $dialog.find('.message-error').hide();
+        $dialog.find('.message-success').hide();
         $dialog.modal('show');
     });
 
@@ -182,8 +215,8 @@ $(document).ready(function() {
         };
 
         if (podaci.naziv == '' || podaci.adresa == '' || podaci.promotivniOpis == '') {
-            $dialog.find('#rc-edit-error').show();
-            $dialog.find('#rc-edit-success').hide();
+            $dialog.find('.message-error').show();
+            $dialog.find('.message-success').hide();
         } else {
             $.ajax({
                 type: 'PUT',
@@ -195,8 +228,56 @@ $(document).ready(function() {
                     $('#span-name').text(data.naziv);
                     $('#span-address').text(data.adresa);
                     $('#span-desc').text(data.promotivniOpis);
-                    $dialog.find('#rc-edit-error').hide();
-                    $dialog.find('#rc-edit-success').show();
+                    $dialog.find('.message-error').hide();
+                    $dialog.find('.message-success').show();
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert(error.responseText);
+                }
+            });
+        }
+    });
+
+    $('#btn-add-branch').click(function () {
+        $dialog = $('#branch-dialog');
+        $dialog.find('#city').val('');
+        $dialog.find('#address').val('');
+        $dialog.find('#employees').val('');
+        $dialog.find('.message-error').hide();
+        $dialog.find('.message-success').hide();
+        $dialog.find('#dialog-title').text('Add new branch');
+        $dialog.find('#btn-save').removeData('id');
+        $dialog.modal('show');
+    });
+
+    $('#branch-dialog #btn-save').click(function () {
+        $dialog = $('#branch-dialog');
+        $id = $(this).data('id');
+        var podaci = {
+            id: $id,
+            grad: $dialog.find('#city').val(),
+            adresa: $dialog.find('#address').val(),
+            brojZaposlenih: $dialog.find('#employees').val(),
+            rentACar: {
+                id : $profileID
+            }
+        };
+
+        if (podaci.grad == '' || podaci.adresa == '' || podaci.brojZaposlenih == 0) {
+            $dialog.find('.message-error').show();
+            $dialog.find('.message-success').hide();
+        } else {
+            $.ajax({
+                type: ($id == undefined ? 'POST' : 'PUT'),
+                url: '/Filijale/' + ($id == undefined ? '' : $id),
+                contentType : 'application/json',
+                dataType : "json",
+                data : JSON.stringify(podaci),
+                success: function(data) {
+                    $dialog.find('.message-error').hide();
+                    $dialog.find('.message-success').show();
+                    getRCBranches();
                 },
                 error: function (error) {
                     console.log(error);
