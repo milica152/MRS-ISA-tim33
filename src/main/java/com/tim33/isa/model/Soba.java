@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Soba {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private Integer roomNo;
     private Integer roomFloor;

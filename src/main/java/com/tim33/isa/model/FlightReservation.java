@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class FlightReservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private double price;
     private Date time;
