@@ -22,6 +22,7 @@ public class Vozilo {
     private String marka;
     private double cena;
     private int tipVozila;
+    private int brojMesta = 5;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private RentACar rentACar;

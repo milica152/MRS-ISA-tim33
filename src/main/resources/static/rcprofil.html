@@ -11,6 +11,7 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/Homepage.css" rel="stylesheet">
+    <link href="/css/rcprofil.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
     <script src="/js/jquery.min.js"></script>
@@ -81,7 +82,7 @@
     </div>
 </nav>
 <div class="container-fluid" style="padding: 0 100px 100px 100px;">
-    <div id="success-alert" class="alert alert-success collapse" style="max-width: 360px; position: absolute; top: 60px; right: 30px;">
+    <div id="success-alert" class="alert alert-success collapse">
         <strong>Success!</strong> Car has been successfully booked.
     </div>
 
@@ -92,11 +93,11 @@
 
     <div class="container-fluid">
         <div class="row" style="margin-top: 30px;">
-            <div class="col-md-3 text-center">
+            <div class="col-md-4 text-center">
                 <img src="/images/profile_default.png" class="img-thumbnail rounded">
 
             </div>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <h4>Service information:</h4>
                 <p>
                     <strong>Name: </strong>
@@ -113,25 +114,74 @@
                 </p>
 
                 <div>
-                    <button type="button" class="btn btn-secondary">Edit info</button>
-                    <button type="button" class="btn btn-primary">Add Branch</button>
-                    <button type="button" class="btn btn-primary">Add Car</button>
+                    <button type="button" id="btn-edit-profile" class="btn btn-secondary">Edit info</button>
+                    <button type="button" id="btn-add-branch" class="btn btn-primary">Add Branch</button>
+                    <button type="button" id="btn-add-car" class="btn btn-primary">Add Car</button>
                 </div>
             </div>
         </div>
 
         <div class="row" style="margin-top: 60px;">
-            <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+            <div class="col-md-4 col-lg-4 col-xl-4 text-center">
                 <div id="branches text-center">
                     <h3 class="text-center">Branches</h3>
                     <table id="table-branches" class="display table table-striped table-bordered"></table>
                 </div>
             </div>
-            <div class="col-md-9 col-lg-9 col-xl-9">
+            <div class="col-md-8 col-lg-8 col-xl-8">
                 <div id="cars text-center">
                     <h3 class="text-center">Available cars</h3>
+                    <div class="form-group" id="search-wrapper">
+                        <div class="search-row">
+                            <select id="pickup-location">
+                                <option value="">Pickup location</option>
+                            </select>
+                            <select id="return-location">
+                                <option value="">Return location</option>
+                            </select>
+                            <input type="text" placeholder="Pickup date" id="date-pickup" class="form-control" onfocus="(this.type='date')" />
+                            <input type="text" placeholder="Return date" id="date-return" class="form-control" onfocus="(this.type='date')" />
+                        </div>
+                        <div class="search-row">
+                            <input type="number" placeholder="Min car price" min="0" id="price-min" class="form-control" />
+                            <input type="number" placeholder="Max car price" min="0" id="price-max" class="form-control" />
+                            <input type="number" placeholder="No. of passengers" min="0" id="passengers" class="form-control" />
+                            <select id="car-type">
+                                <option value="">Vehicle type</option>
+                            </select>
+                        </div>
+                        <button id="search-cars" type="button" class="btn btn-success">Search</button>
+                    </div>
                     <table id="table-cars" class="display table table-striped table-bordered"></table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rc-profile-dialog" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit RC profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="form-edit-profile">
+                        <input type="text" id="rc-name" placeholder="Name" class="form-control" /><br>
+                        <input type="text" id="rc-address" placeholder="Address" class="form-control" /><br>
+                        <input type="text" id="rc-description" placeholder="Promo description" class="form-control" />
+                    </form>
+                    <p id="rc-edit-error">All data must be entered.</p>
+                    <p id="rc-edit-success">Successfully changed profile data.</p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" id="btn-cancel" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btn-save">Save</button>
             </div>
         </div>
     </div>

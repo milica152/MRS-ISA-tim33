@@ -52,7 +52,7 @@ public class VozilaController {
         return new ResponseEntity<>(service.findAllFromRC(idRentACara), HttpStatus.OK);
     }
 
-    @GetMapping("/fromRCWithFilters/{idRentACara}")
+    @PostMapping("/fromRCWithFilters/{idRentACara}")
     ResponseEntity<List<Vozilo>> findAllWithFilter(@PathVariable long idRentACara, @RequestBody FilterPretrageVozila filter) {
         return new ResponseEntity<>(service.findAllWithFilter(idRentACara, filter), HttpStatus.OK);
     }

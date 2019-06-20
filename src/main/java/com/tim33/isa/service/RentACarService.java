@@ -1,5 +1,6 @@
 package com.tim33.isa.service;
 
+import com.tim33.isa.dto.filter.FilterPretrageRCServisa;
 import com.tim33.isa.model.RentACar;
 import com.tim33.isa.repository.RentACarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class RentACarService {
 
     public List<RentACar> findAll() {
         return repository.findAll();
+    }
+
+    public List<RentACar> findAllWithFilter(FilterPretrageRCServisa filter) {
+        return repository.findAllWithFilter(filter);
     }
 
     public RentACar findById(long id) {

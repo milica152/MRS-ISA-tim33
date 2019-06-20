@@ -11,6 +11,7 @@
 
         <!-- Custom styles for this template -->
         <link href="css/Homepage.css" rel="stylesheet">
+        <link href="css/rentacar.css" rel="stylesheet">
 
         <!-- Bootstrap core JavaScript -->
         <script src="js/jquery.min.js"></script>
@@ -84,10 +85,16 @@
         <div class="container">
             <br>
             <h1 class="text-center">Rent a Car Services</h1>
-
-            <button id="search" type="button" class="btn btn-success">Search services</button>
-
-            <br>
+            <br><br>
+            <div class="form-group" id="search-wrapper">
+                <input type="text" placeholder="Service name" id="rc-name" class="form-control" />
+                <select id="rc-location">
+                    <option value="">Select location</option>
+                </select>
+                <input type="text" placeholder="Start date" id="date-from" class="form-control" onfocus="(this.type='date')" />
+                <input type="text" placeholder="End date" id="date-to" class="form-control" onfocus="(this.type='date')" />
+                <button id="search" type="button" class="btn btn-success">Search</button>
+            </div>
             <div class="dropdown-divider"></div>
 
             <table id="table" class="display table table-striped table-bordered" width="100%"></table>

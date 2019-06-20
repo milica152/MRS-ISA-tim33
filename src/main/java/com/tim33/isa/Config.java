@@ -17,14 +17,42 @@ public class Config {
     @Bean
     CommandLineRunner init(UserRepository userRepository, UserRoleRepository roleRepository, UserService userService) {
         return args -> {
-            UserRole role = roleRepository.findByRole("SISTEM_ADMIN");
+            UserRole role = roleRepository.findByRole("OBICAN");
             if (role == null) {
+                UserRole r = new UserRole();
+                r.setRole("OBICAN");
+                roleRepository.save(r);
+            }
+
+            role = roleRepository.findByRole("ADMIN_AK");
+            if (role == null) {
+                UserRole r = new UserRole();
+                r.setRole("ADMIN_AK");
+                roleRepository.save(r);
+            }
+
+            role = roleRepository.findByRole("ADMIN_HOTELA");
+            if (role == null) {
+                UserRole r = new UserRole();
+                r.setRole("ADMIN_HOTELA");
+                roleRepository.save(r);
+            }
+
+            role = roleRepository.findByRole("ADMIN_RCS");
+            if (role == null) {
+                UserRole r = new UserRole();
+                r.setRole("ADMIN_RCS");
+                roleRepository.save(r);
+            }
+
+            UserRole sysAdminRole = roleRepository.findByRole("SISTEM_ADMIN");
+            if (sysAdminRole == null) {
                 UserRole roleAdmin = new UserRole();
                 roleAdmin.setRole("SISTEM_ADMIN");
                 roleRepository.save(roleAdmin);
             }
 
-            List<User> users = userRepository.findByRolesContains(role);
+            List<User> users = userRepository.findByRolesContains(sysAdminRole);
 
             if (users == null || users.size() == 0) {
                 User user = new User();
