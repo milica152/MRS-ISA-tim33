@@ -44,7 +44,7 @@ $(document).ready(function(){
     });
 
     $(document).on('submit', "#addForm", function(e){
-        var $cena = $('#cena');
+        var $cena = $('#price');
         var $ocena = $('#ocena');
         var $vreme_poletanja = $('#vreme_poletanja');
         var $vreme_sletanja = $('#vreme_sletanja');

@@ -4,78 +4,146 @@ $(document).ready(function() {
 
     //#region Inicijalizacija tabela
 
-    var branchesTable = $('#table-branches').DataTable({
-        data: undefined,
-        searching: false,
-        lengthChange: false,
-        paging: false,
-        info: false,
-        ordering: false,
-        compact: true,
-        columns: [
-            { data: 'id', visible: false },
-            { data: 'grad', title: 'City' },
-            { data: 'adresa', title: 'Address' },
-            { data: 'brojZaposlenih', title: 'No. Empl.' },
-            {
-                data: null,
-                render: function(data, type, row)
-                {
-                    return '<button type="button" class="edit-branch btn btn-secondary" data-id="' + data.id + '">Edit</button>';
+    $.ajax({
+        type: 'GET',
+        url: '/whoami',
+        success: function (data) {
+            if (data == undefined || data == "") {
+                hideAllButtons();
+            } else {
+                var isCorrectAdmin = false;
+                for (var i = 0; i < data.authorities.length; i++) {
+                    if (data.authorities[i].authority == 'SISTEM_ADMIN' || data.authorities[i].authority == 'ADMIN_RCS') {
+                        isCorrectAdmin = true;
+                        break;
+                    }
                 }
-            },
-            {
-                data: null,
-                render: function(data, type, row)
-                {
-                    return '<button type="button" class="delete-branch btn btn-danger" data-id="' + data.id + '">Delete</button>';
+
+                if (!isCorrectAdmin) {
+                    hideAllButtons();
                 }
             }
-        ],
-        columnDefs: [
-            { className: "align-middle", targets: "_all" },
-            { width: "30px", targets: 3 }
-        ]
+
+            initTables(!isCorrectAdmin);
+        },
+        async: false
     });
 
-    var carsTable = $('#table-cars').DataTable({
-        data: undefined,
-        searching: false,
-        lengthChange: false,
-        columns: [
-            { data: 'naziv', title: 'Name' },
-            { data: 'marka', title: 'Manifacturer' },
-            { data: 'cena', title: 'Price' },
-            { data: 'tipVozila', title: 'Type' },
-            { data: 'brojMesta', title: 'Seats' },
-            {
-                data: null,
-                render: function(data, type, row)
-                {
-                    return '<button type="button" class="book-car btn btn-success" data-id="' + data.id + '">Book</button>';
-                }
-            },
-            {
-                data: null,
-                render: function(data, type, row)
-                {
-                    return '<button type="button" class="edit-car btn btn-secondary" data-id="' + data.id + '">Edit</button>';
-                }
-            },
-            {
-                data: null,
-                render: function(data, type, row)
-                {
-                    return '<button type="button" class="delete-car btn btn-danger" data-id="' + data.id + '">Delete</button>';
-                }
+    $.ajax({
+        type: 'POST',
+        url: '/VehicleReservation/add/' + $profileID,
+        contentType : 'application/json',
+        dataType : "json",
+        data : {},
+        success: function(data){
+            updateCart(JSON.stringify(data));
+            sessionStorage.setItem("RCSReservation", JSON.stringify(data));
+            setCart();
+        },
+        error: function(xhr, status, error) {
+            if (xhr.responseText!=='true'){
+                alert(xhr.responseText);
             }
-        ],
-        columnDefs: [
-            { className: "align-middle", targets: "_all" },
-            { width: "40px", targets: 5 },
-            { width: "40px", targets: 6 }
-        ]
+        }
     });
+
+    function hideAllButtons() {
+        $('#btn-add-car').hide();
+        $('#btn-add-branch').hide();
+        $('#btn-edit-profile').hide();
+
+        $('.edit-branch').each(function() {
+            $(this).hide();
+        });
+        $('.delete-branch').each(function() {
+            $(this).hide();
+        });
+
+        $('.edit-car').each(function() {
+            $(this).hide();
+        });
+        $('.delete-car').each(function() {
+            $(this).hide();
+        });
+        $('.book-car').each(function() {
+            $(this).hide();
+        });
+    }
+
+    function initTables(hideButtons) {
+        var branchesTable = $('#table-branches').DataTable({
+            data: undefined,
+            searching: false,
+            lengthChange: false,
+            paging: false,
+            info: false,
+            ordering: false,
+            compact: true,
+            columns: [
+                { data: 'id', visible: false },
+                { data: 'grad', title: 'City' },
+                { data: 'adresa', title: 'Address' },
+                { data: 'brojZaposlenih', title: 'No. Empl.' },
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return hideButtons ? '' : '<button type="button" class="edit-branch btn btn-secondary" data-id="' + data.id + '">Edit</button>';
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return hideButtons ? '' : '<button type="button" class="delete-branch btn btn-danger" data-id="' + data.id + '">Delete</button>';
+                    }
+                }
+            ],
+            columnDefs: [
+                { className: "align-middle", targets: "_all" },
+                { width: "30px", targets: 3 }
+            ]
+        });
+
+        var carsTable = $('#table-cars').DataTable({
+            data: undefined,
+            searching: false,
+            lengthChange: false,
+            columns: [
+                { data: 'naziv', title: 'Name' },
+                { data: 'marka', title: 'Manifacturer' },
+                { data: 'cena', title: 'Price' },
+                { data: 'tipVozila', title: 'Type' },
+                { data: 'brojMesta', title: 'Seats' },
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return hideButtons ? '' : '<button type="button" class="book-car btn btn-success" data-id="' + data.id + '">Book</button>';
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return hideButtons ? '' : '<button type="button" class="edit-car btn btn-secondary" data-id="' + data.id + '">Edit</button>';
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return hideButtons ? '' : '<button type="button" class="delete-car btn btn-danger" data-id="' + data.id + '">Delete</button>';
+                    }
+                }
+            ],
+            columnDefs: [
+                { className: "align-middle", targets: "_all" },
+                { width: "40px", targets: 5 },
+                { width: "40px", targets: 6 }
+            ]
+        });
+    }
 
     //#endregion
 
@@ -224,12 +292,26 @@ $(document).ready(function() {
         // Event za rezervaciju vozila
         $('#table-cars .book-car').each(function() {
             $(this).click(function () {
-                var data = carsTable.row($(this).parents('tr')).data();
+                var carID = $(this).data('id');
+                var $reservationId = ($.parseJSON(sessionStorage.getItem("RCSReservation"))).id;
 
-                $('#success-alert').toggleClass("collapse");
-                setTimeout(function() {
-                    $('#success-alert').toggleClass("collapse");
-                }, 3000);
+                $.ajax({
+                    type: 'POST',
+                    url: '/VehicleReservation/addVehicle/' + $reservationId + '/' + carID,
+                    contentType : 'application/json',
+                    dataType : "json",
+                    data : {},
+                    success: function(data){
+                        sessionStorage.setItem("RCSReservation", JSON.stringify(data));
+                        updateCart(data);
+                        setCart();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.responseText!=='true'){
+                            alert(xhr.responseText);
+                        }
+                    }
+                })
             });
         });
     }

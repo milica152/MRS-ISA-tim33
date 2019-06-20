@@ -10,12 +10,12 @@
     margin: 10px 0px;
 }
 
-input[type="text"], input[type="number"], select {
+#search-wrapper input[type="text"], input[type="number"], select {
     min-width: 220px;
     margin-right: 20px;
 }
 
-input[type="date"], #date-pickup, #date-return {
+#search-wrapper input[type="date"], #date-pickup, #date-return {
     max-width: 220px;
     margin-right: 20px;
 }

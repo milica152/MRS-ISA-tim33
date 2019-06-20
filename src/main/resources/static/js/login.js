@@ -5,9 +5,11 @@ $(document).ready(function() {
         success: function (data) {
             if (data == undefined || data == "") {
                 $('#logout-menu-item').hide();
+                $('#shopping-cart').hide();
                 $('#login-menu-item').show();
             } else {
                 $('#login-menu-item').hide();
+                $('#shopping-cart').show();
                 $('#logout-menu-item').show();
             }
         },
