@@ -16,7 +16,9 @@ public interface RentACarRepository extends JpaRepository<RentACar, Long> {
 
     @Query(value = "SELECT rc.* FROM rc_servis rc " +
                    "LEFT JOIN filijale f ON f.rentacar_id = rc.id " +
-                   "WHERE rc.naziv LIKE CONCAT('%', :#{#filter.nazivServisa}, '%') AND " +
-                         "f.grad LIKE CONCAT('%', :#{#filter.adresaServisa}, '%')", nativeQuery = true)
+                   "WHERE " +
+                         "rc.naziv LIKE CONCAT('%', :#{#filter.nazivServisa}, '%') AND " +
+                         "f.grad LIKE CONCAT('%', :#{#filter.adresaServisa}, '%') " +
+                   "GROUP BY rc.id", nativeQuery = true)
     List<RentACar> findAllWithFilter(@Param("filter") FilterPretrageRCServisa filter);
 }

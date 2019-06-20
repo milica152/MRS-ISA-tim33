@@ -23,6 +23,13 @@ $(document).ready(function() {
                 {
                     return '<button type="button" class="edit-branch btn btn-secondary" data-id="' + data.id + '">Edit</button>';
                 }
+            },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return '<button type="button" class="delete-branch btn btn-danger" data-id="' + data.id + '">Delete</button>';
+                }
             }
         ],
         columnDefs: [
@@ -53,6 +60,13 @@ $(document).ready(function() {
                 render: function(data, type, row)
                 {
                     return '<button type="button" class="edit-car btn btn-secondary" data-id="' + data.id + '">Edit</button>';
+                }
+            },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return '<button type="button" class="delete-car btn btn-danger" data-id="' + data.id + '">Delete</button>';
                 }
             }
         ],
@@ -110,6 +124,20 @@ $(document).ready(function() {
                         $dialog.find('#dialog-title').text('Edit branch with ID: ' + id);
                         $dialog.find('#btn-save').data('id', id);
                         $dialog.modal('show');
+                    });
+
+                    $('#table-branches .delete-branch').click(function() {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '/Filijale/' + $(this).data('id'),
+                            data: {},
+                            success: function(data) {
+                                getRCBranches();
+                            },
+                            error: function (error) {
+                                alert('You can\'t do that!');
+                            }
+                        });
                     });
                 }
             },
@@ -176,6 +204,21 @@ $(document).ready(function() {
             $dialog.find('#dialog-title').text('Edit car with ID: ' + id);
             $dialog.find('#btn-save').data('id', id);
             $dialog.modal('show');
+        });
+
+        // Event za brisanje vozila
+        $('#table-cars .delete-car').click(function() {
+            $.ajax({
+                type: 'DELETE',
+                url: '/Vozila/' + $(this).data('id'),
+                data: {},
+                success: function(data) {
+                    $('#search-cars').click();
+                },
+                error: function (error) {
+                    alert('You can\'t do that!');
+                }
+            });
         });
 
         // Event za rezervaciju vozila

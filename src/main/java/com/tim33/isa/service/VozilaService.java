@@ -40,4 +40,7 @@ public class VozilaService {
         return repository.findAllWithFilter(idProfila, filter);
     }
 
+    public void delete(long id) {
+        repository.deleteById(id);
+    }
 }
