@@ -30,6 +30,7 @@ public class Let {
     private double ocena;
     private KlasaLeta klasa;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Aviokompanija aviokompanija;
@@ -42,7 +43,7 @@ public class Let {
     @JsonIgnore
     private LokacijaPresedanja odredisniAerodrom;
 
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //@JsonIgnore
-    //private Avion plane;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Avion plane;
 }

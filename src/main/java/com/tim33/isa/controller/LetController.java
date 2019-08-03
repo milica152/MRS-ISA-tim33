@@ -43,6 +43,7 @@ public class LetController {
     @GetMapping("/specific/{id}")
     @ResponseBody
     Let findById(@PathVariable long id) {
+        System.out.println("dosao na kontroler");
         return service.findById(id);
     }
 
