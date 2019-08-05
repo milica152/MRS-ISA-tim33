@@ -44,6 +44,7 @@ public class LetService {
     }
 
     public Let findById(long id) {
+        System.out.println("dosao na servis");
         return repository.findById(id);
     }
 

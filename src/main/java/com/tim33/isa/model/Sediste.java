@@ -17,9 +17,9 @@ public class Sediste {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private int brojReda;
-    private int brojKolone;
-    private boolean rezervisano;
+    private int numberOfRow;
+    private int columnNumber;
+    private boolean isReserved;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Avion avion;
