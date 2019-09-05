@@ -238,15 +238,21 @@ $(document).ready(function() {
         url: '/Aviocompany/all',
         data: {},
         success: function(data) {
+            alert(data);
             for(var airline in data){
                 var opcija = new Option(data[airline].naziv);
                 opcija.setAttribute("value", data[airline].naziv);
                 document.getElementById('airlines').add(opcija);
             };
             if (data !== undefined && data.length > 0) {
+                alert("sta bi?");
                 $('#tableairlines').dataTable().fnClearTable();
                 $('#tableairlines').dataTable().fnAddData(data);
             }
+        },
+        error: function(xhr, status, error){
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Error - ' + errorMessage);
         }
     });
 

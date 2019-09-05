@@ -19,5 +19,7 @@ public class FilterPretrageVozila {
     private String mestoVracanja;
     private int tipVozila;
     private int brojPutnika;
+    private double cenaOd;
+    private double cenaDo;
 
 }

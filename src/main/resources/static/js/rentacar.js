@@ -1,4 +1,21 @@
 $(document).ready(function() {
+
+    $.ajax({
+        type: 'GET',
+        url: '/Filijale/all',
+        success: function(data) {
+            if (data != undefined) {
+                for (var i = 0; i < data.length; i++) {
+                    $("#rc-location").append(new Option(data[i].grad, data[i].grad));
+                }
+            }
+        },
+        error: function (error) {
+            alert(error);
+        },
+        async: false
+    });
+
     var table = $('#table').DataTable({
         data: undefined,
         searching: false,
@@ -15,12 +32,23 @@ $(document).ready(function() {
     });
 
     $('#search').click(function() {
+        var filter = {
+            nazivServisa: $('#rc-name').val(),
+            adresaServisa: $('#rc-location').find(":selected").val(),
+            datumOd: $('#date-from').val(),
+            datumDo: $('#date-to').val()
+        };
+
         $.ajax({
+            type: 'POST',
             url: '/RentACar/all',
-            data: {},
+            contentType : 'application/json',
+            dataType : "json",
+            data: JSON.stringify(filter),
             success: function(data) {
+                $('#table').dataTable().fnClearTable();
+
                 if (data != undefined && data.length > 0) {
-                    $('#table').dataTable().fnClearTable();
                     $('#table').dataTable().fnAddData(data);
 
                     $('#table tbody').on('click', 'button', function () {

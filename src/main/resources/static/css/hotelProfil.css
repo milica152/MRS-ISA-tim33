@@ -171,3 +171,294 @@ label {
     margin-left:80px;
     width:180px;
 }
+.modal-dialog-slideout {min-height: 100%; margin: 0 0 0 auto;background: #fff;}
+.modal.fade .modal-dialog.modal-dialog-slideout {-webkit-transform: translate(100%,0)scale(1);transform: translate(100%,0)scale(1);}
+.modal.fade.show .modal-dialog.modal-dialog-slideout {-webkit-transform: translate(0,0);transform: translate(0,0);display: flex;align-items: stretch;-webkit-box-align: stretch;height: 100%;}
+.modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body{overflow-y: auto;overflow-x: hidden;}
+.modal-dialog-slideout .modal-content{border: 0;}
+.modal-dialog-slideout .modal-header {height: 54px; display: block;}
+.modal-dialog-slideout .modal-footer {height: 130px; display: block;}
+.modal-dialog-slideout .modal-header h5 {float:left;}
+
+
+.panel {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.panel-primary {
+    border-color: #428BCA;
+}
+
+.panel-primary > .panel-heading {
+    background-color: #428BCA;
+    border-color: #428BCA;
+    color: #FFFFFF;
+}
+
+.panel-heading {
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 0px;
+}
+
+.panel-title {
+    font-size: 16px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.title {
+    font-size: 15px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.hotelResNo, .flightResNo, .rcsResNo{
+    font-size: 13px
+}
+
+.panel-body:before, .panel-body:after {
+    content: " ";
+    display: table;
+}
+
+.panel-body:before, .panel-body:after {
+    content: " ";
+    display: table;
+}
+
+.panel-body:after {
+    clear: both;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+.panel-footer {
+    background-color: #F5F5F5;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top: 1px solid #DDDDDD;
+    padding: 10px 15px;
+}
+
+.service-row {
+    margin-bottom: 5px;
+}
+
+.service-row:last-child {
+    margin-bottom: 0;
+}
+
+.dropdown-service {
+    margin-right: 0px;
+    padding: 5px;
+    height:100%;
+}
+
+.dropdown-service:hover {
+    cursor: pointer;
+}
+
+.table-service-information > tbody > tr {
+    border-top: 1px solid rgb(221, 221, 221);
+    padding: 0;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+.table-service-information > tbody > tr:first-child {
+    border-top: 0;
+    padding: 0;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+
+.table-service-information > tbody > tr > td {
+    border-top: 0;
+    padding: 0;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+.serviceImg{
+    margin-right: -20px;
+    width:50px;
+    height: 50px;
+}
+.img-col{
+    margin-right: -120px;
+}
+.roomTypeTable{
+    margin-left: 15px;
+    font-size: 12px;
+    margin-top: 20px;
+    display : block;
+    color: blue;
+}
+.roomFloorInfo{
+    margin-top: 0px;
+    margin-left: 15px;
+    font-size: 10px;
+}
+.roomNoInfo{
+    margin-top: -15px;
+    margin-left: 15px;
+    font-size: 10px;
+}
+.media-object{
+    width: 50px;
+    height: 50px;
+    margin-top: 20px;
+}
+
+.table-service-information{
+    width:420px;
+}
+.rowSum{
+    width: 200px;
+}
+
+#btnMdlCheckout{
+    width:90px;
+    font-size: 14px;
+}
+#btnMdlBook{
+    margin-left: 140px;
+    margin-right: 30px;
+    width:90px;
+    font-size: 14px;
+}
+.titleCol{
+    margin-left: 80px;
+}
+.priceForService{
+    display: block;
+    text-align: center;
+    margin-left: -15px;
+    margin-top: -5px;
+    margin-bottom: -10px;
+
+}
+.check
+{
+    opacity:0.5;
+    color:#996;
+
+}
+.img-thumbnail{
+    width:120px;
+    height:100px;
+}
+
+.hvrbox,
+.hvrbox * {
+    box-sizing: border-box;
+}
+.hvrbox {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    max-width: 100%;
+    height: auto;
+}
+.hvrbox img {
+    max-width: 100%;
+}
+.hvrbox .hvrbox-layer_bottom {
+    display: block;
+}
+.hvrbox .hvrbox-layer_top {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 15px;
+    -moz-transition: all 0.4s ease-in-out 0s;
+    -webkit-transition: all 0.4s ease-in-out 0s;
+    -ms-transition: all 0.4s ease-in-out 0s;
+    transition: all 0.4s ease-in-out 0s;
+}
+.hvrbox:hover .hvrbox-layer_top,
+.hvrbox.active .hvrbox-layer_top {
+    opacity: 1;
+}
+.hvrbox .hvrbox-text {
+    text-align: center;
+    font-size: 18px;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.hvrbox .hvrbox-text_mobile {
+    font-size: 15px;
+    border-top: 1px solid rgb(179, 179, 179); /* for old browsers */
+    border-top: 1px solid rgba(179, 179, 179, 0.7);
+    margin-top: 5px;
+    padding-top: 2px;
+    display: none;
+}
+.hvrbox.active .hvrbox-text_mobile {
+    display: block;
+}
+
+.cbx1{
+    margin-right:5px;
+}
+.img-thumbnail1{
+    width:50px;
+    height:40px;
+    padding: 5px;
+    margin-bottom: -5px;
+}
+.btnsquick{
+    width:80px;
+    height:70px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+.hvrbox .hvrbox-text1 {
+    text-align: center;
+    font-size: 9px;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: black;
+}
+
+#datepickerStart{
+    display: inline-block;
+    width: 220px;
+    padding: 5px;
+    margin: 8px;
+    position: relative; z-index: 10000 !important;
+
+}
+#datepickerEnd{
+    display: inline-block;
+    width: 220px;
+    padding: 5px;
+    margin: 1px;
+    position: relative; z-index: 10000 !important;
+
+}

@@ -1,0 +1,14 @@
+#search-wrapper {
+    display: flex;
+    justify-content: left;
+}
+
+#search-wrapper input[type="text"], select {
+    max-width: 360px;
+    margin-right: 20px;
+}
+
+#search-wrapper input[type="date"], #date-from, #date-to {
+    max-width: 220px;
+    margin-right: 20px;
+}

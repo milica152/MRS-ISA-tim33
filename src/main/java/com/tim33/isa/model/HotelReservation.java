@@ -1,6 +1,7 @@
 package com.tim33.isa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,13 @@ public class HotelReservation {
 
     private Date beginDate;
     private Date endDate;
-    private Double price;
+    private Double price = 0.0;
+    private Double discount=0.0;
+    private Long hotelId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="room")
-    private Soba room;
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "reservation_room", joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "room_id", referencedColumnName = "id"))
+    private Set<Soba> room;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "reservation_services", joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))

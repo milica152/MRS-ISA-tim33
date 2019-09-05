@@ -21,7 +21,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: '/AviokompanijaProfil/addAirline',
+            url: '/Aviocompany/addNewAviocompany',
             contentType : 'application/json',
             dataType : "json",
             data : JSON.stringify(dataToSend),
@@ -41,13 +41,13 @@ $(document).ready(function() {
 
 	$('#chooseDest').one("click",function() {
 		$.ajax({
-			url: '/Destinacija/all',
+			url: '/LP/all',
 			data: {},
 			success: function(data) {
 				if (data !== undefined && data.length > 0) {
 					var i;
 					for (i = 0; i < data.length; i++) {
-						addCheckbox(data[i].grad);
+						addCheckbox(data[i]);
 						}
 				}
 			},
@@ -68,18 +68,19 @@ $(document).ready(function() {
 		}).get();
 	});
 
-	function addCheckbox(name) {
+	function addCheckbox(destination) {
 		var container = $('#checkboxes');
 		var inputs = container.find('input');
 		var id = inputs.length+1;
-		$('<input />', { type: 'checkbox', id: 'cb'+id, value: name }).appendTo(container);
+		var name = destination.nazivAerodroma + "," +destination.grad+","+destination.drzava;
+		$('<input />', { type: 'checkbox', id: 'cb'+id, value: destination.id }).appendTo(container);
 		$('<label />', { 'for': 'cb'+id, text: name }).appendTo(container);
 		$('</br>').appendTo(container);
 	}
-	function getDestination(name){
+	function getDestination(id){
 		$.ajax({
 			type: 'GET',
-			url: '/Destinacija/'+name,
+			url: '/LP/specific/'+id,
 			data:{},
 			success: [function(data){
 				destinations.push(data);

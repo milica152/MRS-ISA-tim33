@@ -16,12 +16,13 @@ import javax.persistence.*;
 public class Vozilo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String naziv;
     private String marka;
     private double cena;
     private int tipVozila;
+    private int brojMesta = 5;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private RentACar rentACar;

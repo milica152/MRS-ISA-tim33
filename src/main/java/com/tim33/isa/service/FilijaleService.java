@@ -35,4 +35,7 @@ public class FilijaleService {
         return repository.findById(id).orElse(null);
     }
 
+    public void delete(long id) {
+        repository.deleteById(id);
+    }
 }

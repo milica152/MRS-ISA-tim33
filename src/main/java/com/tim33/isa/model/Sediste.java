@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Sediste {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private int numberOfRow;
     private int columnNumber;

@@ -17,6 +17,7 @@
     <!-- jquery za datapicker -->
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="/js/login.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -36,7 +37,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/RentACar">RENT-A-CAR</a>
                 </li>
-                <li class="dropdown">
+                <li class="dropdown" id="login-menu-item">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">LOGIN<span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
                         <li class="px-4 py-4">
@@ -64,6 +65,14 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a class="btn btn-success btn-sm ml-3 mt-1" data-toggle="modal" data-target="#cartModal">
+                        <i class="fa fa-shopping-cart"></i> Cart
+                        <span class="badge badge-light" id="noOfRes">0</span>
+                    </a>
+                <li id="logout-menu-item">
+                    <a class="nav-link">LOGOUT</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -74,10 +83,16 @@
     <div class="container">
         <div class="row" style="margin-top: 30px;">
             <div class="col-md-3">
-                <div class="text-center">
+                <div class="row text-center">
                     <img src="/images/profile_default.png" class="avatar img-circle img-responsive"
                          alt="avatar">
+                </div>
+                <div class = "row row1">
                     <a href="#addServiceModal" data-target="#addServiceModal" data-toggle="modal">Add Services</a>
+                </div>
+                <div class = "row row2">
+                    <a href="#quickResModal" data-target="#quickResModal" data-toggle="modal" id="quickBtn">Quick Reservations</a>
+
                 </div>
             </div>
             <!-- edit form column -->
@@ -182,6 +197,9 @@
                         </fieldset>
                     </div>
                     <table id="table-rooms" class="display table table-striped table-bordered"></table>
+                    <div class="float-right">
+                        <a href="#selServiceModal" data-target="#selServiceModal" data-toggle="modal" id="selectServiceBtn">Select Additional Services</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -370,6 +388,372 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" id="CancelServiceBtn" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary" id="AddServiceBtn">Add Services</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-slideout modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row service-row">
+                    <div class="col-sm-3 img-col">
+                        <img src="/images/airline.png" class="img-circle serviceImg"
+                        alt="Service Pic">
+                    </div>
+                    <div class="col-sm-3 titleCol">
+                        <strong class="title">Flight Reservation </strong><br>
+                        <span class="text-muted flightResNo" id="flightResNo"></span>
+                    </div>
+                    <div class="col-sm-5">
+                        <span class="float-right">€</span>
+                        <span class="float-right text-right" id="FlightsTotal">0.00</span>
+                    </div>
+                    <div class="col-sm-1 dropdown-service float-right" data-for=".flightRes">
+                        <i class="fas fa-chevron-down float-right text-muted"></i>
+                    </div>
+                </div>
+                <div class="row-fluid service-infos flightRes">
+                    <div class="span10 offset1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Flights</h3>
+                            </div>
+                            <div class="panel-body">
+                            </div>
+                            <div class="panel-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row service-row">
+                    <div class="col-sm-3 img-col">
+                        <img alt="Service Pic" class="img-circle serviceImg"
+                             src="/images/hotel.png"
+                        >
+                    </div>
+                    <div class="col-sm-3 titleCol">
+                        <strong class="title">Hotel Reservation</strong><br>
+                        <span class="text-muted hotelResNo" id="hotelResNo"></span>
+                    </div>
+                    <div class="col-sm-5">
+                        <span class="float-right">€</span>
+                        <span class="float-right" id="RoomsTotal">0.00</span>
+                    </div>
+                    <div class="col-sm-1 dropdown-service" data-for=".hotelRes">
+                        <i class="fas fa-chevron-down text-muted float-right"></i>
+                    </div>
+                </div>
+                <div class="row-fluid service-infos hotelRes">
+                    <div class="span10 offset1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Rooms</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table class="table table-service-information table-hover" id="RoomTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Room</th>
+                                                <th class="text-center">Price</th>
+                                                <th> </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="cartBody">
+
+                                            <tr id="rowSubtotal">
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Rooms Total</h6></td>
+                                                <td class="text-right"><h6><strong id="roomsTotalPrice1">0.00€</strong></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Additional Services</h6></td>
+                                                <td class="text-right"><h6><strong id="additionalServices">0.00€</strong></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Discount</h6></td>
+                                                <td class="text-right"><h6><strong id="discount">0.00€</strong></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Total</h6></td>
+                                                <td class="text-right total"><h6><strong id="totalAll">0.00€</strong></h6></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row service-row">
+                    <div class="col-sm-3 img-col">
+                        <img alt="Service Pic"  class="img-circle serviceImg"
+                             src="/images/rcs.png"
+                        >
+                    </div>
+                    <div class="col-sm-3 titleCol">
+                        <strong class="title">RCS Reservation  </strong><br>
+                        <span class="text-muted rcsResNo" id="rcsResNo"></span>
+                    </div>
+                    <div class="col-sm-5">
+                        <span class="float-right">€</span>
+                        <span class="float-right" id="VehiclesTotal">0.00</span>
+                    </div>
+                    <div class="col-sm-1 dropdown-service " data-for=".rcsRes">
+                        <i class="fas fa-chevron-down text-muted float-right"></i>
+                    </div>
+                </div>
+                <div class="row-fluid service-infos rcsRes">
+                    <div class="span10 offset1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Vehicles</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table class="table table-service-information table-hover" id="VehicleTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Vehicle</th>
+                                                <th class="text-center">Price</th>
+                                                <th> </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="rc-cartBody">
+                                            <tr id="rc-rowSubtotal">
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Subtotal</h6></td>
+                                                <td class="text-right"><h6><strong id="rc-subtotal">0.00€</strong></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Discount</h6></td>
+                                                <td class="text-right"><h6><strong id="rc-discount">0.00€</strong></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>   </td>
+                                                <td class="text-right"><h6>Total</h6></td>
+                                                <td class="text-right total"><h6><strong id="rc-totalAll">0.00€</strong></h6></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col col1 text-right"> <strong>Total:</strong></div>
+                        <div class="text-right" id="SumTotal"><span>0.00€</span></div>
+                    </div>
+                    <hr>
+                </div>
+                <button type="button" class="btn btn-success" id="btnMdlBook">Book RCS</button>
+                <button type="button" class="btn btn-success" id="btnMdlCheckout">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="selServiceModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selServiceTitle">Select Additional Services</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="form" id="SelServiceForm">
+                        <div class="row">
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="airportTransferLabel">
+                                    <div class="hvrbox">
+                                        <img id="airportTransferImage" src="https://cdn4.iconfinder.com/data/icons/hotel-facilities-1/512/airport-transfer3-512.png" alt="..." class="img-thumbnail hvrbox-layer_bottom">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Airport Transfer</div>
+                                        </div>
+                                    </div>
+                                      <label hidden id="airportTransferPrice" class="priceForService"><input id = "ATcbx" class="cbx1" disabled type="checkbox" name="checkbox" value="Airport Transfer"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="parkingLabel">
+                                    <div class="hvrbox">
+                                        <img id="parkingImage" src="https://cdn3.iconfinder.com/data/icons/hotel-vacation/33/parking-2-256.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Parking Lot</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="parkingPrice" class="priceForService"><input class="cbx1" id = "PLcbx" disabled type="checkbox" name="checkbox" value="Parking Lot"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="poolLabel">
+                                    <div class="hvrbox">
+                                        <img id="poolImage" src="https://cdn1.iconfinder.com/data/icons/real-estate-set-2/512/38-512.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Pool Access</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="poolPrice" class="priceForService"><input class="cbx1" id = "Poolcbx" disabled type="checkbox" name="checkbox" value="Pool Access"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="restLabel">
+                                    <div class="hvrbox">
+                                        <img id="restImage" src="https://cdn3.iconfinder.com/data/icons/glyph/227/Cook-256.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Restaurant</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="restaurantPrice" class="priceForService"><input class="cbx1" id = "Restcbx" disabled type="checkbox" name="checkbox" value="Restaurant"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="roomServiceLabel">
+                                    <div class="hvrbox">
+                                        <img id="roomServiceImage" src="https://cdn4.iconfinder.com/data/icons/hotel-13/24/hotel-room-service-512.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Room Service</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="roomServicePrice" class="priceForService"><input class="cbx1" id = "RScbx" disabled type="checkbox" name="checkbox" value="Room Service"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="wellnessLabel">
+                                    <div class="hvrbox">
+                                        <img id="wellnessImage" src="https://cdn4.iconfinder.com/data/icons/hotel-services-and-facilities-3/32/Hotel-40-256.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Wellness</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="wellnessPrice" class="priceForService"><input class="cbx1" id = "Wellcbx" disabled type="checkbox" name="checkbox" value="Wellness"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="spaLabel">
+                                    <div class="hvrbox">
+                                        <img id="spaImage" src="https://cdn4.iconfinder.com/data/icons/beauty-spa-solid-style/24/sign-spa--256.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">Spa</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="spaPrice" class="priceForService"><input class="cbx1" id = "Spacbx" disabled type="checkbox" name="checkbox" value="Spa"><span></span></label>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="btn disabled btn-success" id="wiFiLabel">
+                                    <div class="hvrbox">
+                                        <img id="wiFiImage" src="https://cdn3.iconfinder.com/data/icons/wireless/512/21-256.png" alt="..." class="img-thumbnail">
+                                        <div class="hvrbox-layer_top">
+                                            <div class="hvrbox-text">WiFi</div>
+                                        </div>
+                                    </div>
+                                    <label hidden id="wiFiPrice" class="priceForService"><input class="cbx1" id = "wiFicbx" disabled type="checkbox" name="checkbox" value="WiFi"><span></span></label>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" id="CancelSelServiceBtn" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="AddSelServiceBtn">Add Services</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quickResModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="text-center">
+                    <h3>
+                        <span>Hotel Quick Reservations</span>
+                        <button class="btn-lg float-right" id="quickRes" data-toggle="modal" data-target="#addQuickModal">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </h3>
+                    <hr/>
+                </div>
+                <table id="quick-table" class="display table table-striped table-bordered"></table>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" id="CancelBtnQuick" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addQuickModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addQuickTitle">Add new quick reservation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="AddQuickForm">
+                        <div class="input-group">
+                            <label for="QuickDisc">Discount(%)</label>
+                            <input type="number" min="0" step="0.1" class="form-control" placeholder="Enter Discount" id="QuickDisc">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="RoomQuick">Room</label>
+                            <select id="RoomQuick" class="form-control">
+
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="RoomQuick">Start Date</label>
+                            <input type='text' class="form-control" id='datepickerStart' placeholder='Select Start Date'>
+                        </div>
+                        <div class="input-group">
+                            <label for="RoomQuick">End Date</label>
+                            <input type='text' class="form-control" id='datepickerEnd' placeholder='Select End Date'>
+                        </div>
+                        <div class="input-group">
+                            <div class="row" id="rowAddQuick">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" id="CancelQuickBtn" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="AddQuickResBtn">Add Quick Reservation</button>
             </div>
         </div>
     </div>
