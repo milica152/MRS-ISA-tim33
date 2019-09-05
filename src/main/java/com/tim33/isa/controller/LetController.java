@@ -23,8 +23,8 @@ public class LetController {
 
     @PostMapping
     @ResponseBody
-    Let save(@RequestBody Let novoVozilo) {
-        return service.save(novoVozilo);
+    Let save(@RequestBody Let noviLet) {
+        return service.save(noviLet);
     }
 
     @PutMapping("/{id}")
@@ -43,7 +43,6 @@ public class LetController {
     @GetMapping("/specific/{id}")
     @ResponseBody
     Let findById(@PathVariable long id) {
-        System.out.println("dosao na kontroler");
         return service.findById(id);
     }
 

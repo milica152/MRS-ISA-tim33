@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation</title>
+
+
+    <!-- CSS -->
+    <link href="../../../css/bootstrap.css" rel="stylesheet">
+    <link href="../../../css/seatReservation.css" rel="stylesheet">
+    <link href="../../../css/airplane.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../../../js/jquery.min.js"></script>
+    <script src="../../../js/bootstrap.bundle.min.js"></script>
+    <script src="../../../js/jquery-ui.min.js"></script>
+    <script src="../../../js/mdb.js"></script>
+
+
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+</head>
+<body>
+<div style="padding-left: 300px; padding-right: 300px;">
+    <div class="cockpit">
+        <h1>Please select a seat</h1>
+    </div>
+    <div id="reservationInfo" style="display: none">
+        <div>
+            <input type="text"  class="form-control" id="nameInput" name="nameInput" placeholder="Name of passanger">
+            <input type="text"  class="form-control" id="surnameInput" name="surnameInput" placeholder="Surname of passanger">
+            <input type="text"  class="form-control" id="passport" name="passport" placeholder="Passport number">
+            <button class="btn btn-secondary" id="enterBtn">Enter</button>
+        </div>
+
+    </div>
+
+    <div class="exit exit--front fuselage">
+
+    </div>
+    <div id = "seats">
+
+    </div>
+
+    <div class="exit exit--back fuselage">
+
+    </div>
+
+    <button type="button" class="btn btn-primary" id="doneBtn">Done</button>
+
+
+</div>
+
+<!-- JS files-->
+<script type="text/javascript" src = "../../../js/seatReservation.js"></script>
+
+</body>
+</html>

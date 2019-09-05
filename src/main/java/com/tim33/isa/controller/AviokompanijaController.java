@@ -1,6 +1,7 @@
 
 package com.tim33.isa.controller;
 
+import com.tim33.isa.dto.filter.SearchAirline;
 import com.tim33.isa.model.Aviokompanija;
 import com.tim33.isa.model.LetZaDodavanje;
 import com.tim33.isa.service.AviokompanijaService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -61,11 +63,12 @@ public class AviokompanijaController {
     }
 
     @GetMapping("/{id}")
-    public String aviocompanyProfile() {
+    public String aviocompanyProfile(@PathVariable long id) {
         return "aviokompanijaprofil";
     }
 
-
+    @GetMapping("/{id}/reservation/{flightId}")
+    public String flightReservation(@PathVariable long id,@PathVariable String flightId){return "seatReservation";}
 
     @GetMapping("/specific/{id}")
     @ResponseBody
@@ -77,5 +80,8 @@ public class AviokompanijaController {
     @ResponseBody
     public void deleteAviocompany(@PathVariable Long idDel){service.deleteById(idDel);}
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<List<Aviokompanija>> search(@Valid @RequestBody SearchAirline params){return new ResponseEntity<>(service.searchAK(params), HttpStatus.OK);}
 
 }

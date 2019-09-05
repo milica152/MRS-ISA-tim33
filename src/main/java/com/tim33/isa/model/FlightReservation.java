@@ -19,6 +19,9 @@ public class FlightReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private double price;
+    private String name;
+    private String surname;
+    private String passportNum;
     private Date time;
 
     @OneToOne(cascade = CascadeType.ALL)

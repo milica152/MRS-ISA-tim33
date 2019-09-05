@@ -1,12 +1,16 @@
 package com.tim33.isa.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.tim33.isa.dto.filter.SearchAirline;
 import com.tim33.isa.model.Aviokompanija;
 import com.tim33.isa.model.Destinacija;
+import com.tim33.isa.model.Let;
 import com.tim33.isa.repository.AviokompanijaRepository;
 import com.tim33.isa.repository.DestinacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -68,5 +72,41 @@ public class AviokompanijaService {
     }
 
     public void deleteById(long id) { repository.delete(findById(id)); }
+
+    public List<Aviokompanija> searchAK (SearchAirline params){
+        List<Aviokompanija> result = repository.findAll();
+
+        Iterator<Aviokompanija> it = result.iterator();
+
+        Aviokompanija current;
+        if(params.getName()== null){
+            params.setName("");
+        }
+        if(params.getCity()== null){
+            params.setCity("");
+        }
+
+        while (it.hasNext()) {
+            current = it.next();
+
+            System.out.println(current.getNaziv() + "?c" + params.getName());
+            System.out.println(current.getAdresa() + "?c" + params.getCity());
+            if (!(params.getName().trim().equals(""))) {
+                if (!(current.getNaziv().toLowerCase().contains(params.getName().toLowerCase()))) {
+                    it.remove();
+                    continue;
+                }
+            }
+            if (!(params.getCity().trim().equals(""))) {
+                if (!(current.getAdresa().toLowerCase().contains(params.getCity().toLowerCase()))) {
+                    it.remove();
+                }
+            }
+
+        }
+
+        return result;
+    }
+
 
 }
