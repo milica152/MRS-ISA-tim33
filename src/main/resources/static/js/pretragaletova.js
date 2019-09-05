@@ -77,11 +77,60 @@ $(document).ready(function() {
     });
 
     $('#table tbody').on('click', '#chooseBtn', function(e) {
+        e.preventDefault();
         var data = table.row($(this).parents('tr')).data();    //podaci o letu koji je kliknut
-        //window.location = "/Flight/" + data.id;                //ide se na prozor rezervacije
+        //direkt na reyervaciju
+        //window.location = "/Aviocompany/" + idAviokompanije + "/reservation/" + data.id;                //ide se na prozor rezervacije
     });
 
+
+    $(document).on('submit', '#search-airline-form', function (e) {
+        e.preventDefault();
+
+        var $name = $('#airline_name').val();
+        var $city = $('#airline_city').val();
+
+        if($name == null){
+            $name="";
+        }
+        if($city == null){
+            $city= "";
+        }
+        alert($city);
+        alert($name);
+
+        var searchParams = JSON.stringify({
+            "name" : $name,
+            "city" : $city
+        });
+
+
+        $.ajax({
+            method:'POST',
+            url: '/Aviocompany/search',
+            contentType : 'application/json',
+            dataType : "json",
+            data: searchParams,     //posalji prikupljene podatke
+            success: [function(data) {
+
+                if (data !== undefined && data.length > 0) {
+                    $('#tableairlines').dataTable().fnClearTable();
+                    $('#tableairlines').dataTable().fnAddData(data);
+                }
+                else{
+                    alert("Ne postoji nijedna kompanija koja zadovoljava kriterijume pretrage");
+                }
+            }],
+            error: function(xhr, status, error){
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                alert('Error - ' + errorMessage);
+            }
+        });
+    });
+
+
     $(document).on('submit', '#search-form', function (e) {
+        e.preventDefault();
 
         var $depAir = $('#departureAirport').val();
         var $arrAir = $('#arrivalAirport').val();
@@ -135,8 +184,6 @@ $(document).ready(function() {
                     current_data.push(data[let].id);
                 }
                 if (data !== undefined && data.length > 0) {
-                    document.getElementById('div_tableairlines').style.display = 'none';
-                    document.getElementById('div_table').style.display = 'contents';
                     document.getElementById('whole_filter').style.display = 'contents';
                     $('#table').dataTable().fnClearTable();
                     $('#table').dataTable().fnAddData(data);
@@ -210,6 +257,7 @@ $(document).ready(function() {
     });
 
     $('#tableairlines tbody').on('click', '#chooseBtn', function(e) {
+        e.preventDefault();
         var data = tableairlines.row($(this).parents('tr')).data();    //podaci o aviokomp koja je kliknuta
         window.location = "/Aviocompany/" + data.id;
     });

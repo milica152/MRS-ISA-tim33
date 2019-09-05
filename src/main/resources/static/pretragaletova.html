@@ -22,22 +22,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- DataTables -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 
 
-    <!-- jquery za datapicker -->
-    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
-    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
-    <!-- css za stil -->
-    <link href="../css/mdb.css" rel="stylesheet">
-    <link href="../css/mdb.lite.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
-
-    <script src="../js/login.js"></script>
+<!-- jquery za datapicker -->
+<link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript" src="js/pretragaletova.js"> </script>
+<script src="../js/login.js"></script>
+  
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -97,135 +93,182 @@
         </div>
     </div>
 </nav>
+
+
+
+
 <div class="container" id="Cont">
     <div>
-        <h1 class="text-center ">Flights</h1>
+        <h1 class="text-center " style = "padding-top: 30px">Flights</h1>
         <br>
     </div>
-    <form class="form-inline" id="search-form">
-        <div class="row col-lg-12">
-            <div class="form-group  col-lg-3">
-                <select class="form-control" id="departureAirport">
-                    <option value="" selected disabled>Departure airport</option>
-                </select>
-            </div>
 
-            <div class="form-group col-lg-3 pmd-textfield pmd-textfield-floating-label">
-                <input type='text' class="form-control" id='datepickerStart' placeholder='Select Departure Date'>
-            </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#airlinesT">Airlines</a></li>
+        <li><a data-toggle="tab" href="#flightsT">Flights</a></li>
+    </ul>
 
-            <div class="form-group col-lg-3 nopass">
-                <label for="Passengers">
-                    <span>Passengers</span>
-                </label>
-                <input type="number" id="Passengers" class="form-control" min="1">
-            </div>
-            <div class="form-group col-lg-3">
-                <select class="form-control" id="Class">
-                    <option value="" selected disabled>Class</option>
-                    <option>Economy</option>
-                    <option>Business</option>
-                    <option>First</option>
-                    <option>Premium economy</option>
-                </select>
-            </div>
+    <div class="tab-content">
+        <div id="airlinesT" class="tab-pane fade in active">
+
+            <form class="form-inline" id="search-airline-form" style="padding-top: 30px; padding-bottom: 15px;">
+                <div class="row col-lg-12">
 
 
-        </div>
-        <div class = "row col-lg-12">
-            <div class="form-group  col-lg-3">
-                <select class="form-control" id="arrivalAirport">
-                    <option value="" selected disabled>Arrival airport</option>
-                </select>
-            </div>
-            <div class="form-group col-lg-3 pmd-textfield pmd-textfield-floating-label">
-                <input type='text' class="form-control" id='datepickerEnd' placeholder='Select Arrival Date'>
-            </div>
-            <div class="form-group col-lg-3">
-                <select class="form-control" id="FlightType">
-                    <option value="One-way">One-way</option>
-                    <option selected value="Round-trip">Round-trip</option>
-                    <option value="Multi-city">Multi-city</option>
-                </select>
-            </div>
-        </div>
-        <div class = "row col-lg-12">
-            <div class="form-group col-lg-3"></div>
-            <div class="form-group col-lg-3"></div>
-            <div class="form-group col-lg-3"></div>
-            <div class="form-group col-lg-1"></div>
-            <div class="form-group col-lg-2">
-                <button type="submit"  name="search-submit" class="btn btn-success form-control" id="flight-search-submit">
-                    Search
-                </button>
-            </div>
-        </div>
-
-    </form>
-
-    <div class="dropdown-divider"></div>
-
-    <div class="row" style="margin-top: 60px; display:none" id="whole_filter">
-        <div class="col-md-12">
-            <div id="filter text-center">
-                <form>
-                    <div class="row">
-                        <div class="form-group col-lg-3 " id="minPriceClass">
-                            <label for="minPrice">
-                                <span>Price from</span>
-                            </label>
-                            <input type="number" id="minPrice" class="form-control" min="1">
-                        </div>
-                        <div class="form-group  col-lg-3  durationClass">
-                            <label for="duration">
-                                <span>Max. duration</span>
-                            </label>
-                            <input type="number" id="duration" class="form-control" min="1">
-                        </div>
-                        <div class="form-group  col-lg-3  airlinesClass">
-                            <label for="airlines">
-                                <span>Airlines</span>
-                            </label>
-                            <select class="form-control" id="airlines">
-                                <option value = "any">Any</option>
-                            </select>
-                        </div>
-                        <div class="form-group  col-lg-3  maxPriceClass">
-                            <label for="maxPrice">
-                                <span>Price to</span>
-                            </label>
-                            <input type="number" id="maxPrice" class="form-control" min="1">
-                        </div>
-
+                    <div class="form-group col-lg-3 pmd-textfield pmd-textfield-floating-label">
+                        <input type='text' class="form-control" id='airline_name' placeholder='Airline name'>
                     </div>
-                    <div class = "row col-lg-12">
-                        <div class="form-group col-lg-3"></div>
-                        <div class="form-group col-lg-3"></div>
-                        <div class="form-group col-lg-3"></div>
-                        <div class="form-group col-lg-1"></div>
-                        <div class="form-group col-lg-2">
-                            <button class="btn-lg pull-right" type= "submit" id="filterFlights">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
+                    <div class="form-group col-lg-3 pmd-textfield pmd-textfield-floating-label">
+                        <input type='text' class="form-control" id='airline_city' placeholder='Airline city'>
+                    </div>
+                    <button type="submit"  name="search-submit" class="btn btn-success form-control" id="airline-search-submit">
+                        Search
+                    </button>
 
+                </div>
+
+
+            </form>
+
+            <div class="dropdown-divider"></div>
+
+            <div id="div_tableairlines">
+                <table id="tableairlines" class="display table table-striped table-bordered" width="100%"></table>
+            </div>
+
+
+        </div>
+        <div id="flightsT" class="tab-pane fade">
+
+            <form class="form-inline" id="search-form">
+                <div class="row col-lg-12">
+                    <div class="form-group  col-lg-3">
+                        <select class="form-control" id="departureAirport">
+                            <option value="" selected disabled>Departure airport</option>
+                        </select>
                     </div>
 
-                </form>
+                    <div class="form-group col-lg-3 pmd-textfield pmd-textfield-floating-label">
+                        <input type='text' class="form-control" id='datepickerStart' placeholder='Select Departure Date'>
+                    </div>
 
+                    <div class="form-group col-lg-3 nopass">
+                        <label for="Passengers">
+                            <span>Passengers</span>
+                        </label>
+                        <input type="number" id="Passengers" class="form-control" min="1">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <select class="form-control" id="Class">
+                            <option value="" selected disabled>Class</option>
+                            <option>Economy</option>
+                            <option>Business</option>
+                            <option>First</option>
+                            <option>Premium economy</option>
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class = "row col-lg-12">
+                    <div class="form-group  col-lg-3">
+                        <select class="form-control" id="arrivalAirport">
+                            <option value="" selected disabled>Arrival airport</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-3 pmd-textfield pmd-textfield-floating-label">
+                        <input type='text' class="form-control" id='datepickerEnd' placeholder='Select Arrival Date'>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <select class="form-control" id="FlightType">
+                            <option value="One-way">One-way</option>
+                            <option selected value="Round-trip">Round-trip</option>
+                            <option value="Multi-city">Multi-city</option>
+                        </select>
+                    </div>
+                </div>
+                <div class = "row col-lg-12">
+                    <div class="form-group col-lg-3"></div>
+                    <div class="form-group col-lg-3"></div>
+                    <div class="form-group col-lg-3"></div>
+                    <div class="form-group col-lg-1"></div>
+                    <div class="form-group col-lg-2">
+                        <button type="submit"  name="search-submit" class="btn btn-success form-control" id="flight-search-submit">
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="row" style="margin-top: 60px; display:none" id="whole_filter">
+                <div class="col-md-12">
+                    <div id="filter text-center">
+                        <form>
+                            <div class="row">
+                                <div class="form-group col-lg-3 " id="minPriceClass">
+                                    <label for="minPrice">
+                                        <span>Price from</span>
+                                    </label>
+                                    <input type="number" id="minPrice" class="form-control" min="1">
+                                </div>
+                                <div class="form-group  col-lg-3  durationClass">
+                                    <label for="duration">
+                                        <span>Max. duration</span>
+                                    </label>
+                                    <input type="number" id="duration" class="form-control" min="1">
+                                </div>
+                                <div class="form-group  col-lg-3  airlinesClass">
+                                    <label for="airlines">
+                                        <span>Airlines</span>
+                                    </label>
+                                    <select class="form-control" id="airlines">
+                                        <option value = "any">Any</option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-lg-3  maxPriceClass">
+                                    <label for="maxPrice">
+                                        <span>Price to</span>
+                                    </label>
+                                    <input type="number" id="maxPrice" class="form-control" min="1">
+                                </div>
+
+                            </div>
+                            <div class = "row col-lg-12">
+                                <div class="form-group col-lg-3"></div>
+                                <div class="form-group col-lg-3"></div>
+                                <div class="form-group col-lg-3"></div>
+                                <div class="form-group col-lg-1"></div>
+                                <div class="form-group col-lg-2">
+                                    <button class="btn-lg pull-right" type= "submit" id="filterFlights">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
             </div>
+
+            <br>
+            <br>
+
+
+            <div id ="div_table">
+                <table id="table" class="display table table-striped table-bordered" width="100%"></table>
+            </div>
+
+
         </div>
+
+
     </div>
 
-    <br>
-    <br>
-
-    <div id="div_tableairlines">
-        <table id="tableairlines" class="display table table-striped table-bordered" width="100%"></table>
-    </div>
-    <div id ="div_table" style="display:none">
-        <table id="table" class="display table table-striped table-bordered" width="100%"></table>
-    </div>
     <br><br>
 </div>
 
