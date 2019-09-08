@@ -8,20 +8,21 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "sediste")
+@Table(name = "user_flight_reservation")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Sediste {
+public class UserFlightReservation {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private int numberOfRow;
-    private int columnNumber;
-    private boolean isReserved;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Let flight;
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private FlightReservation fr;
 
 }

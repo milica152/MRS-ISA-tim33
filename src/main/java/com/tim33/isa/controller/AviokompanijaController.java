@@ -80,6 +80,12 @@ public class AviokompanijaController {
         return "pretragaletova";
     }
 
+    @GetMapping("/{id}/fastReservations")
+    public String fastReservations(@PathVariable String id) {
+        return "fastreservations";
+    }
+
+
     @GetMapping("/{id}")
     public String aviocompanyProfile(@PathVariable long id) {
         return "aviokompanijaprofil";

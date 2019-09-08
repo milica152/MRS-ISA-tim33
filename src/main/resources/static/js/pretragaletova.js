@@ -65,6 +65,27 @@ $(document).ready(function() {
         ]
     });
 
+    $(document).on('click', '#reserveBtn', function(e){
+        e.preventDefault();
+        var data = table.row($(this).parents('tr')).data();
+
+        $.ajax({
+            method:'GET',
+            url: '/Flight/getAirlineId/' + data.id,
+            dataType : "text",
+            success: [function(id) {
+                alert(id);
+                window.location = "/Aviocompany/" + id + "/reservation/" + data.id;
+            }],
+            error: function(xhr, status, error){
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                alert('Error - ' + errorMessage);
+            }
+        });
+
+
+    });
+
     $.ajax({
         url: '/Flight/all',
         data: {},

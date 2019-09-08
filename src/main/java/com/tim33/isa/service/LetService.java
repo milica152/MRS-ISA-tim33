@@ -3,10 +3,7 @@ package com.tim33.isa.service;
 import com.tim33.isa.dto.filter.FilterFlight;
 import com.tim33.isa.dto.filter.SearchFlight;
 import com.tim33.isa.model.*;
-import com.tim33.isa.repository.AviokompanijaRepository;
-import com.tim33.isa.repository.FlightReservationRepository;
-import com.tim33.isa.repository.LetRepository;
-import com.tim33.isa.repository.LokacijaPresedanjaRepository;
+import com.tim33.isa.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +25,12 @@ public class LetService {
     LokacijaPresedanjaRepository repositoryLP;
     @Autowired
     FlightReservationRepository repositoryFR;
+    @Autowired
+    AirplaneRepository airplaneRepository;
+    @Autowired
+    SeatRepository seatRepository;
+    @Autowired
+    SeatService seatService;
 
     public Let save(Let noviLet){
         // Manipulacija letom...
@@ -99,6 +102,17 @@ public class LetService {
                 return "Departure must be before return!";
             }
 
+        for(Avion a : airplaneRepository.findAll()){
+            if(a.getACode().equalsIgnoreCase(noviLetStr.getAirplane_code())){
+                noviLet.setPlane(a);
+                break;
+            }
+        }
+
+        if(noviLet.getPlane() == null){
+            return "Airplane code must be valid!";
+        }
+
 
         if(repositoryLP.findByNazivAerodroma(noviLetStr.getOdredisni_aerodrom_id())  != null){
             noviLet.setOdredisniAerodrom(repositoryLP.findByNazivAerodroma(noviLetStr.getOdredisni_aerodrom_id()));
@@ -125,6 +139,7 @@ public class LetService {
         noviLet.setOcena(0.0);
         noviLet.setSifra(noviLetStr.getSifra().toUpperCase());
         repository.save(noviLet);
+        seatService.generateSeats(repository.findBySifra(noviLet.getSifra()));
         return "true";
 
     }

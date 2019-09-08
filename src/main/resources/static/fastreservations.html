@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">el="stylesheet">
+
+    <title>Fast reservations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../../css/fastreservations.css">
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="../../js/fastreservations.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.js"></script>
+
+
+
+
+</head>
+<body>
+<button class="btn-secondary" id = "backBtn">
+    <i class="fa fa-arrow-left"></i>
+</button>
+
+<div>
+    <h1>Please select a flight to reserve</h1>
+</div>
+<div id="reservationInfo" style="display: none">
+    <div>
+        <input type="text"  class="form-control" id="nameInput" name="nameInput" placeholder="Name of passanger">
+        <input type="text"  class="form-control" id="surnameInput" name="surnameInput" placeholder="Surname of passanger">
+        <input type="text"  class="form-control" id="passport" name="passport" placeholder="Passport number">
+        <button class="btn btn-secondary" id="enterBtn">Enter</button>
+    </div>
+
+</div>
+
+
+<div id = "tableDiv">
+    <table id="table"   data-pagination="true" style = "width : 1150px;">
+        <thead>
+        <tr>
+            <th data-field="id"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>

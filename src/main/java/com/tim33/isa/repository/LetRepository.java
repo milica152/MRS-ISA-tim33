@@ -13,4 +13,5 @@ public interface LetRepository  extends JpaRepository<Let, Long> {
     Let findById(long id);
     List<Let> findAllByAviokompanijaId(long idAviocomp);
 
+    Let findBySifra(String sifra);
 }
