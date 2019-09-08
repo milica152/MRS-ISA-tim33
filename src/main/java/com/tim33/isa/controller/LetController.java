@@ -116,4 +116,18 @@ public class LetController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/getAirlineId/{id}")
+    @ResponseBody
+    ResponseEntity<?> getAirlineId(@PathVariable long id){
+        try {
+            Let f = service.findById(id);
+
+            return new ResponseEntity<Long>(f.getAviokompanija().getId(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }

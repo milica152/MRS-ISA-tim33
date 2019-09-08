@@ -22,7 +22,7 @@ public class LetZaDodavanje {
     private String aviokompanija_id;
     private String odredisni_aerodrom_id;
     private String polazni_aerodrom_id;
-
+    private String airplane_code;
 
 
 }

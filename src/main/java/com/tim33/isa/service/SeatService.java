@@ -34,20 +34,17 @@ public class SeatService {
         return repository.findById(id);
     }
 
-        private Sediste findByNumberOfRowAndColumnNumberAndAvionId(int row_num, int column_num, long id){
-            return repository.findByNumberOfRowAndColumnNumberAndAvionId(row_num, column_num, id);
-        }
 
-        public Sediste[][] findAllFromPlane(long idFlight) {
+    public Sediste[][] findAllFromPlane(long idFlight) {
 
-            Let flight = repositoryF.findById(idFlight);
+        Let flight = repositoryF.findById(idFlight);
 
-            long id = flight.getPlane().getId();
-            int rows = flight.getPlane().getNumberOfRows();
-            int seats_per_column = flight.getPlane().getSeatsPerColumn();
-            int columns = flight.getPlane().getColumnNumber()*seats_per_column;
-            Sediste[][] result = new Sediste[rows][columns + flight.getPlane().getColumnNumber() - 1];
-            int column_counter = 0;
+        long id = flight.getPlane().getId();
+        int rows = flight.getPlane().getNumberOfRows();
+        int seats_per_column = flight.getPlane().getSeatsPerColumn();
+        int columns = flight.getPlane().getColumnNumber()*seats_per_column;
+        Sediste[][] result = new Sediste[rows][columns + flight.getPlane().getColumnNumber() - 1];
+        int column_counter = 0;
 
 
         //rasporedjujemo po nizu
@@ -57,7 +54,7 @@ public class SeatService {
                     result[i-1][j-1] = null;    //nema sedista
                 }else {
                     column_counter++;
-                    Sediste seat = findByNumberOfRowAndColumnNumberAndAvionId(i,column_counter,id);
+                    Sediste seat = findByNumberOfRowAndColumnNumberAndFlightId(i,column_counter,idFlight);
                     result[i-1][j-1] = seat;
                 }
 
@@ -68,8 +65,29 @@ public class SeatService {
         return result;
     }
 
+    private Sediste findByNumberOfRowAndColumnNumberAndFlightId(int i, int column_counter, long id) {
+        return repository.findByNumberOfRowAndColumnNumberAndFlightId(i, column_counter, id);
+    }
+
 
     public void deleteById(Long idDel) {
         repository.delete(findById(idDel));
+    }
+
+    public void generateSeats(Let flight) {
+        int rows = flight.getPlane().getNumberOfRows(), columns = flight.getPlane().getColumnNumber();
+        int seatsPerColumn = flight.getPlane().getSeatsPerColumn();
+
+
+        for(int i = 1; i <= rows; i++ ){
+            for(int j = 1 ; j <= columns*seatsPerColumn; j++){
+                Sediste s = new Sediste();
+                s.setReserved(false);
+                s.setColumnNumber(j);
+                s.setFlight(flight);
+                s.setNumberOfRow(i);
+                repository.save(s);
+            }
+        }
     }
 }

@@ -63,6 +63,9 @@ public class FlightReservationController {
         for(Sediste s : seats){
             if(s.getNumberOfRow() == Integer.parseInt(row) && s.getColumnNumber() == Integer.parseInt(column)){
                 fr.setSeat(s);
+                Sediste seat = seatService.findById(s.getId());
+                seat.setReserved(true);
+                seatService.update(seat);
                 break;
             }
         }

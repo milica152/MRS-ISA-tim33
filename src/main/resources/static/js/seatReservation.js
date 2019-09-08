@@ -5,17 +5,44 @@ $flightID = window.location.href.substring(window.location.href.lastIndexOf('/')
 
 //alert($airlineID);
 var reservationsMade = [];
+var fastResForFlight = [];
 
 $(document).ready(function(){
 
-    function seatFunction(button){
-        clicked_button_id = button.id;
-        document.getElementById('nameInput').value = "";
-        document.getElementById('surnameInput').value = "";
-        document.getElementById('passport').value = "";
-        document.getElementById('reservationInfo').style.display = 'contents';
+
+    function includes(elem) {
+        for(var e in fastResForFlight){
+            alert(e);
+            if(fastResForFlight[e] === elem){
+                alert(elem);
+
+                return true;
+            }
+        }
+        return false;
 
     }
+
+    showSeats();
+
+    function showSeats() {
+        $.ajax({      //dobih sedista iz brzih rez
+            type:'GET',
+            url:'/FastFlightReservation/seatsFromFlight/' + $flightID ,
+            dataType:"json",
+            success:[function(data){
+                for(var d in data){
+
+                    fastResForFlight.push(data[d].id.toString());
+                    alert(data);
+                }
+
+
+            }]
+        });
+
+
+
 
         $.ajax({
             type:'GET',
@@ -50,7 +77,7 @@ $(document).ready(function(){
                             }else{
                                 column_counter++;
 
-                                if(data[row-1][column-1].reserved){                       // POGLEDAJ JE L SA OVOM CRTICOM ILI BEZ
+                                if(data[row-1][column-1].reserved || includes(data[row-1][column-1].id.toString())){                       // POGLEDAJ JE L SA OVOM CRTICOM ILI BEZ
                                     var btn_r = document.createElement("button");
                                     var id_r = row.toString() + "-" + column_counter.toString();
                                     btn_r.setAttribute("id", id_r);
@@ -81,6 +108,11 @@ $(document).ready(function(){
                 }
             }
         });
+
+
+
+
+    }
 
 
 
@@ -141,6 +173,16 @@ $(document).ready(function(){
 
     });
 });
+function seatFunction(button){
+    clicked_button_id = button.id;
+    document.getElementById('nameInput').value = "";
+    document.getElementById('surnameInput').value = "";
+    document.getElementById('passport').value = "";
+    document.getElementById('reservationInfo').style.display = 'contents';
+
+}
+
+
 
 
 function addReservation(reservation){

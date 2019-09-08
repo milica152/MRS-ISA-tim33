@@ -42,6 +42,15 @@ $(document).ready(function() {
             }
         });
 
+
+    $(document).on('click', '#fastResBtn', function(e){
+        e.preventDefault();
+
+        window.location = "/Aviocompany/" + $profileID + "/fastReservations";
+
+
+    });
+
     $(document).on('click', '#backBtn', function(e){
         e.preventDefault();
         window.location = "/Aviocompany";
@@ -450,6 +459,7 @@ $(document).ready(function() {
         var $odredisni_aerodrom = $('#odredisni_aerodrom_id').val();
         var $polazni_aerodrom = $('#polazni_aerodrom_id').val();
         var $sifra = $('#code').val();
+        var $airplane = $('#airplane').val();
 
         if($vreme_sletanja === null ||$vreme_sletanja === "" || $datum_sletanja=== null || $datum_sletanja==="" || $sifra === ""){
             alert("You must fill all fields!");
@@ -457,6 +467,10 @@ $(document).ready(function() {
         }
 
         if($cena === null || $cena === "" || $klasa===null  || $klasa === ""  || $vreme_poletanja===null || $vreme_poletanja === "" ||  $datum_poletanja===null  ||  $datum_poletanja==="" || $odredisni_aerodrom===null  || $odredisni_aerodrom==="" || $polazni_aerodrom===null || $polazni_aerodrom===""){
+            alert("You must fill all fields!");
+            return false;
+        }
+        if($airplane === null || $airplane === ""){
             alert("You must fill all fields!");
             return false;
         }
@@ -479,7 +493,8 @@ $(document).ready(function() {
             "polazni_aerodrom_id": $polazni_aerodrom,
             "datum_poletanja": $datum_poletanja,
             "datum_sletanja": $datum_sletanja,
-            "klasa" : $klasa
+            "klasa" : $klasa,
+            "airplane_code" : $airplane
         });
 
 
@@ -491,8 +506,8 @@ $(document).ready(function() {
             data : flight,
             success: [function(){
                 $('#addFlightModal').modal('hide');
+                alert('You added flight successfully!');
                 popuniTabelu();
-                //window.location = "/Aviocompany/" + $profileID2;
             }],
             error: function(xhr, status, error) {
                 if (xhr.responseText!=='true'){

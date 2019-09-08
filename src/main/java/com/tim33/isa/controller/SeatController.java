@@ -44,7 +44,7 @@ public class SeatController {
 
     @RequestMapping(value = "deleteSeat/{idDel}", method = RequestMethod.POST)
     @ResponseBody
-    public void deleteFlight(@PathVariable Long idDel){service.deleteById(idDel);}
+    public void deleteSeat(@PathVariable Long idDel){service.deleteById(idDel);}
 
 
     @GetMapping("/fromPlane/{idFlight}")
