@@ -13,7 +13,7 @@ import java.util.Set;
 public class RequestWrapper {
 
     Aviokompanija airline;
-    Set<Destinacija> destinations;
+    Set<LokacijaPresedanja> destinations;
 
 
 }

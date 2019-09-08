@@ -3,22 +3,27 @@ package com.tim33.isa.service;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.tim33.isa.dto.filter.SearchAirline;
 import com.tim33.isa.model.Aviokompanija;
+
 import com.tim33.isa.model.Destinacija;
 import com.tim33.isa.model.Let;
+
+import com.tim33.isa.model.LokacijaPresedanja;
+import com.tim33.isa.model.RequestWrapper;
 import com.tim33.isa.repository.AviokompanijaRepository;
-import com.tim33.isa.repository.DestinacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AviokompanijaService {
     @Autowired
     AviokompanijaRepository repository;
     @Autowired
-    DestinacijaService destser;
+    LokacijaPresedanjaService destser;
 
     public Aviokompanija save(Aviokompanija noviProfil){
         // Manipulacija profilom...
@@ -63,11 +68,11 @@ public class AviokompanijaService {
             return "Name already taken!";
         }
         repository.save(a);
-        for(Destinacija d:ak.getDestinations()){
-            d.setAirline(a);
+        /*for(LokacijaPresedanja d:ak.getDestinations()){
+            d.getAirline().add(a);
             destser.save(d);
 
-        }
+        }*/
         return "true";
     }
 

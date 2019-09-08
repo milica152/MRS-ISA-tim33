@@ -1,5 +1,6 @@
 package com.tim33.isa.controller;
 
+import com.tim33.isa.dto.filter.FilterPretrageRCServisa;
 import com.tim33.isa.model.RentACar;
 import com.tim33.isa.service.RentACarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,10 @@ public class RentACarController {
         }
     }
 
-    @GetMapping("/all")
-    @ResponseBody
-    List<RentACar> findAll() {
-        return service.findAll();
+    @PostMapping("/all")
+//    @ResponseBody
+    ResponseEntity<List<RentACar>> findAll(@RequestBody FilterPretrageRCServisa filter) {
+        return new ResponseEntity<>(service.findAllWithFilter(filter), HttpStatus.OK);
     }
 
     @GetMapping

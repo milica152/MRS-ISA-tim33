@@ -5,6 +5,9 @@ import com.tim33.isa.service.FilijaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,5 +52,21 @@ public class FilijaleController {
     @GetMapping("/fromRC/{idRentACara}")
     ResponseEntity<List<Filijala>> findAllFromRC(@PathVariable long idRentACara) {
         return new ResponseEntity<>(service.findAllFromRC(idRentACara), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> delete(@PathVariable long id) {
+        Object a = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (a.equals("anonymousUser")) return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        else {
+            UserDetails user = (UserDetails) a;
+            if (user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN_RCS")) ||
+                user.getAuthorities().contains(new SimpleGrantedAuthority("SISTEM_ADMIN"))) {
+                service.delete(id);
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            }
+        }
     }
 }

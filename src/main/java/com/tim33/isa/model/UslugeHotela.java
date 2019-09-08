@@ -18,7 +18,7 @@ import java.util.Set;
 public class UslugeHotela {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String naziv;
     private double cena;
@@ -28,8 +28,13 @@ public class UslugeHotela {
     @JsonIgnore
     private Hotel hotel;
 
-    @ManyToMany(mappedBy = "hotelServices", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "hotelServices")
     private Set<HotelReservation> reservations;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "hotelServices")
+    private Set<QuickHotelReservation> quickReservations;
 
 
 

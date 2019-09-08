@@ -22,6 +22,7 @@ public class Service {
     private String naziv;
     private String adresa;
     private String opis;
+    private String promotivniOpis;
 
 
 }

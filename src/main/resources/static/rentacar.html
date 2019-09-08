@@ -11,6 +11,8 @@
 
         <!-- Custom styles for this template -->
         <link href="css/Homepage.css" rel="stylesheet">
+        <link href="css/cart.css" rel="stylesheet">
+        <link href="css/rentacar.css" rel="stylesheet">
 
         <!-- Bootstrap core JavaScript -->
         <script src="js/jquery.min.js"></script>
@@ -21,6 +23,9 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/r-2.2.2/datatables.min.js"></script>
 
         <script src="js/rentacar.js"></script>
+        <script src="js/login.js"></script>
+        <script src="js/cart.js"></script>
+        <script src = "https://kit.fontawesome.com/df0583b6a8.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -42,7 +47,13 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="RentACar">RENT-A-CAR</a>
                         </li>
-                        <li class="dropdown">
+                        <li class="nav-item" id="shopping-cart">
+                            <a class="btn btn-success btn-sm ml-3 mt-1" data-toggle="modal" data-target="#cartModal">
+                                <i class="fa fa-shopping-cart"></i> Cart
+                                <span class="badge badge-light" id="noOfRes">0</span>
+                            </a>
+                        </li>
+                        <li class="dropdown" id="login-menu-item">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown">LOGIN<span class="caret"></span></a>
                             <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
                                 <li class="px-4 py-4">
@@ -67,11 +78,13 @@
 
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="register.html">Sign up</a>
-                                        <a class="dropdown-item" href="#">Forgot password?</a>
-                                        <input type="hidden" class="hide" name="token" id="token" value="a465a2791ae0bae853cf4bf485dbe1b6">
+                                        <p id="error_text"></p>
                                     </form>
                                 </li>
                             </ul>
+                        </li>
+                        <li id="logout-menu-item">
+                            <a class="nav-link">LOGOUT</a>
                         </li>
                     </ul>
                 </div>
@@ -80,15 +93,199 @@
         <div class="container">
             <br>
             <h1 class="text-center">Rent a Car Services</h1>
-
-            <button id="search" type="button" class="btn btn-success">Search services</button>
-
-            <br>
+            <br><br>
+            <div class="form-group" id="search-wrapper">
+                <input type="text" placeholder="Service name" id="rc-name" class="form-control" />
+                <select id="rc-location">
+                    <option value="">Select location</option>
+                </select>
+                <input type="text" placeholder="Start date" id="date-from" class="form-control" onfocus="(this.type='date')" />
+                <input type="text" placeholder="End date" id="date-to" class="form-control" onfocus="(this.type='date')" />
+                <button id="search" type="button" class="btn btn-success">Search</button>
+            </div>
             <div class="dropdown-divider"></div>
 
             <table id="table" class="display table table-striped table-bordered" width="100%"></table>
 
             <br><br>
+        </div>
+
+        <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-slideout modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cart</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row service-row">
+                            <div class="col-sm-3 img-col">
+                                <img src="/images/airline.png" class="img-circle serviceImg"
+                                     alt="Service Pic">
+                            </div>
+                            <div class="col-sm-3 titleCol">
+                                <strong class="title">Flight Reservation </strong><br>
+                                <span class="text-muted flightResNo" id="flightResNo"></span>
+                            </div>
+                            <div class="col-sm-5">
+                                <span class="float-right">€</span>
+                                <span class="float-right text-right" id="FlightsTotal">0.00</span>
+                            </div>
+                            <div class="col-sm-1 dropdown-service float-right" data-for=".flightRes">
+                                <i class="fas fa-chevron-down float-right text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="row-fluid service-infos flightRes">
+                            <div class="span10 offset1">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Flights</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                    </div>
+                                    <div class="panel-footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row service-row">
+                            <div class="col-sm-3 img-col">
+                                <img alt="Service Pic" class="img-circle serviceImg"
+                                     src="/images/hotel.png"
+                                >
+                            </div>
+                            <div class="col-sm-3 titleCol">
+                                <strong class="title">Hotel Reservation</strong><br>
+                                <span class="text-muted hotelResNo" id="hotelResNo"></span>
+                            </div>
+                            <div class="col-sm-5">
+                                <span class="float-right">€</span>
+                                <span class="float-right" id="RoomsTotal">0.00</span>
+                            </div>
+                            <div class="col-sm-1 dropdown-service" data-for=".hotelRes">
+                                <i class="fas fa-chevron-down text-muted float-right"></i>
+                            </div>
+                        </div>
+                        <div class="row-fluid service-infos hotelRes">
+                            <div class="span10 offset1">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Rooms</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <table class="table table-service-information table-hover" id="RoomTable">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Room</th>
+                                                        <th class="text-center">Price</th>
+                                                        <th> </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="cartBody">
+
+                                                    <tr id="rowSubtotal">
+                                                        <td>   </td>
+                                                        <td class="text-right"><h6>Subtotal</h6></td>
+                                                        <td class="text-right"><h6><strong id="subtotal">0.00€</strong></h6></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>   </td>
+                                                        <td class="text-right"><h6>Discount</h6></td>
+                                                        <td class="text-right"><h6><strong id="discount">0.00€</strong></h6></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>   </td>
+                                                        <td class="text-right"><h6>Total</h6></td>
+                                                        <td class="text-right total"><h6><strong id="totalAll">0.00€</strong></h6></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row service-row">
+                            <div class="col-sm-3 img-col">
+                                <img alt="Service Pic"  class="img-circle serviceImg"
+                                     src="/images/rcs.png"
+                                >
+                            </div>
+                            <div class="col-sm-3 titleCol">
+                                <strong class="title">RCS Reservation  </strong><br>
+                                <span class="text-muted rcsResNo" id="rcsResNo"></span>
+                            </div>
+                            <div class="col-sm-5">
+                                <span class="float-right">€</span>
+                                <span class="float-right" id="VehiclesTotal">0.00</span>
+                            </div>
+                            <div class="col-sm-1 dropdown-service " data-for=".rcsRes">
+                                <i class="fas fa-chevron-down text-muted float-right"></i>
+                            </div>
+                        </div>
+                        <div class="row-fluid service-infos rcsRes">
+                            <div class="span10 offset1">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Vehicles</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <table class="table table-service-information table-hover" id="VehicleTable">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Vehicle</th>
+                                                        <th class="text-center">Price</th>
+                                                        <th> </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="rc-cartBody">
+                                                    <tr id="rc-rowSubtotal">
+                                                        <td>   </td>
+                                                        <td class="text-right"><h6>Subtotal</h6></td>
+                                                        <td class="text-right"><h6><strong id="rc-subtotal">0.00€</strong></h6></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>   </td>
+                                                        <td class="text-right"><h6>Discount</h6></td>
+                                                        <td class="text-right"><h6><strong id="rc-discount">0.00€</strong></h6></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>   </td>
+                                                        <td class="text-right"><h6>Total</h6></td>
+                                                        <td class="text-right total"><h6><strong id="rc-totalAll">0.00€</strong></h6></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col col1 text-right"> <strong>Total:</strong></div>
+                                <div class="text-right" id="SumTotal"><span>0.00€</span></div>
+                            </div>
+                            <hr>
+                        </div>
+                        <button type="button" class="btn btn-success" id="btnMdlCheckout">Checkout</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <footer class="py-3 bg-dark fixed-bottom">

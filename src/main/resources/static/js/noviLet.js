@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 
     $( "#datum_poletanja").datepicker({
-\        dateFormat:"dd-mm-yy",
+        dateFormat:"dd-mm-yy",
         minDate: '0d',
         onSelect: function(e) {
             $('#datum_sletanja').datepicker('option', 'minDate', e);
@@ -44,7 +44,7 @@ $(document).ready(function(){
     });
 
     $(document).on('submit', "#addForm", function(e){
-        var $cena = $('#cena');
+        var $cena = $('#price');
         var $ocena = $('#ocena');
         var $vreme_poletanja = $('#vreme_poletanja');
         var $vreme_sletanja = $('#vreme_sletanja');

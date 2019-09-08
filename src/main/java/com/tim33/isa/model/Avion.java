@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Avion {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String aCode;
     private int numberOfRows;

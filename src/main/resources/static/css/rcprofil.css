@@ -1,0 +1,43 @@
+#search-wrapper {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+}
+
+.search-row {
+    display: flex;
+    justify-content: left;
+    margin: 10px 0px;
+}
+
+#search-wrapper input[type="text"], input[type="number"], select {
+    min-width: 220px;
+    margin-right: 20px;
+}
+
+#search-wrapper input[type="date"], #date-pickup, #date-return {
+    max-width: 220px;
+    margin-right: 20px;
+}
+
+#success-alert {
+    max-width: 360px;
+    position: absolute;
+    top: 60px;
+    float: right;
+    z-index: 1000;
+}
+
+.message-error {
+    width: 100%;
+    text-align: center;
+    color: #9e0011;
+    margin: 10px 0px 0px 0px;
+}
+
+.message-success {
+    width: 100%;
+    text-align: center;
+    color: #049e2d;
+    margin: 10px 0px 0px 0px;
+}
