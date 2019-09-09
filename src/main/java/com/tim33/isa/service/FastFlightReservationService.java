@@ -63,11 +63,8 @@ public class FastFlightReservationService {
             fr.setSeat(ffr.getSeat());
             fr.setPrice(ffr.getPrice() - ffr.getPrice()*ffr.getDiscount());
 
-            System.out.println("podesio sve podatke");
             frRepository.save(fr);
-            System.out.println("napravio rez");
             repository.deleteById(ffr.getId());
-            System.out.println("izbrisao brzu rez");
         }catch (Exception ex){
             return "Somethig's wrong..";
         }

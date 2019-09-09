@@ -93,8 +93,6 @@ public class AviokompanijaService {
         while (it.hasNext()) {
             current = it.next();
 
-            System.out.println(current.getNaziv() + "?c" + params.getName());
-            System.out.println(current.getAdresa() + "?c" + params.getCity());
             if (!(params.getName().trim().equals(""))) {
                 if (!(current.getNaziv().toLowerCase().contains(params.getName().toLowerCase()))) {
                     it.remove();

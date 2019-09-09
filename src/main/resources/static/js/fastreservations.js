@@ -24,6 +24,7 @@ $(document).ready(function(){
     getRes();
 
     $(document).on('click', '.btn-primary', function (e) {
+        e.preventDefault();
         reserve(this);
     });
 

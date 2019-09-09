@@ -35,32 +35,35 @@ public class SeatService {
     }
 
 
+
+    private int getMaxRow(Let flight , List<Sediste> all){
+        int max = 0;
+        for(Sediste s : all){
+            if(s.getNumberOfRow()>max){
+                max = s.getNumberOfRow();
+            }
+        }
+        return max;
+    }
+
+
     public Sediste[][] findAllFromPlane(long idFlight) {
-
         Let flight = repositoryF.findById(idFlight);
+        List<Sediste> all = repository.findAllByFlightId(idFlight);
 
-        long id = flight.getPlane().getId();
-        int rows = flight.getPlane().getNumberOfRows();
+
+        int rows = getMaxRow(flight, all);
         int seats_per_column = flight.getPlane().getSeatsPerColumn();
         int columns = flight.getPlane().getColumnNumber()*seats_per_column;
         Sediste[][] result = new Sediste[rows][columns + flight.getPlane().getColumnNumber() - 1];
-        int column_counter = 0;
 
 
-        //rasporedjujemo po nizu
-        for(int i = 1; i <= rows; i ++){
-            for(int j = 1; j<=columns + flight.getPlane().getColumnNumber() - 1;j++){
-                if((j)%(seats_per_column+1)==0){   //ako je ovo prolaz,
-                    result[i-1][j-1] = null;    //nema sedista
-                }else {
-                    column_counter++;
-                    Sediste seat = findByNumberOfRowAndColumnNumberAndFlightId(i,column_counter,idFlight);
-                    result[i-1][j-1] = seat;
-                }
 
-            }
-            column_counter = 0;
+        for(Sediste s : all){
+            result[s.getNumberOfRow()-1][s.getColumnNumber() + (s.getColumnNumber()-1)/(seats_per_column)-1] = s;
         }
+
+
 
         return result;
     }
@@ -89,5 +92,10 @@ public class SeatService {
                 repository.save(s);
             }
         }
+    }
+
+
+    public Sediste findByRowAndColumnAndFlight(int row, int column, long idFlight) {
+        return repository.findByNumberOfRowAndColumnNumberAndFlightId(row, column, idFlight);
     }
 }

@@ -56,6 +56,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="RentACar">RENT-A-CAR</a>
                 </li>
+                <li class="nav-item" id = "li_edit">
+                    <a class="nav-link" href = "#editProfileModal" data-target="#editProfileModal" data-toggle="modal" id = "edit_profile">EDIT PROFILE</a>
+                </li>
                 <li class="dropdown" id="login-menu-item">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">LOGIN<span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
@@ -272,6 +275,84 @@
 
     <br><br>
 </div>
+
+
+
+<div class="modal fade" id="editProfileModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editProfileForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileTitle">Edit info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label for="f_name" class="col-md-4 col-form-label text-md-right">First name</label>
+                        <div class="col-md-6">
+                            <input type="text" id="f_name" class="form-control" name="f_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="l_name" class="col-md-4 col-form-label text-md-right">Last name</label>
+                        <div class="col-md-6">
+                            <input type="text" id="l_name" class="form-control" name="l_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                        <div class="col-md-6">
+                            <input type="email" id="email_address" class="form-control" name="email-address">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label for="user_name" class="col-md-4 col-form-label text-md-right">Username</label>
+                        <div class="col-md-6">
+                            <input type="text" id="user_name" class="form-control" name="username">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="newPassword" class="col-md-4 col-form-label text-md-right">Password</label>
+                        <div class="col-md-6">
+                            <input type="password" id="newPassword" class="form-control" name = "password">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="newPassword2" class="col-md-4 col-form-label text-md-right">Repeat password</label>
+                        <div class="col-md-6">
+                            <input type="password" id="newPassword2" class="form-control" name="password2">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" id="doneEditBtn">Done</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+
 
 <footer class="py-3 bg-dark fixed-bottom">
     <div class="container">

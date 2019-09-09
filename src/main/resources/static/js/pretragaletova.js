@@ -5,6 +5,7 @@ var departureAir = "";
 var arrivalAir = "";
 var noPassengers = 0;
 var fClass = "";
+var loggedUsername = "";
 
 
 $(document).ready(function() {
@@ -19,7 +20,8 @@ $(document).ready(function() {
         success: function (data) {
             if (data == undefined || data == "") {
                 isLogged = false;
-                //hideAll(isLogged);
+                loggedUsername = "";
+                hideAll(isLogged);
 
             } else {
                 isLogged = true;
@@ -29,10 +31,10 @@ $(document).ready(function() {
                         break;
                     }
                 }
-
-                //if (!isCorrectAdmin) {
-                //    hideAll(isLogged);
-                //}
+                loggedUsername = data.username;
+                if (!isCorrectAdmin) {
+                    hideAll(isLogged);
+                }
             }
 
             //initTables(!isCorrectAdmin, isLogged);
@@ -40,6 +42,13 @@ $(document).ready(function() {
         async: false
     });
 
+
+    function hideAll(isLogged){
+        if(!isLogged){
+            document.getElementById('li_edit').style.display = 'none';
+        }
+
+    }
 
         var table = $('#flights_table').DataTable( {
             data: undefined,
@@ -56,10 +65,11 @@ $(document).ready(function() {
                     data: null,
                     render: function(data, type, row)
                     {
-                        return !isLogged ? '' : '<button type="button" class="reserve-btn btn btn-primary" id="reserveBtn">Reserve</button>';
+                        return !isLogged || isCorrectAdmin ? '' : '<button type="button" class="reserve-btn btn btn-primary" id="reserveBtn">Reserve</button>';
                     }
                 }
                 //{ data: null, defaultContent: '<button type="button" class="btn btn-primary" id="reserveBtn">Reserve</button>'}
+
                 ],
             columnDefs: [
                 {className: "align-middle", targets: "_all"}
@@ -103,6 +113,86 @@ $(document).ready(function() {
             ]
         });
 
+
+    refreshEditModal();
+
+
+    function refreshEditModal(){
+        if(loggedUsername !== ""){
+
+            $.ajax({
+                type : 'POST',
+                url : '/findByUsername',
+                dataType : "json",
+                data : loggedUsername,
+                success : function (data) {
+                    $('#f_name').val(data.ime);
+                    $('#l_name').val(data.prezime);
+                    $('#email_address').val(data.email);
+                    $('#user_name').val(data.username);
+                    $('#newPassword').val(data.password);
+                    $('#newPassword2').val(data.password);
+                },
+                error : function () {
+                    alert("There is a problem with autentification.");
+                }
+            });
+        }
+    }
+
+    $(document).on('click', '#doneEditBtn', function(e){
+        e.preventDefault();
+
+        var $firstName = $('#f_name').val();
+        var $lastName = $('#l_name').val();
+        var $email = $('#email_address').val();
+        var $password = $('#newPassword').val();
+        var $password2 = $('#newPassword2').val();
+
+
+        if($password !== $password2){
+            alert("Different passwords!");
+            return false;
+        }
+
+        if($firstName === "" || $lastName === "" ||  $email === ""){
+            alert('All fields must be filled!');
+            return false;
+        }
+        if($password === "" || $password2 === "" ){
+            alert('All fields must be filled!');
+            return false;
+        }
+
+        var userInfo = JSON.stringify({
+            "password" : $password,
+            "name" : $firstName,
+            "surname" : $lastName,
+            "email" : $email
+        });
+        $.ajax({
+            type : 'POST',
+            url : '/editInfo',
+            dataType : "text",
+            contentType : 'application/json',
+            data : userInfo,
+            success : function (data) {
+                if(data === "ok"){
+                    alert("Profile successfully changed!");
+                }else {
+                    alert(data);
+                }
+
+                refreshEditModal();
+            },
+            error : function (xhr, error, status) {
+                alert("Error : " + status +  error);
+            }
+        });
+
+
+
+    });
 
 
 

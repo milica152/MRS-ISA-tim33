@@ -34,7 +34,6 @@ $(document).ready(function() {
                         break;
                     }
                 }
-                alert(data.username);
                 loggedUsername = data.username;
                 if (!isCorrectAdmin) {
                     hideAll( isCorrectAdmin, isLogged);
@@ -114,6 +113,16 @@ $(document).ready(function() {
 
     refreshEditModal();
 
+    $(document).on('click', '#manageBtn', function(e){
+        e.preventDefault();
+        var data = flightsTable.row($(this).parents('tr')).data();
+        var fID = data.id;
+
+        window.location = "/Aviocompany/" + $profileID + "/reservation/" + fID;
+
+
+    });
+
 
     function refreshEditModal(){
         if(loggedUsername !== ""){
@@ -137,6 +146,69 @@ $(document).ready(function() {
             });
         }
     }
+
+
+    refreshEditCompanyModal();
+
+
+    $(document).on('click', '#doneEditCompanyBtn', function(e) {
+        e.preventDefault();
+        var $name = $('#c_name').val();
+        var $address = $('#c_address').val();
+        var $desc = $('#desc').val();
+
+
+        if($name === "" || $address === "" ||  $desc === ""){
+            alert('All fields must be filled!');
+            return false;
+        }
+
+
+        var airlineInfo = JSON.stringify({
+            "name" : $name,
+            "address" : $address,
+            "desc" : $desc
+        });
+
+
+        $.ajax({
+            type : 'PUT',
+            url : '/Aviocompany/' + $profileID,
+            dataType : "text",
+            contentType : 'application/json',
+            data : airlineInfo,
+            success : function (data) {
+                if(data === "ok"){
+                    alert("Company profile successfully changed!");
+                    refreshEditCompanyModal($name, $address, $desc);
+
+                    $('#span-name').html($name);
+                    $('#span-address').html($address);
+                    $('#span-desc').html($desc);
+                }else {
+                    alert(data);
+                }
+
+            },
+            error : function (xhr, error, status) {
+                alert("Error : " + status +  error);
+            }
+        });
+
+
+
+
+    });
+
+
+
+
+    function refreshEditCompanyModal($name, $address, $desc){
+        $('#c_name').val($name);
+        $('#c_address').val($address);
+        $('#desc').val($desc);
+    }
+
 
     $(document).on('click', '#doneEditBtn', function(e){
         e.preventDefault();
@@ -595,17 +667,21 @@ $(document).ready(function() {
 
     });
 
+
         $.ajax({
-        type:'GET',
-        url : '/Aviocompany/specific/' + $profileID,
-        data : {},
-        success: function (data) {
-            $('#span-name').html(data.naziv);
-            $('#span-address').html(data.adresa);
-            $('#span-desc').html(data.opis);
-            rate = data.ocena;
-        }
-    });
+            type:'GET',
+            url : '/Aviocompany/specific/' + $profileID,
+            data : {},
+            success: function (data) {
+                $('#span-name').html(data.naziv);
+                $('#span-address').html(data.adresa);
+                $('#span-desc').html(data.opis);
+                refreshEditCompanyModal(data.naziv, data.adresa, data.opis);
+                rate = data.ocena;
+            }
+        });
+
+
 
 
 
