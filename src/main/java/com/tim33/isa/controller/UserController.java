@@ -47,7 +47,6 @@ public class UserController {
     @ResponseBody
     public User findByUsername (@RequestBody String username){
         username = username.substring(0,username.length()-1);
-        System.out.println(username);
         User u =  userService.findByUsername(username);
         return u;
     }

@@ -138,7 +138,7 @@
                 </p>
                 <div>
                     <button type="button" class="btn btn-secondary" id="fastResBtn">Fast reservations</button>
-                    <button type="button" class="btn btn-secondary" id="editInfoBtn">Edit info</button>
+                    <button type="button" class="btn btn-secondary" id="editInfoBtn" data-toggle="modal" data-target="#editCompanyModal">Edit info</button>
                     <button type="button" class="btn btn-secondary" id="reportsBtn" data-toggle="modal" data-target="#reportsModal">Reports</button>
                 </div>
             </div>
@@ -305,6 +305,66 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="editCompanyModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editCompanyForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCompanyTitle">Edit company info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label for="c_name" class="col-md-4 col-form-label text-md-right">Name</label>
+                        <div class="col-md-6">
+                            <input type="text" id="c_name" class="form-control" name="c_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="c_address" class="col-md-4 col-form-label text-md-right">Address</label>
+                        <div class="col-md-6">
+                            <input type="text" id="c_address" class="form-control" name="c_address">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="desc" class="col-md-4 col-form-label text-md-right">Description</label>
+                        <div class="col-md-6">
+                            <input type="text" id="desc" class="form-control" name="desc-address">
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" id="doneEditCompanyBtn">Done</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+
+
+
+
 
 <div class="modal fade" id="editProfileModal" role="dialog" aria-hidden="true">
     <div class="modal-dialog">

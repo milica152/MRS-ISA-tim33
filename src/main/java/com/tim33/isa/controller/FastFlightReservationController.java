@@ -94,13 +94,11 @@ public class FastFlightReservationController {
     @ResponseBody
     public ResponseEntity<?> reserveFastRes(@Valid @PathVariable Long id, @RequestBody ReservationInfo info){
         //sediste se promeni na rezervisano
-        System.out.println("Dosao na server");
         FastFlightReservation ffr = service.findById(id);
         ffr.setName(info.getName());
         ffr.setSurname(info.getSurname());
         ffr.setPassportNum(info.getPassNum());
         String mess= service.reserve(ffr);   //napravi rez na servisu
-        System.out.println(mess);
         if (!mess.equals("true")) {
             return new ResponseEntity<>(mess, HttpStatus.BAD_REQUEST);
         } else {

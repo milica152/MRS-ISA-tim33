@@ -32,10 +32,7 @@ public class FlightReservationController {
     @PostMapping
     @ResponseBody
     FlightReservation save(@Valid  @RequestBody FlightReservationToAdd newFlightReservation) {
-        System.out.println("dosao na server");
         FlightReservation fr = new FlightReservation();
-        //SimpleDateFormat df = new SimpleDateFormat("E MMM dd yyyy HH:mm:ss 'GMT'Z (z)");
-        System.out.println(newFlightReservation.getDate());
 
         Date d = new Date(Long.parseLong(newFlightReservation.getDate()));
         fr.setTime(d);
@@ -67,9 +64,6 @@ public class FlightReservationController {
 
 
         //obradi podatke
-            System.out.println(fr.getTime());
-            System.out.println(fr.getFlight());
-            System.out.println(fr.getSeat());
         fr.setName(newFlightReservation.getName());
         fr.setSurname(newFlightReservation.getSurname());
         fr.setPassportNum(newFlightReservation.getPassport());
@@ -77,13 +71,6 @@ public class FlightReservationController {
 
         return service.save(fr);
     }
-
-    //@PutMapping("/{id}")
-    //@ResponseBody
-    //FlightReservation update(@RequestBody FlightReservation newReservation, @PathVariable long id) {
-    //    newReservation.setId(id);
-    //    return service.save(newReservation);
-    //}
 
     @GetMapping("/all")
     @ResponseBody

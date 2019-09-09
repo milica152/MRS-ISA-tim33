@@ -2,9 +2,7 @@
 package com.tim33.isa.controller;
 
 import com.tim33.isa.dto.filter.SearchAirline;
-import com.tim33.isa.model.Aviokompanija;
-import com.tim33.isa.model.LetZaDodavanje;
-import com.tim33.isa.model.RequestWrapper;
+import com.tim33.isa.model.*;
 import com.tim33.isa.service.AviokompanijaService;
 import com.tim33.isa.service.LetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,9 @@ public class AviokompanijaController {
     }
 
 
+
+
+
     @RequestMapping(value = "/addNewAviocompany", method = RequestMethod.POST)
     public ResponseEntity<?> addNew(@RequestBody RequestWrapper request) {
         Aviokompanija ak = request.getAirline();
@@ -51,9 +52,23 @@ public class AviokompanijaController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    Aviokompanija update(@RequestBody Aviokompanija noviProfil, @PathVariable long id) {
-        noviProfil.setId(id);
-        return service.save(noviProfil);
+    String update(@RequestBody CompanyInfo newInfo, @PathVariable long id) {
+        List<Aviokompanija> airlines = service.findAll();
+
+        for(Aviokompanija airline : airlines){
+            if(airline.getNaziv().equalsIgnoreCase(newInfo.getName()) && airline.getId() != id){
+                return "Name already taken.";
+            }
+        }
+
+        Aviokompanija a = service.findById(id);
+        a.setAdresa(newInfo.getAddress());
+        a.setNaziv(newInfo.getName());
+        a.setOpis(newInfo.getDesc());
+
+        service.save(a);
+
+        return "ok";
     }
 
     @PostMapping("/{id}/addFlight")

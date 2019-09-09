@@ -11,6 +11,6 @@ public interface SeatRepository  extends JpaRepository<Sediste, Long> {
     List<Sediste> findAll();
     Sediste findById(long id);
     List<Sediste> findAllByFlightId(long idPlane);
-    Sediste findByNumberOfRowAndColumnNumberAndFlightId(int row_num, int column_num, long id);
-
+    //Sediste findByNumberOfRowAndColumnNumberAndFlightId(int row_num, int column_num, long id);
+    Sediste findByNumberOfRowAndColumnNumberAndFlightId(int row, int column, long idFlight);
 }
