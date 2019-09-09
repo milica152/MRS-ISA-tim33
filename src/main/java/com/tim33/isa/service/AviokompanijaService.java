@@ -4,7 +4,6 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import com.tim33.isa.dto.filter.SearchAirline;
 import com.tim33.isa.model.Aviokompanija;
 
-import com.tim33.isa.model.Destinacija;
 import com.tim33.isa.model.Let;
 
 import com.tim33.isa.model.LokacijaPresedanja;

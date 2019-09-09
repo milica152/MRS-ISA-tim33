@@ -29,7 +29,7 @@ public class AviokompanijaController {
     @Autowired
     LetService letService;
 
-    @RequestMapping(value = "addAviocompany", method = RequestMethod.POST)
+    @RequestMapping(value = "/addAviocompany", method = RequestMethod.POST)
     @ResponseBody
     Aviokompanija save(@RequestBody Aviokompanija noviProfil) {
         return service.save(noviProfil);

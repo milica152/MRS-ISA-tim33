@@ -38,11 +38,6 @@ public class FlightReservationController {
         System.out.println(newFlightReservation.getDate());
 
         Date d = new Date(Long.parseLong(newFlightReservation.getDate()));
-        //try {
-        //    d = df.parse(newFlightReservation.getDate());
-        //} catch (ParseException e) {
-        //    e.printStackTrace();
-        //}
         fr.setTime(d);
 
 
