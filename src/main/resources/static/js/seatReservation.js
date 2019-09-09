@@ -12,7 +12,6 @@ $(document).ready(function(){
 
     function includes(elem) {
         for(var e in fastResForFlight){
-            alert(e);
             if(fastResForFlight[e] === elem){
                 alert(elem);
 
@@ -34,7 +33,6 @@ $(document).ready(function(){
                 for(var d in data){
 
                     fastResForFlight.push(data[d].id.toString());
-                    alert(data);
                 }
 
 
@@ -152,8 +150,6 @@ $(document).ready(function(){
             "date" : date
           });
         reservationsMade.push(reservation);
-        alert(reservation);
-        alert(reservationsMade);
     });
 
 
@@ -193,7 +189,7 @@ function addReservation(reservation){
         dataType : "json",
         data : reservation,
         success : [function(data){
-            alert(data);
+            alert('You successfully reserved this flight!');
             window.location = "/Aviocompany";
         }],
         error : function(xhr, status, code){

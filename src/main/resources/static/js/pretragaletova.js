@@ -6,7 +6,108 @@ var arrivalAir = "";
 var noPassengers = 0;
 var fClass = "";
 
+
 $(document).ready(function() {
+
+    var isLogged = false;
+    var isCorrectAdmin = false;
+
+
+    $.ajax({
+        type: 'GET',
+        url: '/whoami',
+        success: function (data) {
+            if (data == undefined || data == "") {
+                isLogged = false;
+                //hideAll(isLogged);
+
+            } else {
+                isLogged = true;
+                for (var i = 0; i < data.authorities.length; i++) {
+                    if (data.authorities[i].authority == 'SISTEM_ADMIN' || data.authorities[i].authority == 'ADMIN_RCS') {
+                        isCorrectAdmin = true;
+                        break;
+                    }
+                }
+
+                //if (!isCorrectAdmin) {
+                //    hideAll(isLogged);
+                //}
+            }
+
+            //initTables(!isCorrectAdmin, isLogged);
+        },
+        async: false
+    });
+
+
+        var table = $('#flights_table').DataTable( {
+            data: undefined,
+            searching: false,
+            ordering: true,
+            lengthChange: false,
+            columns: [
+                { data: 'id', title: "ID"},
+
+                { data: 'vremePolaska', title: 'Dep. time' },
+                { data: 'vremeDolaska', title: 'Arr. time'},
+                { data: 'cena', title: 'Price'},
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return !isLogged ? '' : '<button type="button" class="reserve-btn btn btn-primary" id="reserveBtn">Reserve</button>';
+                    }
+                }
+                //{ data: null, defaultContent: '<button type="button" class="btn btn-primary" id="reserveBtn">Reserve</button>'}
+                ],
+            columnDefs: [
+                {className: "align-middle", targets: "_all"}
+            ]
+        });
+
+        var tableairlines = $('#tableairlines').DataTable( {
+            data: undefined,
+            searching: false,
+            lengthChange: false,
+            columns: [
+                { data: 'naziv', title: 'Name' },
+                { data: 'adresa', title: 'Address' },
+                { data: 'opis', title: 'Promo description' },
+                { data: 'ocena', title: 'Rating'},
+                { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>'},
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return !isCorrectAdmin ? '' : '<button type="button" class="edit-btn btn btn-secondary" >Edit</button>';
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row)
+                    {
+                        return !isCorrectAdmin ? '' : '<button type="button" class="delete-btn btn btn-danger">Delete</button>';
+                    }
+                }
+
+
+
+
+
+                //{ data: null, defaultContent: '<div class="edit_div"><button type="button" class="btn btn-primary" id="editBtn">Edit</button></div>'},
+                //{ data: null, defaultContent: '<div class="remove_div"><button type="button" class=" delete-btn btn btn-primary" id="removeBtn">Remove</button></div>'}
+            ],
+            columnDefs: [
+                {className: "align-middle", targets: "_all"}
+            ]
+        });
+
+
+
+
+
+
 
     $( "#datepickerStart").datepicker({
         dateFormat:"dd-mm-yy",
@@ -47,34 +148,15 @@ $(document).ready(function() {
         }
     });
 
-    var table = $('#table').DataTable( {
-        data: undefined,
-        searching: false,
-        ordering: true,
-        lengthChange: false,
-        columns: [
-            { data: 'id', title: "ID"},
-
-            { data: 'vremePolaska', title: 'Dep. time' },
-            { data: 'vremeDolaska', title: 'Arr. time'},
-            { data: 'cena', title: 'Price'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="reserveBtn">Reserve</button>'}
-        ],
-        columnDefs: [
-            {className: "align-middle", targets: "_all"}
-        ]
-    });
 
     $(document).on('click', '#reserveBtn', function(e){
         e.preventDefault();
         var data = table.row($(this).parents('tr')).data();
-
         $.ajax({
             method:'GET',
             url: '/Flight/getAirlineId/' + data.id,
             dataType : "text",
             success: [function(id) {
-                alert(id);
                 window.location = "/Aviocompany/" + id + "/reservation/" + data.id;
             }],
             error: function(xhr, status, error){
@@ -91,13 +173,13 @@ $(document).ready(function() {
         data: {},
         success: function(data) {
             if (data !== undefined && data.length > 0) {
-                $('#table').dataTable().fnClearTable();
-                $('#table').dataTable().fnAddData(data);
+                $('#flights_table').dataTable().fnClearTable();
+                $('#flights_table').dataTable().fnAddData(data);
             }
         }
     });
 
-    $('#table tbody').on('click', '#chooseBtn', function(e) {
+    $('#flights_table tbody').on('click', '#chooseBtn', function(e) {
         e.preventDefault();
         var data = table.row($(this).parents('tr')).data();    //podaci o letu koji je kliknut
         //direkt na reyervaciju
@@ -117,8 +199,6 @@ $(document).ready(function() {
         if($city == null){
             $city= "";
         }
-        alert($city);
-        alert($name);
 
         var searchParams = JSON.stringify({
             "name" : $name,
@@ -206,8 +286,8 @@ $(document).ready(function() {
                 }
                 if (data !== undefined && data.length > 0) {
                     document.getElementById('whole_filter').style.display = 'contents';
-                    $('#table').dataTable().fnClearTable();
-                    $('#table').dataTable().fnAddData(data);
+                    $('#flights_table').dataTable().fnClearTable();
+                    $('#flights_table').dataTable().fnAddData(data);
                 }
                 else{
                     alert("Ne postoji nijedan let koji zadovoljava kriterijume pretrage");
@@ -237,36 +317,16 @@ $(document).ready(function() {
     });
 
 
-    var tableairlines = $('#tableairlines').DataTable( {
-        data: undefined,
-        searching: false,
-        lengthChange: false,
-        columns: [
-            { data: 'naziv', title: 'Name' },
-            { data: 'adresa', title: 'Address' },
-            { data: 'opis', title: 'Promo description' },
-            { data: 'ocena', title: 'Rating'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="editBtn">Edit</button>'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="removeBtn">Remove</button>'}
-        ],
-        columnDefs: [
-            {className: "align-middle", targets: "_all"}
-        ]
-    });
-
     $.ajax({
         url: '/Aviocompany/all',
         data: {},
         success: function(data) {
-            alert(data);
             for(var airline in data){
                 var opcija = new Option(data[airline].naziv);
                 opcija.setAttribute("value", data[airline].naziv);
                 document.getElementById('airlines').add(opcija);
             };
             if (data !== undefined && data.length > 0) {
-                alert("sta bi?");
                 $('#tableairlines').dataTable().fnClearTable();
                 $('#tableairlines').dataTable().fnAddData(data);
             }
@@ -279,12 +339,16 @@ $(document).ready(function() {
 
     $('#tableairlines tbody').on('click', '#chooseBtn', function(e) {
         e.preventDefault();
+        //var id = $(this).data('id');
         var data = tableairlines.row($(this).parents('tr')).data();    //podaci o aviokomp koja je kliknuta
         window.location = "/Aviocompany/" + data.id;
     });
 
-    $('#tableairlines tbody').on('click', '#removeBtn', function(e) {
+    $('#tableairlines tbody').on('click', '.delete-btn', function(e) {
+        e.preventDefault();
         var conBox = confirm("Are you sure?");
+        //var id = $(this).data('id');
+
         var data = tableairlines.row($(this).parents('tr')).data();
         if(conBox){
             $.ajax({
@@ -306,7 +370,6 @@ $(document).ready(function() {
         else{
             e.preventDefault();
         }
-        e.preventDefault();
 
 
 
@@ -316,7 +379,6 @@ $(document).ready(function() {
     $(document).on('click', '#filterFlights', function(e){
 
         e.preventDefault();
-        //alert(roomTypesNeeded);
         doFilter();
 
     });
@@ -340,8 +402,8 @@ function doFilter(){
         data: JSON.stringify(filterParams),
         success: function(data){
             if(data.length>0){
-                $('#table').dataTable().fnClearTable();
-                $('#table').dataTable().fnAddData(data);
+                $('#flights_table').dataTable().fnClearTable();
+                $('#flights_table').dataTable().fnAddData(data);
             }
             else{
                 alert("No flight that fulfills these parameters!");

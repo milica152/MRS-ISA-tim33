@@ -10,10 +10,192 @@ var rate = "";
 var clicked_button_id = "";
 var reserved_seats = [];
 var ids= [];
+var loggedUsername = "";
 
 $(document).ready(function() {
+    var isLogged = false;
+    var isCorrectAdmin = false;
 
-        var ctxL = document.getElementById("lineChart").getContext('2d');  //2d
+
+    $.ajax({
+        type: 'GET',
+        url: '/whoami',
+        success: function (data) {
+            if (data == undefined || data == "") {
+                isLogged = false;
+                loggedUsername = "";
+                hideAll(isCorrectAdmin, isLogged);
+
+            } else {
+                isLogged = true;
+                for (var i = 0; i < data.authorities.length; i++) {
+                    if (data.authorities[i].authority == 'SISTEM_ADMIN' || data.authorities[i].authority == 'ADMIN_AK') {
+                        isCorrectAdmin = true;
+                        break;
+                    }
+                }
+                alert(data.username);
+                loggedUsername = data.username;
+                if (!isCorrectAdmin) {
+                    hideAll( isCorrectAdmin, isLogged);
+                }
+            }
+
+        },
+        async: false
+    });
+
+
+
+
+
+    function hideAll(isCorrectAdmin, isLogged){
+        if(!isCorrectAdmin){
+            document.getElementById('editInfoBtn').style.visibility = 'hidden';
+            document.getElementById('reportsBtn').style.visibility = 'hidden';
+            document.getElementById('addFlightBtn').style.visibility = 'hidden';
+        }
+        if(!isLogged){
+            document.getElementById('li_edit').style.display = 'none';
+        }
+
+    }
+
+
+
+    var flightsTable = $('#table-flights').DataTable({
+        data: undefined,
+        searching: false,
+        lengthChange: false,
+        paging: false,
+        info: false,
+        ordering: true,
+        compact: true,
+        columns: [
+            { data: 'id', title: 'Id' },
+
+            { data: 'vremePolaska', title: 'Polazak' },
+            { data: 'vremeDolaska', title: 'Dolazak' },
+            { data: 'cena', title: 'Cena'},
+            { data: 'ocena', title: 'Ocena'},
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    if(isCorrectAdmin){
+                        return '<button type="button" class="manage-btn btn btn-primary" id = "manageBtn">Manage</button>';
+                    }
+                    if(isLogged){
+                        return '<button type="button" class="reserve-btn btn btn-primary" id = "ReserveBtn">Reserve</button>';
+                    }
+
+                    return '';
+                }
+            },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return !isCorrectAdmin ? '' : '<button type="button" class="edit-btn btn btn-primary" id="editBtn">Edit</button>';
+                }
+            },
+            {
+                data: null,
+                render: function(data, type, row)
+                {
+                    return !isCorrectAdmin ? '' : '<button type="button" class="delete-btn btn btn-danger" id="deleteBtn">Delete</button>';
+                }
+            }
+       ],
+        columnDefs: [
+            { className: "align-middle", targets: "_all" }
+        ]
+    });
+
+    refreshEditModal();
+
+
+    function refreshEditModal(){
+        if(loggedUsername !== ""){
+
+            $.ajax({
+                type : 'POST',
+                url : '/findByUsername',
+                dataType : "json",
+                data : loggedUsername,
+                success : function (data) {
+                    $('#f_name').val(data.ime);
+                    $('#l_name').val(data.prezime);
+                    $('#email_address').val(data.email);
+                    $('#user_name').val(data.username);
+                    $('#newPassword').val(data.password);
+                    $('#newPassword2').val(data.password);
+                },
+                error : function () {
+                    alert("There is a problem with autentification.");
+                }
+            });
+        }
+    }
+
+    $(document).on('click', '#doneEditBtn', function(e){
+        e.preventDefault();
+
+        var $firstName = $('#f_name').val();
+        var $lastName = $('#l_name').val();
+        var $email = $('#email_address').val();
+        var $password = $('#newPassword').val();
+        var $password2 = $('#newPassword2').val();
+
+
+        if($password !== $password2){
+            alert("Different passwords!");
+            return false;
+        }
+
+        if($firstName === "" || $lastName === "" ||  $email === ""){
+            alert('All fields must be filled!');
+            return false;
+        }
+        if($password === "" || $password2 === "" ){
+            alert('All fields must be filled!');
+            return false;
+        }
+
+        var userInfo = JSON.stringify({
+            "password" : $password,
+            "name" : $firstName,
+            "surname" : $lastName,
+            "email" : $email
+        });
+        $.ajax({
+            type : 'POST',
+            url : '/editInfo',
+            dataType : "text",
+            contentType : 'application/json',
+            data : userInfo,
+            success : function (data) {
+                if(data === "ok"){
+                    alert("Profile successfully changed!");
+                }else {
+                    alert(data);
+                }
+
+                refreshEditModal();
+            },
+            error : function (xhr, error, status) {
+                alert("Error : " + status +  error);
+            }
+        });
+
+
+
+    });
+
+
+
+
+    var ctxL = document.getElementById("lineChart").getContext('2d');  //2d
         var gradientFill = ctxL.createLinearGradient(0, 0, 0, 290);  //
         gradientFill.addColorStop(0, "rgba(173, 53, 186, 1)");    //
         gradientFill.addColorStop(1, "rgba(173, 53, 186, 0.1)");   //
@@ -377,29 +559,6 @@ $(document).ready(function() {
         }
     });
 
-    var flightsTable = $('#table-flights').DataTable({
-        data: undefined,
-        searching: false,
-        lengthChange: false,
-        paging: false,
-        info: false,
-        ordering: true,
-        compact: true,
-        columns: [
-            { data: 'id', title: 'Id' },
-
-            { data: 'vremePolaska', title: 'Polazak' },
-            { data: 'vremeDolaska', title: 'Dolazak' },
-            { data: 'cena', title: 'Cena'},
-            { data: 'ocena', title: 'Ocena'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="reportsModal" id="ReserveBtn">Reserve</button>'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="EditBtn">Edit</button>'},
-            { data: null, defaultContent: '<button type="button" class="btn btn-primary" id="RemoveBtn">Remove</button>'}
-        ],
-        columnDefs: [
-            { className: "align-middle", targets: "_all" }
-        ]
-    });
 
     $.ajax({
         type: 'GET',
@@ -447,6 +606,8 @@ $(document).ready(function() {
             rate = data.ocena;
         }
     });
+
+
 
 
     $(document).on('submit', '#addForm', function(e){

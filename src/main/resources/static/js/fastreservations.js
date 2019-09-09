@@ -55,10 +55,7 @@ $(document).ready(function(){
             "surname" : $surname,
             "passNum" : $passport
         });
-        alert(info);
 
-        //posalji ajaxom ovde podatke na url
-        //ajax za rezervaciju
         $.ajax({
             type : 'POST',
             url: "/FastFlightReservation/reserve/" + clicked_button_id,
@@ -78,7 +75,6 @@ $(document).ready(function(){
 
             }
         });
-        alert("preskocio ajax");
 
     });
 
