@@ -53,7 +53,7 @@ public class FlightReservationController {
         String row = rowAndColumn[0];
         String column = rowAndColumn[1];
         for(Sediste s : seats){
-            if(s.getNumberOfRow() == Integer.parseInt(row) && s.getColumnNumber() == Integer.parseInt(column)){
+            if(s.getNumberOfRow() == Integer.parseInt(row) && s.getColumnNumber() == Integer.parseInt(column)  && s.getFlight().getId() == Long.parseLong(newFlightReservation.getFlightId())){
                 fr.setSeat(s);
                 Sediste seat = seatService.findById(s.getId());
                 seat.setReserved(true);
