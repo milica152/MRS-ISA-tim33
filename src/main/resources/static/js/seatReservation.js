@@ -63,7 +63,6 @@ $(document).ready(function(){
     function includes(elem) {
         for(var e in fastResForFlight){
             if(fastResForFlight[e] === elem){
-                alert(elem);
 
                 return true;
             }

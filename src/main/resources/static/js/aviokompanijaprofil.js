@@ -3,6 +3,7 @@ $profileID0 = window.location.href.lastIndexOf('/');
 $profileID1 = window.location.href.substring(0,$profileID0);
 $profileID2 = $profileID1.substring($profileID1.lastIndexOf('/') + 1);
 
+var clickedFlightId;
 var chartLabels = [];
 var chartData = [];
 var chartLabel = "";
@@ -95,14 +96,7 @@ $(document).ready(function() {
                 data: null,
                 render: function(data, type, row)
                 {
-                    return !isCorrectAdmin ? '' : '<button type="button" class="edit-btn btn btn-primary" id="editBtn">Edit</button>';
-                }
-            },
-            {
-                data: null,
-                render: function(data, type, row)
-                {
-                    return !isCorrectAdmin ? '' : '<button type="button" class="delete-btn btn btn-danger" id="deleteBtn">Delete</button>';
+                    return !isCorrectAdmin ? '' : '<button type="button" class="addQuick-btn btn btn-primary" data-target="#addQuickModal" data-toggle="modal" id="addQiuckBtn">Add q. res.</button>';
                 }
             }
        ],
@@ -110,6 +104,14 @@ $(document).ready(function() {
             { className: "align-middle", targets: "_all" }
         ]
     });
+
+    $(document).on('click', '.addQuick-btn', function(e) {
+        e.preventDefault();
+        var data = flightsTable.row($(this).parents('tr')).data();
+        clickedFlightId = data.id;
+    });
+
+
 
     refreshEditModal();
 
@@ -122,6 +124,42 @@ $(document).ready(function() {
 
 
     });
+
+    $(document).on('submit', '#addQuickForm', function(e) {
+        e.preventDefault();
+
+        var $scol = $('#scolumn').val();
+        var $srow = $('#srow').val();
+        var $disc = $('#discount').val();
+
+        if($scol === "" || $srow === "" || $disc === "" ){
+            alert('All fields must be filled.');
+            return false;
+        }
+
+
+        var resInfo = JSON.stringify({
+            "row" : $srow,
+            "column" : $scol,
+            "discount" : $disc,
+            "flightId" : clickedFlightId.toString()
+        });
+
+        $.ajax({
+            type : 'POST',
+            url : '/FastFlightReservation/addFastReservation',
+            dataType : "text",
+            contentType : 'application/json',
+            data : resInfo,
+            success : function (data) {
+                alert(data);
+            }
+        });
+
+
+    });
+
+
 
 
     function refreshEditModal(){

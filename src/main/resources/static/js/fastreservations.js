@@ -1,9 +1,14 @@
 $airlineId0 = window.location.href.slice(0,window.location.href.lastIndexOf('/'));
 $airlineId = $airlineId0.substring(window.location.href.lastIndexOf('/') + -1);
 var clicked_button_id = "";
+var loggedUsername = "";
 
 
 $(document).ready(function(){
+
+    var isLogged = false;
+    var isCorrectAdmin = false;
+
 
 
 
@@ -22,6 +27,47 @@ $(document).ready(function(){
     });
 
     getRes();
+
+
+
+    $.ajax({
+        type: 'GET',
+        url: '/whoami',
+        success: function (data) {
+            if (data == undefined || data == "") {
+                isLogged = false;
+                isCorrectAdmin = false;
+                loggedUsername = "";
+
+            } else {
+                isLogged = true;
+                for (var i = 0; i < data.authorities.length; i++) {
+                    if (data.authorities[i].authority == 'SISTEM_ADMIN' || data.authorities[i].authority == 'ADMIN_AK') {
+                        isCorrectAdmin = true;
+                        break;
+                    }
+                }
+                loggedUsername = data.username;
+            }
+            hideAll(isCorrectAdmin, isLogged);
+
+        },
+        async: false
+    });
+
+
+
+
+
+    function hideAll(isCorrectAdmin, isLogged){
+        if(isCorrectAdmin || !isLogged){
+
+            document.getElementsByClassName('btn-primary').style.visibility = 'hidden';
+        }
+
+    }
+
+
 
     $(document).on('click', '.btn-primary', function (e) {
         e.preventDefault();
