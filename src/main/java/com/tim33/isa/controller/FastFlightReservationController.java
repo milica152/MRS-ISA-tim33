@@ -1,11 +1,9 @@
 package com.tim33.isa.controller;
 
-import com.tim33.isa.model.FastFlightReservation;
-import com.tim33.isa.model.Let;
-import com.tim33.isa.model.ReservationInfo;
-import com.tim33.isa.model.Sediste;
+import com.tim33.isa.model.*;
 import com.tim33.isa.service.FastFlightReservationService;
 import com.tim33.isa.service.LetService;
+import com.tim33.isa.service.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +21,10 @@ public class FastFlightReservationController {
     FastFlightReservationService service;
     @Autowired
     LetService flightService;
+    @Autowired
+    SeatService seatService;
 
-    @RequestMapping(value = "addFastRes", method = RequestMethod.POST)
+    @RequestMapping(value = "/addFastRes", method = RequestMethod.POST)
     @ResponseBody
     FastFlightReservation save(@RequestBody FastFlightReservation newRes) {
         return service.save(newRes);
@@ -33,8 +33,77 @@ public class FastFlightReservationController {
     @PutMapping("/{id}")
     @ResponseBody
     FastFlightReservation update(@RequestBody FastFlightReservation newRes, @PathVariable long id) {
-        newRes.setId(id);    //??
         return service.save(newRes);
+    }
+
+
+    //@RequestMapping(value = "", method = RequestMethod.POST)
+    @PostMapping("/addFastReservation")
+    @ResponseBody
+    String addRes(@RequestBody QuickResInfo info) {
+        List<FastFlightReservation> frs = service.findAll();
+        List<Let> all = flightService.findAll();
+        FastFlightReservation fr = new FastFlightReservation();
+        List<Sediste> seats = seatService.findAll();
+
+        try{
+            for(FastFlightReservation ffr : frs){
+                if(ffr.getFlight().getId() == Long.parseLong(info.getFlightId()) && ffr.getSeat().getColumnNumber() == Integer.parseInt(info.getColumn()) && ffr.getSeat().getNumberOfRow() == Integer.parseInt(info.getRow())){
+                    return "There is already a quick reservation for this seat";
+                }
+            }
+        }catch (Exception ex){
+            return "Row and column are positive numbers.";
+        }
+
+
+        try{
+            if(Integer.parseInt(info.getDiscount()) > 100 || Integer.parseInt(info.getDiscount()) <=0){
+                return "Discount must be between 0 and 100.";
+            }
+
+        }catch (Exception ex){
+            return "Discount must be between 0 and 100.";
+        }
+
+        for(Let let : all){
+
+            if(let.getId() == Long.parseLong(info.getFlightId())){
+                fr.setFlight(let);
+                break;
+            }
+        }
+        if(fr.getFlight() == null){
+            return "Cannot find appropriate flight.";
+        }
+
+        try{
+            for(Sediste s : seats){
+                if(!s.isReserved() && s.getNumberOfRow() == Integer.parseInt(info.getRow()) && s.getColumnNumber() == Integer.parseInt(info.getColumn()) && s.getFlight().getId() == Long.parseLong(info.getFlightId())){
+                    fr.setSeat(s);
+                    break;
+                }
+            }
+        }catch(Exception ex){
+            return "Invalid data.";
+        }
+
+        if(fr.getSeat() == null){
+            return "Cannot find that seat.";
+        }
+
+        fr.setArrCity(fr.getFlight().getOdredisniAerodrom().getGrad());
+        fr.setArrCountry(fr.getFlight().getOdredisniAerodrom().getDrzava());
+        fr.setArrTime(fr.getFlight().getVremeDolaska());
+        fr.setDepCity(fr.getFlight().getPolazniAerodrom().getGrad());
+        fr.setDepCountry(fr.getFlight().getPolazniAerodrom().getDrzava());
+        fr.setDepTime(fr.getFlight().getVremePolaska());
+        fr.setDiscount(Double.parseDouble(info.getDiscount())/100.0);
+        fr.setKlasa(fr.getFlight().getKlasa());
+        fr.setPrice(fr.getFlight().getCena());
+
+        service.save(fr);
+        return "Reservation successfully added.";
     }
 
 

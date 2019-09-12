@@ -366,6 +366,55 @@
 
 
 
+
+<div class="modal fade" id="addQuickModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addQuickForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" >Quick reservation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label for="srow" class="col-md-4 col-form-label text-md-right">Seat row</label>
+                        <div class="col-md-6">
+                            <input type="text" id="srow" class="form-control" name="srow">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="scolumn" class="col-md-4 col-form-label text-md-right">Seat column</label>
+                        <div class="col-md-6">
+                            <input type="text" id="scolumn" class="form-control" name="scolumn">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="discount" class="col-md-4 col-form-label text-md-right">Discount (%)</label>
+                        <div class="col-md-6">
+                            <input type="text" id="discount" class="form-control" name="discount">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"id="doneAddingQuickBtn">Done</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
 <div class="modal fade" id="editProfileModal" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
